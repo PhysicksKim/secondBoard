@@ -1,11 +1,17 @@
 spring:
+  config:
+    import:
+      - application-oauth.yml
+      - optional:application-db.yml
   profiles:
-    active: local
+    active:
+      - dev
+      - optional:oauth
 ---
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: dev
   datasource:
     url: jdbc:h2:tcp://localhost/~/secondboard
     username: sa
