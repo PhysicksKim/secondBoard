@@ -6,7 +6,8 @@ spring:
   profiles:
     active:
       - dev
-      - optional:oauth
+      - oauth
+    include: oauth
 ---
 spring:
   config:
@@ -17,6 +18,12 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+
+  thymeleaf:
+    prefix: classpath:templates/
+    suffix: .html
+    cache: false
+    check-template-location: true
 
   jpa:
     hibernate:
