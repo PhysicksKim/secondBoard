@@ -9,6 +9,5 @@ public class SecondBoardApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SecondBoardApplication.class, args);
 	}
-	// jdbc:h2:tcp://localhost/~/querydsl
 
 }

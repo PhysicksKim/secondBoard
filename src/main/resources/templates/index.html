@@ -9,13 +9,13 @@
 </head>
 <body>
 
+    <!--로그인 된 경우 로그아웃 표시-->
     <div th:if="${username != null}">
-        <div> Logged in as :
-            <div th:text="${username}"> 유저이름 </div>
-        </div>
+        <div th:text="'Logged in as : '+${username}" style="white-space: nowrap"> 유저이름 </div>
         <a href="/logout" class="btn btn-info active" role="button">Logout</a>
     </div>
 
+    <!-- Google Oauth2 버튼 -->
     <div th:unless="${username != null}">
         <div>
             <a href="/oauth2/authorization/google" class="bottomNav btn-success active" role="button">

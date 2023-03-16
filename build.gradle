@@ -6,7 +6,7 @@ plugins {
 
 group = 'physicks'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 configurations {
 	compileOnly {
@@ -26,7 +26,15 @@ dependencies {
 	// OAuth
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+	// Security Test
+	testImplementation 'org.springframework.security:spring-security-test'
+
 	compileOnly 'org.projectlombok:lombok'
+
+	// test 에서 slf4j 를 사용하기 위해 필요
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
