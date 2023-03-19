@@ -1,18 +1,26 @@
 spring:
-  config:
-    import:
-      - application-oauth.yml
-      - optional:application-db.yml
+#  config:
+#    import:
+#      - application-oauth.yml
+#      - optional:application-db.yml
   profiles:
     active:
-      - dev
+#      - dev
       - oauth
     include: oauth
+
+# spring.profiles.include : 애플리케이션에서 활성화되는 프로파일을 지정합니다
+# spring.config.import : YAML 파일의 외부 구성을 가져올 때 사용됩니다
 ---
 spring:
-  config:
-    activate:
-      on-profile: dev
+#  config:
+#    activate:
+#      on-profile: dev
+  # on-profile : 특정 프로파일이 활성화되었을 때 사용할 추가 프로퍼티 파일을 지정하는 데 사용
+  # 예시
+  # on-profile: dev
+  # additional-config: classpath:application-dev-datasource.yml
+  # 이러면 dev가 활성화 됐을 때 dev-datasource 를 추가로 활성화한다
   datasource:
     url: jdbc:h2:tcp://localhost/~/secondboard
     username: sa
