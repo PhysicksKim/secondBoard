@@ -76,7 +76,8 @@ class HelloControllerTest {
      */
     @Test
     void hello접근_oauth2_SecurityMock사용() throws Exception {
-        mvc.perform(get("/posts").with(oauth2Login()))
+        // oauth2Login() 은 SecurityMockMvcRequestPostProcessors 에 있는 Mock
+        mvc.perform(get("/hello").with(oauth2Login()))
                 .andExpect(status().isOk());
     }
 

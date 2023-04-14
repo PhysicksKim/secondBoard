@@ -9,6 +9,10 @@
 </head>
 <body>
 
+    <div id="title" name="title">
+        <h1> Index Page </h1>
+    </div>
+
     <!--로그인 된 경우 로그아웃 표시-->
     <div th:if="${username != null}">
         <div th:text="'Logged in as : '+${username}" style="white-space: nowrap"> 유저이름 </div>
