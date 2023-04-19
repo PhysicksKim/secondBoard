@@ -3,12 +3,17 @@ package physicks.secondBoard.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import physicks.secondBoard.domain.boardList.PostListDto;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -16,6 +21,31 @@ import java.time.LocalDateTime;
 public class BasicBoardController {
 
     private final PostRepository postRepository;
+
+    @GetMapping("/board")
+    public String boardMain(Model model) {
+
+        PostListDto dto1 = PostListDto.builder()
+                .id(123L)
+                .title("TEST title")
+                .author("TEST author")
+                .createdTime(LocalDateTime.now())
+                .build();
+        PostListDto dto2 = PostListDto.builder()
+                .id(124L)
+                .title("TEST title2")
+                .author("TEST author2")
+                .createdTime(LocalDateTime.now())
+                .build();
+
+        List<PostListDto> postList = new ArrayList<>();
+        postList.add(dto1);
+        postList.add(dto2);
+
+        model.addAttribute("postList", postList);
+
+        return "board";
+    }
 
     @PostMapping("/board")
     @ResponseBody
