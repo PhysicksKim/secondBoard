@@ -5,7 +5,7 @@ spring:
 #      - optional:application-db.yml
   profiles:
     active:
-#      - dev
+      - dev
       - oauth
     include: oauth
 
@@ -33,6 +33,14 @@ spring:
     cache: false
     check-template-location: true
 
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        page-parameter: page
+        size-parameter: size
+
+
   jpa:
     hibernate:
       ddl-auto: create
@@ -44,3 +52,4 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
 #  org.hibernate.type: trace
+

@@ -2,6 +2,7 @@ package physicks.secondBoard.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,26 +25,8 @@ public class BasicBoardController {
 
     @GetMapping("/board")
     public String boardMain(Model model) {
-
-        PostListDto dto1 = PostListDto.builder()
-                .id(123L)
-                .title("TEST title")
-                .author("TEST author")
-                .createdTime(LocalDateTime.now())
-                .build();
-        PostListDto dto2 = PostListDto.builder()
-                .id(124L)
-                .title("TEST title2")
-                .author("TEST author2")
-                .createdTime(LocalDateTime.now())
-                .build();
-
-        List<PostListDto> postList = new ArrayList<>();
-        postList.add(dto1);
-        postList.add(dto2);
-
+        List<PostListDto> postList = postRepository.findAllPostListDtos();
         model.addAttribute("postList", postList);
-
         return "board";
     }
 

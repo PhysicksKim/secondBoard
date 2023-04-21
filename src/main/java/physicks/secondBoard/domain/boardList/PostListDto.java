@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.entity.BaseEntity;
 
 import java.time.LocalDateTime;
