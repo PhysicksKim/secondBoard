@@ -47,8 +47,6 @@ public class BasicBoardController {
         }
 
         log.info("success save post");
-
         return "success save post";
     }
-
 }
