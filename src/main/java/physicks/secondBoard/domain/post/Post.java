@@ -1,6 +1,7 @@
 package physicks.secondBoard.domain.post;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
  * 제목, 작성자, 내용, 작성일, 마지막 수정일
  */
 @Entity
+@Getter
 @NoArgsConstructor
 public class Post extends AuditBaseEntity {
 

@@ -8,12 +8,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import physicks.secondBoard.domain.boardList.PostListDto;
+import physicks.secondBoard.domain.boardList.BoardPostListDto;
+import physicks.secondBoard.domain.boardList.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -21,11 +21,18 @@ import java.util.List;
 @Slf4j
 public class BasicBoardController {
 
-    private final PostRepository postRepository;
+    private final BoardService boardService;
 
     @GetMapping("/board")
-    public String boardMain(Model model) {
-        List<PostListDto> postList = postRepository.findAllPostListDtos();
+    public String boardMain(Model model, Pageable pageable) {
+        List<BoardPostListDto> postList = boardService.getBoardPostList(pageable);
+        log.info("postList log : {}" , postList.toString());
+        log.info("post get 0 : {} {} {} {}" ,
+                postList.get(0).getTitle(),
+                postList.get(0).getAuthor(),
+                postList.get(0).getCreatedTime(),
+                postList.get(0).getId()
+        );
         model.addAttribute("postList", postList);
         return "board";
     }
@@ -41,7 +48,7 @@ public class BasicBoardController {
                 .build();
 
         try {
-            postRepository.save(post);
+            boardService.savePost(post);
         } catch (Exception e) {
             log.error("Error. postRepository.save(post) 에서 에러 발생 : {}", e);
         }
