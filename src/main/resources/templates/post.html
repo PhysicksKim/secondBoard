@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<h1> 게시판 </h1>
+
+<a href="/board"><h2> 게시글 목록 </h2></a>
+
+<div id="post" th:object="${post}">
+    <div>
+        <div th:field="*{title}" th:text="*{title}" style="display: inline-block">제목</div>
+        <div th:field="*{createdTime}" th:text="*{createdTime}" style="display: block">작성시간</div>
+    </div>
+    <div>
+        <div th:field="*{author}" th:text="*{author}" style="display: inline-block">작성자</div>
+    </div>
+    <div th:field="*{content}" th:text="*{content}" style="display: block">
+        본문
+    </div>
+</div>
+</body>
+</html>

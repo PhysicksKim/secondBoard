@@ -23,9 +23,10 @@ public class SecurityConfig {
                     .authorizeRequests()
                     .antMatchers("/", "/css/**","/images/**",
                             "/js/**","h2-console/**","/profile","/hello").permitAll()
-                    .antMatchers("/board").permitAll()
+                    .antMatchers("/board/**").permitAll()
                     .antMatchers("/api/v1/**").hasRole(Role.USER.name())
-                    .anyRequest().authenticated()
+                    // .anyRequest().authenticated()
+                    .anyRequest().permitAll()
                 .and()
                     .logout()
                         .logoutSuccessUrl("/")

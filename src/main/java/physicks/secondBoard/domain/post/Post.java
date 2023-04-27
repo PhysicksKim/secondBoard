@@ -1,8 +1,6 @@
 package physicks.secondBoard.domain.post;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import physicks.secondBoard.entity.AuditBaseEntity;
@@ -20,7 +18,9 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Post extends AuditBaseEntity {
 
     @Column(nullable = false)
@@ -32,12 +32,4 @@ public class Post extends AuditBaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Builder
-    public Post(String title,
-                String author,
-                String content) {
-        this.title = title;
-        this.author = author;
-        this.content = content;
-    }
 }

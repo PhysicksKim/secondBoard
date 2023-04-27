@@ -5,15 +5,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import physicks.secondBoard.domain.boardList.BoardPostListDto;
+import physicks.secondBoard.domain.board.BoardPostListDto;
 
 import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query("SELECT new physicks.secondBoard.domain.boardList.BoardPostListDto(p.id, p.title, p.author, p.createdTime) from Post p")
+    @Query("SELECT new physicks.secondBoard.domain.board.BoardPostListDto(p.id, p.title, p.author, p.createdTime) from Post p")
     public List<BoardPostListDto> findAllPostListDtos();
 
     Page<Post> findAll(Pageable pageable);
+
+    Page<Post> findAllByOrderByIdDesc(Pageable pageable);
 }

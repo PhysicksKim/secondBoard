@@ -3,6 +3,7 @@ package physicks.secondBoard.domain.devinit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
@@ -22,11 +23,7 @@ public class SamplePostInitializer implements CommandLineRunner {
 
     private void addSamplePosts(int numPosts) {
         for(int i = 0 ; i<numPosts ; i++) {
-            Post post = Post.builder()
-                    .title("Test Post"+i)
-                    .author("Author "+i)
-                    .content("TEST Content " + i)
-                    .build();
+            Post post = new Post("TestPost" + i, "Author" + i, "TestContent" + i);
             postRepository.save(post);
         }
     }

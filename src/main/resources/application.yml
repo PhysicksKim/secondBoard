@@ -41,6 +41,7 @@ spring:
         size-parameter: size
 
 
+
   jpa:
     hibernate:
       ddl-auto: create

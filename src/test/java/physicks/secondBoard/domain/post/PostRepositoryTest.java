@@ -23,13 +23,7 @@ public class PostRepositoryTest {
     @BeforeEach
     void addSamplePosts() {
         for(int i = 0 ; i<samplePostNum ; i++) {
-            postRepository.save(Post.builder()
-                    .title("test" + i)
-                    .author("tester"+i)
-                    .title("title"+i)
-                    .content("content"+i)
-                    .build()
-            );
+            postRepository.save(new Post("title"+i,"tester"+i,"content"+i));
         }
     }
 

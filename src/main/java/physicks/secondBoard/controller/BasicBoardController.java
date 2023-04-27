@@ -6,14 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import physicks.secondBoard.domain.boardList.BoardPostListDto;
-import physicks.secondBoard.domain.boardList.BoardService;
+import physicks.secondBoard.domain.board.BoardPostListDto;
+import physicks.secondBoard.domain.board.BoardService;
 import physicks.secondBoard.domain.post.Post;
-import physicks.secondBoard.domain.post.PostRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -25,6 +24,8 @@ public class BasicBoardController {
 
     @GetMapping("/board")
     public String boardMain(Model model, Pageable pageable) {
+        log.info("Sort : {}", pageable.getSort());
+        log.info("Pageable : {}", pageable.toString());
         List<BoardPostListDto> postList = boardService.getBoardPostList(pageable);
         log.info("postList log : {}" , postList.toString());
         log.info("post get 0 : {} {} {} {}" ,
@@ -37,22 +38,23 @@ public class BasicBoardController {
         return "board";
     }
 
+    @GetMapping("/board/{id}")
+    public String boardPostRead(@PathVariable Long id, Model model) {
+        Post findPost = boardService.getPostById(id);
+        model.addAttribute("post", findPost);
+        return "post";
+    }
+
     @PostMapping("/board")
     @ResponseBody
     public String writePost(String title, String author, String content) {
-        LocalDateTime now = LocalDateTime.now();
-        Post post = Post.builder()
-                .title(title)
-                .author(author)
-                .content(content)
-                .build();
+        Post post = new Post(title, author, content);
 
         try {
             boardService.savePost(post);
         } catch (Exception e) {
             log.error("Error. postRepository.save(post) 에서 에러 발생 : {}", e);
         }
-
         log.info("success save post");
         return "success save post";
     }
