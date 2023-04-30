@@ -23,11 +23,8 @@ public class BoardService {
         List<BoardPostListDto> result = new ArrayList<>();
         Page<Post> posts = postRepository.findAllByOrderByIdDesc(pageable);
         for (Post post : posts) {
-            log.info("Post title : {}", post.getTitle());
             BoardPostListDto dto = BoardPostListDtoMapper.INSTANCE.toDto(post);
             result.add(dto);
-
-            log.info("Dto title : {}", dto.getTitle());
         }
         return result;
     }

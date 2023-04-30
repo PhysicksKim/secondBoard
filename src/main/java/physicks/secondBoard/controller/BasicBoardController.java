@@ -24,16 +24,7 @@ public class BasicBoardController {
 
     @GetMapping("/board")
     public String boardMain(Model model, Pageable pageable) {
-        log.info("Sort : {}", pageable.getSort());
-        log.info("Pageable : {}", pageable.toString());
         List<BoardPostListDto> postList = boardService.getBoardPostList(pageable);
-        log.info("postList log : {}" , postList.toString());
-        log.info("post get 0 : {} {} {} {}" ,
-                postList.get(0).getTitle(),
-                postList.get(0).getAuthor(),
-                postList.get(0).getCreatedTime(),
-                postList.get(0).getId()
-        );
         model.addAttribute("postList", postList);
         return "board";
     }
