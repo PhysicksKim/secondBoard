@@ -31,7 +31,7 @@ public class BasicBoardController {
 
     @GetMapping("/board/{id}")
     public String boardPostRead(@PathVariable Long id, Model model) {
-        Post findPost = boardService.getPostById(id);
+        Post findPost = boardService.findPostById(id);
         model.addAttribute("post", findPost);
         return "post";
     }

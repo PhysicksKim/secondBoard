@@ -19,7 +19,8 @@ public class SecondBoardApplication {
 
 	@Bean
 	public AuditorAware<String> auditorProvider() {
-		// 차후에 경우에 따라서 securityContext 에서 user 정보를 추출 하는 등으로 수정
+		// Auditing시 작성자가 누구인지 기록하는 AuditorAware 가 필요하므로 Bean으로 등록해준다.
+		// 차후에 securityContext 에서 user 정보를 추출 하는 방식 등으로 수정 필요
 		return () -> Optional.of(UUID.randomUUID().toString());
 	}
 

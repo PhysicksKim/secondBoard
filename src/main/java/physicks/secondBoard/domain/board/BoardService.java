@@ -29,12 +29,12 @@ public class BoardService {
         return result;
     }
 
-    public Post getPostById(long id) {
+    public Post findPostById(long id) {
         Optional<Post> post = postRepository.findById(id);
         return post.get();
     }
 
-    public void savePost(Post post) {
-        postRepository.save(post);
+    public Post savePost(Post post) {
+        return postRepository.save(post);
     }
 }
