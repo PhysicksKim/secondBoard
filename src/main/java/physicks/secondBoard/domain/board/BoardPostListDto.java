@@ -13,7 +13,7 @@ public class BoardPostListDto {
     private Long id;
     private String title;
     private String author;
-    private LocalDateTime createdTime;
+    private String createdTime;
 
 }
 
