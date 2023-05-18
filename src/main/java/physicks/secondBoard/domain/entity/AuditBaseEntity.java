@@ -1,4 +1,4 @@
-package physicks.secondBoard.entity;
+package physicks.secondBoard.domain.entity;
 
 import lombok.Getter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -6,13 +6,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
+
 /**
- * Auditing 대상 필드
- * CreatedTime : 등록일
- * LastUpdatedTime : 최종 수정일
+ * <h1>미구현</h1> <br><br>
+ * 작성자 기록을 남기기 위한 @MappedSuperclass Entity 이다.
+ * BaseEntity를 포함한다.
  */
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
-public class AuditBaseEntity extends BaseEntity{
+public abstract class AuditBaseEntity extends BaseEntity{
 }

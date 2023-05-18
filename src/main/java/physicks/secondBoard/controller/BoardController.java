@@ -18,7 +18,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class BasicBoardController {
+public class BoardController {
 
     private final BoardService boardService;
 

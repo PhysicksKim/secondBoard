@@ -12,9 +12,6 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    // @Query("SELECT new physicks.secondBoard.domain.board.BoardPostListDto(p.id, p.title, p.author, p.createdTime) from Post p")
-    // public List<BoardPostListDto> findAllPostListDtos();
-
     Page<Post> findAll(Pageable pageable);
 
     Page<Post> findAllByOrderByIdDesc(Pageable pageable);

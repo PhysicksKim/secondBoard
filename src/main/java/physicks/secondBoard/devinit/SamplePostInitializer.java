@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.devinit;
+package physicks.secondBoard.devinit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
