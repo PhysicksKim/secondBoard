@@ -1,5 +1,6 @@
 package physicks.secondBoard.domain.board;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,10 +16,10 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class BoardService {
 
-    @Autowired
-    PostRepository postRepository;
+    private final PostRepository postRepository;
 
     public List<BoardPostListDto> getBoardPostList(Pageable pageable) {
         List<BoardPostListDto> result = new ArrayList<>();
