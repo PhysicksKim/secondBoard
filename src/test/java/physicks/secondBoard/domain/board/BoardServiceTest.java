@@ -22,6 +22,7 @@ import physicks.secondBoard.domain.post.PostRepository;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -89,15 +90,33 @@ class BoardServiceTest {
                 .withFailMessage("두번째 post.id가 given의 post2.id과 다릅니다");
     }
 
-    // @Test
-    // public void findPostById() throws Exception {
-    //     //given
-    //
-    //     //when
-    //
-    //     //then
-    // }
-    //
+    @Test
+    public void findPostById() throws Exception {
+        //given
+        Post post1 = new Post("title1", "author1", "content1");
+        Post post2 = new Post("title2", "author2", "content2");
+        ReflectionTestUtils.setField(post1,POST_ID_FIELD, 1L);
+        ReflectionTestUtils.setField(post2,POST_ID_FIELD, 2L);
+        ReflectionTestUtils.setField(post1,POST_CREATED_TIME_FIELD, LocalDateTime.now());
+        ReflectionTestUtils.setField(post2,POST_CREATED_TIME_FIELD, LocalDateTime.now());
+
+        // Mock 주입
+        when(postRepository.findById(1L))
+                .thenReturn(Optional.of(post1));
+        when(postRepository.findById(2L))
+                .thenReturn(Optional.of(post2));
+
+        //when
+        Post findPost_id1L = boardService.findPostById(1L);
+        Post findPost_id2L = boardService.findPostById(2L);
+
+        //then
+        Assertions.assertThat(findPost_id1L).isEqualTo(post1)
+                .withFailMessage("id=1L로 찾은 Post가 post1과 다릅니다");
+        Assertions.assertThat(findPost_id2L).isEqualTo(post2)
+                .withFailMessage("id=2L로 찾은 Post가 post2와 다릅니다");
+    }
+
     // @Test
     // public void savePost() throws Exception {
     //     //given
