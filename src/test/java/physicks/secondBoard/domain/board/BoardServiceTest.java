@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * BoardService 의 메서드들을 테스트 합니다.  <br>
@@ -57,8 +58,13 @@ class BoardServiceTest {
         boardService = new BoardService(postRepository); // 테스트할 Service에 Mock 객체를 주입
     }
 
+    /**
+     * boardService 의 getBoardPostList() 메서드를 테스트 합니다 <br>
+     * Pagination 은 테스트 대상으로 다루지 않습니다. <br>
+     * {@link #getBoardPostList_PaginationTest}
+     */
     @Test
-    public void TestUnitMethod_getBoardPostList() throws Exception {
+    public void getBoardPostList() throws Exception {
         //given
         // Post 데이터를 생성
         Post post1 = new Post("title1", "author1", "content1");
@@ -90,6 +96,37 @@ class BoardServiceTest {
                 .withFailMessage("두번째 post.id가 given의 post2.id과 다릅니다");
     }
 
+    // Pagination 테스트 1. 최신 페이지 조회 (ex. 총 3페이지 중 가장 최신글이 있는 1페이지 조회)
+    @Test
+    public void getBoardPostList_PaginationTest_NewestPage() throws Exception{
+        // !!! 구현 필요 !!!
+        // Given : Post 13개 생성
+        // When  : Pageable.of(0,5)
+        // Then  : 가장 최신 글 총 5개 반환 체크
+    }
+
+    // Pagination 테스트 2. 중간 페이지 조회 (ex. 총 3페이지 중 2페이지 조회)
+    @Test
+    public void getBoardPostList_PaginationTest_MiddlePage() throws Exception{
+        // !!! 구현 필요 !!!
+        // Given : Post 13개 생성
+        // When  : Pageable.of(1,5)
+        // Then  : 페이징 통해 최신기준 6번째 글 부터 포함해서 총 5개 반환 체크
+    }
+
+
+    // Pagination 테스트 3. 마지막 페이지 조회 (ex. 총 3페이지 중 3페이지 조회)
+    @Test
+    public void getBoardPostList_PaginationTest_OldestPage() throws Exception{
+        // !!! 구현 필요 !!!
+        // Given : Post 13개 생성
+        // When  : Pageable.of(2,5)
+        // Then  : 페이징 통해 최신기준 11번째 글 부터 포함해서 총 3개 반환 체크
+    }
+
+    /**
+     * boardService 의 findPostById() 메서드를 테스트 합니다 <br>
+     */
     @Test
     public void findPostById() throws Exception {
         //given
@@ -97,8 +134,6 @@ class BoardServiceTest {
         Post post2 = new Post("title2", "author2", "content2");
         ReflectionTestUtils.setField(post1,POST_ID_FIELD, 1L);
         ReflectionTestUtils.setField(post2,POST_ID_FIELD, 2L);
-        ReflectionTestUtils.setField(post1,POST_CREATED_TIME_FIELD, LocalDateTime.now());
-        ReflectionTestUtils.setField(post2,POST_CREATED_TIME_FIELD, LocalDateTime.now());
 
         // Mock 주입
         when(postRepository.findById(1L))
@@ -111,38 +146,37 @@ class BoardServiceTest {
         Post findPost_id2L = boardService.findPostById(2L);
 
         //then
-        Assertions.assertThat(findPost_id1L).isEqualTo(post1)
-                .withFailMessage("id=1L로 찾은 Post가 post1과 다릅니다");
-        Assertions.assertThat(findPost_id2L).isEqualTo(post2)
-                .withFailMessage("id=2L로 찾은 Post가 post2와 다릅니다");
+        verify(postRepository, times(1)).findById(1L);
+        verify(postRepository, times(1)).findById(2L);
+        assertThat(post1.getId()).isEqualTo(findPost_id1L.getId());
+        assertThat(post2.getId()).isEqualTo(findPost_id2L.getId());
+        assertPostEqual(post1, findPost_id1L);
+        assertPostEqual(post2, findPost_id2L);
     }
 
-    // @Test
-    // public void savePost() throws Exception {
-    //     //given
-    //
-    //     //when
-    //
-    //     //then
-    // }
+    /**
+     * Post의 title, author, content 필드가 같은지를 assert 합니다.
+     */
+    private void assertPostEqual(Post original, Post find) {
+        assertThat(original.getTitle()).isEqualTo(find.getTitle());
+        assertThat(original.getAuthor()).isEqualTo(find.getAuthor());
+        assertThat(original.getContent()).isEqualTo(find.getContent());
+    }
 
     @Test
-    public void post_saveAndFind() throws Exception {
+    public void savePost() throws Exception {
         //given
-        Post post = new Post("title", "author", "content");
+        Post post1 = new Post("title1", "author1", "content1");
+
+        when(postRepository.save(any(Post.class))).thenReturn(post1);
 
         //when
-        Post savedPost = boardService.savePost(post);
-        Post foundPost = boardService.findPostById(savedPost.getId());
+        Post savedPost = boardService.savePost(post1);
 
         //then
-        assertThat(savedPost).isNotNull();
-        assertThat(foundPost).isNotNull();
-
-        assertThat(foundPost.getId()).isEqualTo(post.getId());
-        assertThat(foundPost.getTitle()).isEqualTo(post.getTitle());
-        assertThat(foundPost.getAuthor()).isEqualTo(post.getAuthor());
-        assertThat(foundPost.getContent()).isEqualTo(post.getContent());
+        verify(postRepository, times(1)).save(post1);
+        assertThat(savedPost.getTitle()).isEqualTo(post1.getTitle());
+        assertThat(savedPost.getAuthor()).isEqualTo(post1.getAuthor());
+        assertThat(savedPost.getContent()).isEqualTo(post1.getContent());
     }
-
 }
