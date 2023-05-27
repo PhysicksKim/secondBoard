@@ -20,9 +20,7 @@ import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -60,8 +58,11 @@ class BoardServiceTest {
 
     /**
      * boardService 의 getBoardPostList() 메서드를 테스트 합니다 <br>
-     * Pagination 은 테스트 대상으로 다루지 않습니다. <br>
-     * {@link #getBoardPostList_PaginationTest}
+     * Pagination 테스트는 BoardServiceSpringTest 파일의 getBoardPostList_PaginationTest_ 에서 다룹니다. <br>
+     * <br>
+     * {@link BoardServiceSpringTest#getBoardPostList_PaginationTest_NewestPage}
+     * {@link BoardServiceSpringTest#getBoardPostList_PaginationTest_MiddlePage}
+     * {@link BoardServiceSpringTest#getBoardPostList_PaginationTest_OldestPage}
      */
     @Test
     public void getBoardPostList() throws Exception {
@@ -96,33 +97,7 @@ class BoardServiceTest {
                 .withFailMessage("두번째 post.id가 given의 post2.id과 다릅니다");
     }
 
-    // Pagination 테스트 1. 최신 페이지 조회 (ex. 총 3페이지 중 가장 최신글이 있는 1페이지 조회)
-    @Test
-    public void getBoardPostList_PaginationTest_NewestPage() throws Exception{
-        // !!! 구현 필요 !!!
-        // Given : Post 13개 생성
-        // When  : Pageable.of(0,5)
-        // Then  : 가장 최신 글 총 5개 반환 체크
-    }
 
-    // Pagination 테스트 2. 중간 페이지 조회 (ex. 총 3페이지 중 2페이지 조회)
-    @Test
-    public void getBoardPostList_PaginationTest_MiddlePage() throws Exception{
-        // !!! 구현 필요 !!!
-        // Given : Post 13개 생성
-        // When  : Pageable.of(1,5)
-        // Then  : 페이징 통해 최신기준 6번째 글 부터 포함해서 총 5개 반환 체크
-    }
-
-
-    // Pagination 테스트 3. 마지막 페이지 조회 (ex. 총 3페이지 중 3페이지 조회)
-    @Test
-    public void getBoardPostList_PaginationTest_OldestPage() throws Exception{
-        // !!! 구현 필요 !!!
-        // Given : Post 13개 생성
-        // When  : Pageable.of(2,5)
-        // Then  : 페이징 통해 최신기준 11번째 글 부터 포함해서 총 3개 반환 체크
-    }
 
     /**
      * boardService 의 findPostById() 메서드를 테스트 합니다 <br>
