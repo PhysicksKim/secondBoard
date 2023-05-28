@@ -39,4 +39,8 @@ public class BoardService {
     public Post savePost(Post post) {
         return postRepository.save(post);
     }
+
+    public List<Post> findAll() {
+        return postRepository.findAll();
+    }
 }

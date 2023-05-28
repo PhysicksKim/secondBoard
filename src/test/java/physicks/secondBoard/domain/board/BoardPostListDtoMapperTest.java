@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 이를 구분하여 DtoMappingTest를 수행한다. <br>
  */
 @SpringBootTest
+@Transactional
 class BoardPostListDtoMapperTest {
 
     @Autowired

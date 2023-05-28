@@ -1,11 +1,13 @@
 package physicks.secondBoard.domain.board;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.post.Post;
 
 import java.util.List;
@@ -13,12 +15,14 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Transactional
 public class BoardServiceSpringTest {
 
     @Autowired
     private BoardService boardService;
 
     private final int postNums = 13;
+    private final int size = 5;
 
     @BeforeEach
     public void setup() {
@@ -55,7 +59,6 @@ public class BoardServiceSpringTest {
     public void getBoardPostList_PaginationTest_NewestPage() throws Exception{
         //given
         final int page = 0;
-        final int size = 5;
         Pageable pageable = PageRequest.of(page, size);
 
         //when
@@ -73,7 +76,6 @@ public class BoardServiceSpringTest {
     public void getBoardPostList_PaginationTest_MiddlePage() throws Exception{
         //given
         final int page = 1;
-        final int size = 5;
         Pageable pageable = PageRequest.of(page, size);
 
         //when
@@ -97,11 +99,18 @@ public class BoardServiceSpringTest {
 
         //when
         List<BoardPostListDto> dtoList = boardService.getBoardPostList(pageable);
+        for (BoardPostListDto boardPostListDto : dtoList) {
+            System.out.println("dto title = " + boardPostListDto.getTitle());
+        }
+        List<Post> all = boardService.findAll();
+        for (Post post : all) {
+            System.out.println("post.getTitle() = " + post.getTitle());
+        }
 
         //then
         assertThat(dtoList.size()).isEqualTo(3);
-        for(int i = 0 ; i < size ; i++) {
-            assertThat(dtoList.get(i).getTitle()).isEqualTo("title"+(3-i));
+        for(int i = 0 ; i < postNums%size ; i++) {
+            assertThat(dtoList.get(i).getTitle()).isEqualTo("title"+(postNums-i-size*page));
         }
     }
 }
