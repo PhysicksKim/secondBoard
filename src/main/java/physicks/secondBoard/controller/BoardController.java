@@ -42,10 +42,11 @@ public class BoardController {
         return "write";
     }
 
-    @PostMapping
+    @PostMapping("/write")
     @ResponseBody
     public String writePost(String title, String author, String content) {
         Post post = new Post(title, author, content);
+        System.out.println("post.toString() = " + post.toString());
 
         try {
             boardService.savePost(post);

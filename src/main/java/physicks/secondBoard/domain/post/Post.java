@@ -15,6 +15,7 @@ import java.util.Objects;
  */
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Post extends AuditBaseEntity {

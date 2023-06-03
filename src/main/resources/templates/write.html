@@ -6,5 +6,13 @@
 </head>
 <body>
     <h1>Post Write Page</h1>
+
+    <!-- 현재 URL 에서 POST 로 submit -->
+    <form id="post-form" name="post-form" method="post">
+        <input type="text" id="title" name="title"> <br>
+        <input type="text" id="author" name="author"> <br>
+        <textarea id="content" name="content" form="post-form"></textarea> <br>
+        <input type="submit" value="Write">
+    </form>
 </body>
 </html>
