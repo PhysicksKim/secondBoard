@@ -9,5 +9,4 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest
 public class SpringSecurity {
 
-
 }

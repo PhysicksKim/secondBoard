@@ -3,14 +3,16 @@ package physicks.secondBoard;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import physicks.secondBoard.config.ApplicationConfig;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootApplication
-@EnableJpaAuditing
+@Import({ApplicationConfig.class })
 public class SecondBoardApplication {
 
 	public static void main(String[] args) {
@@ -23,5 +25,4 @@ public class SecondBoardApplication {
 		// 차후에 securityContext 에서 user 정보를 추출 하는 방식 등으로 수정 필요
 		return () -> Optional.of(UUID.randomUUID().toString());
 	}
-
 }

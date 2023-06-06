@@ -21,32 +21,36 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
-    public String boardMain(Model model, Pageable pageable) {
+    public String mainPage(Model model, Pageable pageable) {
         List<BoardPostListDto> postList = boardService.getBoardPostList(pageable);
         model.addAttribute("postList", postList);
         return "board";
     }
 
     @GetMapping("/{id}")
-    public String boardPostRead(@PathVariable Long id, Model model) {
+    public String postRead(@PathVariable Long id, Model model) {
         Post findPost = boardService.findPostById(id);
         model.addAttribute("post", findPost);
         return "post";
     }
 
     @GetMapping("/write")
-    public String boardPostWritePage() {
+    public String postWritePage() {
         // !!! 구현 필요 !!!
         // 1. Post Write Test 먼저 구현
         // 2. Post Write 로직과 Page 구현 필요
         return "write";
     }
 
+    /*
+     * from message 예시
+     * @ResponseBody => title=testTitle&author=testAuthor&content=testContent
+     */
     @PostMapping("/write")
     @ResponseBody
     public String writePost(String title, String author, String content) {
         Post post = new Post(title, author, content);
-        System.out.println("post.toString() = " + post.toString());
+        System.out.println("post.toString() = " + post);
 
         try {
             boardService.savePost(post);

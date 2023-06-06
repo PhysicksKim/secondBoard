@@ -10,7 +10,7 @@ import physicks.secondBoard.config.oauth.CustomOAuth2UserService;
 import physicks.secondBoard.domain.user.Role;
 
 @RequiredArgsConstructor
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -22,10 +22,8 @@ public class SecurityConfig {
                 .and()
                     .authorizeRequests()
                     .antMatchers("/", "/css/**","/images/**",
-                            "/js/**","h2-console/**","/profile").permitAll()
+                            "/js/**","h2-console/**","/profile").permitAll() // index페이지 + 정적 파일 권한
                     .antMatchers("/board/**").permitAll()
-                    .antMatchers("/api/v1/**").hasRole(Role.USER.name())
-                    // .anyRequest().authenticated()
                     .anyRequest().permitAll()
                 .and()
                     .logout()
