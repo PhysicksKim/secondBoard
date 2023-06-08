@@ -23,7 +23,7 @@ public class SamplePostInitializer implements CommandLineRunner {
 
     private void addSamplePosts(int numPosts) {
         for(int i = 0 ; i<numPosts ; i++) {
-            Post post = new Post("TestPost" + i, "Author" + i, "TestContent" + i);
+            Post post = Post.of("TestPost" + i, "Author" + i, "TestContent" + i);
             postRepository.save(post);
         }
     }

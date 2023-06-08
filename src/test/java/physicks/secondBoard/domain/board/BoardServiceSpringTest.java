@@ -27,7 +27,7 @@ public class BoardServiceSpringTest {
     @BeforeEach
     public void setup() {
         for(int i = 1 ; i <= postNums ; i++) {
-            Post post = new Post("title"+i,"author"+i,"content"+i);
+            Post post = Post.of("title"+i,"author"+i,"content"+i);
             boardService.savePost(post);
         }
     }
@@ -35,7 +35,7 @@ public class BoardServiceSpringTest {
     @Test
     public void post_saveAndFind() throws Exception {
         //given
-        Post post = new Post("title", "author", "content");
+        Post post = Post.of("title", "author", "content");
 
         //when
         Post savedPost = boardService.savePost(post);

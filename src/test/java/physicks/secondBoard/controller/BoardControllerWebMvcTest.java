@@ -2,19 +2,13 @@ package physicks.secondBoard.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import physicks.secondBoard.domain.board.BoardService;
-import physicks.secondBoard.mock.WithMockCustomOAuth2Account;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -24,10 +18,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebMvcTest(BoardController.class) // class를 지정해주지 않으면 모든 @Controller 들을 로딩해버린다.
 @MockBean(JpaMetamodelMappingContext.class)
+@WithMockUser(roles = "GUEST") // 게시판은 Guest 권한으로 접근 가능
 class BoardControllerWebMvcTest {
 
-    private static final String BOARD_MAIN_URL = "/board";
-    private static final String BOARD_MAIN_PAGE = "board";
+    private static final String URL_MAIN = "/board";
+    private static final String PAGE_MAIN = "board";
+
+    private static final String URL_WRITE = URL_MAIN + "/write";
+    private static final String PAGE_WRITE = "write";
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,22 +43,26 @@ class BoardControllerWebMvcTest {
      * 그러므로 최소한 GUEST 권한이라도 집어 넣어줘야 한다.
      */
     @Test
-    @WithMockUser(roles = "GUEST") // 게시판은 Guest 권한으로
     void mainPage() throws Exception{
-        mockMvc.perform(get(BOARD_MAIN_URL))
+        mockMvc.perform(get(URL_MAIN))
                 .andExpect(status().isOk())
-                .andExpect(view().name(BOARD_MAIN_PAGE));
+                .andExpect(view().name(PAGE_MAIN));
     }
 
     @Test
     void postRead() {
+        // MockTest 보다는 SpringBootTest 가 적절하므로 생략
     }
 
     @Test
-    void postWritePage() {
+    void postWritePage() throws Exception{
+        mockMvc.perform(get(URL_WRITE))
+                .andExpect(status().isOk())
+                .andExpect(view().name(PAGE_WRITE));
     }
 
     @Test
     void writePost() {
+        // MockTest 보다는 SpringBootTest 가 적절하므로 생략
     }
 }

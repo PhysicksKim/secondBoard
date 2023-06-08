@@ -68,8 +68,8 @@ class BoardServiceTest {
     public void getBoardPostList() throws Exception {
         //given
         // Post 데이터를 생성
-        Post post1 = new Post("title1", "author1", "content1");
-        Post post2 = new Post("title2", "author2", "content2");
+        Post post1 = Post.of("title1", "author1", "content1");
+        Post post2 = Post.of("title2", "author2", "content2");
         ReflectionTestUtils.setField(post1,POST_ID_FIELD, 1L);
         ReflectionTestUtils.setField(post2,POST_ID_FIELD, 2L);
         ReflectionTestUtils.setField(post1,POST_CREATED_TIME_FIELD, LocalDateTime.now());
@@ -105,8 +105,8 @@ class BoardServiceTest {
     @Test
     public void findPostById() throws Exception {
         //given
-        Post post1 = new Post("title1", "author1", "content1");
-        Post post2 = new Post("title2", "author2", "content2");
+        Post post1 = Post.of("title1", "author1", "content1");
+        Post post2 = Post.of("title2", "author2", "content2");
         ReflectionTestUtils.setField(post1,POST_ID_FIELD, 1L);
         ReflectionTestUtils.setField(post2,POST_ID_FIELD, 2L);
 
@@ -141,7 +141,7 @@ class BoardServiceTest {
     @Test
     public void savePost() throws Exception {
         //given
-        Post post1 = new Post("title1", "author1", "content1");
+        Post post1 = Post.of("title1", "author1", "content1");
 
         when(postRepository.save(any(Post.class))).thenReturn(post1);
 

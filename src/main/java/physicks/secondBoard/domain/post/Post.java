@@ -16,8 +16,8 @@ import java.util.Objects;
 @Entity
 @Getter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA 엔티티 생성을 위해
+@AllArgsConstructor(access = AccessLevel.PRIVATE) // 정적 팩토리를 위해
 public class Post extends AuditBaseEntity {
 
     @Column(nullable = false)
@@ -28,6 +28,7 @@ public class Post extends AuditBaseEntity {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
+
 
     @Override
     public boolean equals(Object o) {
@@ -40,5 +41,9 @@ public class Post extends AuditBaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(getTitle(), getAuthor(), getContent());
+    }
+
+    static public Post of(String title, String author, String content) {
+        return new Post(title, author, content);
     }
 }

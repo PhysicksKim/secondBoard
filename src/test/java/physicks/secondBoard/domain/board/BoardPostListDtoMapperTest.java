@@ -25,14 +25,17 @@ class BoardPostListDtoMapperTest {
     @Autowired
     PostRepository postRepository;
 
+    @Autowired
+    private BoardPostListDtoMapper boardPostListDtoMapper;
+
     @Test
     public void PostToDtoMappingTest_today인경우() throws Exception {
         //given
-        Post post = new Post("title","author","content");
+        Post post = Post.of("title","author","content");
         Post savedPost = postRepository.save(post);
 
         //when
-        BoardPostListDto dto = BoardPostListDtoMapper.INSTANCE.toDto(savedPost);
+        BoardPostListDto dto = boardPostListDtoMapper.toDto(savedPost);
 
         //then
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -45,7 +48,7 @@ class BoardPostListDtoMapperTest {
     @Test
     public void PostToDtoMappingTest_today아닌경우() throws Exception {
         //given
-        Post post = new Post("title","author","content");
+        Post post = Post.of("title","author","content");
         Post savedPost = postRepository.save(post);
 
         // reflection을 사용하여 어제 작성된 글로 만든다
@@ -53,7 +56,7 @@ class BoardPostListDtoMapperTest {
         ReflectionTestUtils.setField(savedPost, "createdTime", yesterday, LocalDateTime.class);
 
         //when
-        BoardPostListDto dto = BoardPostListDtoMapper.INSTANCE.toDto(savedPost);
+        BoardPostListDto dto = boardPostListDtoMapper.toDto(savedPost);
 
         //then
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd");

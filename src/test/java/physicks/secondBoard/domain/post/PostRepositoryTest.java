@@ -22,7 +22,7 @@ public class PostRepositoryTest {
     @BeforeEach
     void addSamplePosts() {
         for(int i = 0 ; i<samplePostNum ; i++) {
-            postRepository.save(new Post("title"+i,"tester"+i,"content"+i));
+            postRepository.save(Post.of("title"+i,"tester"+i,"content"+i));
         }
     }
 

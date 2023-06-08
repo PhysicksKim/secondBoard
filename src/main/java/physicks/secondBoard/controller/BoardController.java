@@ -49,7 +49,7 @@ public class BoardController {
     @PostMapping("/write")
     @ResponseBody
     public String writePost(String title, String author, String content) {
-        Post post = new Post(title, author, content);
+        Post post = Post.of(title, author, content);
         System.out.println("post.toString() = " + post);
 
         try {
