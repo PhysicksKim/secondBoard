@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.board.BoardService;
 import physicks.secondBoard.domain.post.Post;
 
@@ -15,6 +16,7 @@ import physicks.secondBoard.domain.post.Post;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @WithMockUser(roles = "GUEST")
+@Transactional
 public class BoardControllerSpringBootTest {
 
     @Autowired

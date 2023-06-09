@@ -1,25 +1,16 @@
 package physicks.secondBoard.domain.board;
 
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
@@ -36,7 +27,6 @@ import static org.mockito.Mockito.*;
  * Post Mapping 비교는 아래 테스트에서 수행합니다 <br>
  * @see BoardPostListDtoMapperTest
  */
-// @SpringBootTest // @SpringBootTest 를 사용하면 빈과 mock이 충돌해서 문제된다
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 class BoardServiceTest {
@@ -44,7 +34,9 @@ class BoardServiceTest {
     @Mock
     private PostRepository postRepository;
 
-    // @InjectMocks
+    @Mock
+    private BoardPostListDtoMapper boardPostListDtoMapper;
+
     private BoardService boardService;
 
     private static final String POST_ID_FIELD = "id";
@@ -53,48 +45,18 @@ class BoardServiceTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this); // Mock 객체 초기화
-        boardService = new BoardService(postRepository); // 테스트할 Service에 Mock 객체를 주입
+        boardService = new BoardService(postRepository, boardPostListDtoMapper); // 테스트할 Service에 Mock 객체를 주입
     }
 
     /**
-     * boardService 의 getBoardPostList() 메서드를 테스트 합니다 <br>
-     * Pagination 테스트는 BoardServiceSpringTest 파일의 getBoardPostList_PaginationTest_ 에서 다룹니다. <br>
-     * <br>
-     * {@link BoardServiceSpringTest#getBoardPostList_PaginationTest_NewestPage}
-     * {@link BoardServiceSpringTest#getBoardPostList_PaginationTest_MiddlePage}
-     * {@link BoardServiceSpringTest#getBoardPostList_PaginationTest_OldestPage}
+     * 너무 많은 MOCK 이 필요해지므로 본 테스트는 삭제. 다만 기록을 위해 메서드 흔적만 남겨둠.
      */
-    @Test
+    // @Test
+    @Deprecated
     public void getBoardPostList() throws Exception {
-        //given
-        // Post 데이터를 생성
-        Post post1 = Post.of("title1", "author1", "content1");
-        Post post2 = Post.of("title2", "author2", "content2");
-        ReflectionTestUtils.setField(post1,POST_ID_FIELD, 1L);
-        ReflectionTestUtils.setField(post2,POST_ID_FIELD, 2L);
-        ReflectionTestUtils.setField(post1,POST_CREATED_TIME_FIELD, LocalDateTime.now());
-        ReflectionTestUtils.setField(post2,POST_CREATED_TIME_FIELD, LocalDateTime.now());
-
-        // Pageable 생성
-        Pageable pageable = PageRequest.of(0, 2);
-
-        // Mock 주입
-        when(postRepository.findAllByOrderByIdDesc(pageable))
-                .thenReturn(new PageImpl<>(Arrays.asList(post1, post2)));
-
-        //when
-        List<BoardPostListDto> postList = boardService.getBoardPostList(pageable);
-
-        //then
-        assertThat(postList).isNotNull()
-                .withFailMessage("postList가 null이면 안됨");
-        assertThat(postList.size()).isEqualTo(2)
-                .withFailMessage("postList size는 2여야 합니다");
-
-        assertThat(postList.get(0).getId()).isEqualTo(post1.getId())
-                .withFailMessage("첫번째 post.id가 given의 post1.id와 다릅니다");
-        assertThat(postList.get(1).getId()).isEqualTo(post2.getId())
-                .withFailMessage("두번째 post.id가 given의 post2.id과 다릅니다");
+        // 너무 많은 Mocking 이 필요해짐.
+        // postRepository와 boardPostListDtoMapper에 대해서 메서드 mock이 필요해지므로
+        // 테스트의 대부분이 mock으로만 구성되는 결과로 이어짐.
     }
 
 

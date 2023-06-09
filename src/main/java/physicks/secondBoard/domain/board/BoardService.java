@@ -21,8 +21,7 @@ public class BoardService {
 
     private final PostRepository postRepository;
 
-    @Autowired
-    private BoardPostListDtoMapper boardPostListDtoMapper;
+    private final BoardPostListDtoMapper boardPostListDtoMapper;
 
     public List<BoardPostListDto> getBoardPostList(Pageable pageable) {
         List<BoardPostListDto> result = new ArrayList<>();
