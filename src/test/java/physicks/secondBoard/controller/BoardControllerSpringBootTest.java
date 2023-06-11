@@ -1,5 +1,6 @@
 package physicks.secondBoard.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+
+@Slf4j
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -55,8 +58,9 @@ public class BoardControllerSpringBootTest {
 
     @Test
     void postRead() throws Exception{
-        Long id = 1L;
-        Post post = postRepository.findById(id).get();
+        List<Post> all = postRepository.findAll();
+        Post post = all.get(0);
+        long id = post.getId();
 
         mockMvc.perform(get("/board/{id}", id))
                 .andExpect(status().isOk())
