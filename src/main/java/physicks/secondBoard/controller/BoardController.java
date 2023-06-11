@@ -47,7 +47,6 @@ public class BoardController {
      * @ResponseBody => title=testTitle&author=testAuthor&content=testContent
      */
     @PostMapping("/write")
-    @ResponseBody
     public String writePost(String title, String author, String content) {
         Post post = Post.of(title, author, content);
         System.out.println("post.toString() = " + post);
@@ -57,7 +56,8 @@ public class BoardController {
         } catch (Exception e) {
             log.error("Error. postRepository.save(post) 에서 에러 발생 : {}", e);
         }
-        log.info("success save post");
-        return "success save post";
+        log.info("success save post! id = {}", post.getId());
+
+        return "redirect:/board/"+post.getId();
     }
 }
