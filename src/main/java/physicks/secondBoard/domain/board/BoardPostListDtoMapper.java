@@ -24,7 +24,6 @@ public abstract class BoardPostListDtoMapper {
     )
     public abstract BoardPostListDto toDto(Post post);
 
-    // We don't provide direct mapping to Entity here
     // public abstract Post toEntity(BoardPostListDto boardPostListDto);
 
     public String formatCreatedTime(LocalDateTime createdTime) {

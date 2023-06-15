@@ -49,10 +49,12 @@ class BoardControllerWebMvcTest {
                 .andExpect(view().name(PAGE_MAIN));
     }
 
+    /*
     @Test
     void postRead() {
         // MockTest 보다는 SpringBootTest 가 적절하므로 생략
     }
+    */
 
     @Test
     void postWritePage() throws Exception{
@@ -61,8 +63,10 @@ class BoardControllerWebMvcTest {
                 .andExpect(view().name(PAGE_WRITE));
     }
 
+    /*
     @Test
     void writePost() {
         // MockTest 보다는 SpringBootTest 가 적절하므로 생략
     }
+    */
 }

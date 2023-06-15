@@ -3,12 +3,15 @@ package physicks.secondBoard.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import physicks.secondBoard.config.oauth.CustomOAuth2UserService;
 import physicks.secondBoard.domain.board.BoardPostListDto;
 import physicks.secondBoard.domain.board.BoardService;
 import physicks.secondBoard.domain.post.Post;
+import physicks.secondBoard.domain.user.AuthService;
 
 import java.util.List;
 
@@ -20,8 +23,13 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    private final AuthService authService;
+
     @GetMapping
-    public String mainPage(Model model, Pageable pageable) {
+    public String mainPage(Model model, Pageable pageable, Authentication authentication) {
+        String userName = authService.getUserName(authentication);
+        log.info("userName : {}", userName);
+
         List<BoardPostListDto> postList = boardService.getBoardPostList(pageable);
         model.addAttribute("postList", postList);
         return "board";
@@ -36,14 +44,11 @@ public class BoardController {
 
     @GetMapping("/write")
     public String postWritePage() {
-        // !!! 구현 필요 !!!
-        // 1. Post Write Test 먼저 구현
-        // 2. Post Write 로직과 Page 구현 필요
         return "write";
     }
 
-    /*
-     * from message 예시
+    /**
+     * from message 예시 <br>
      * @ResponseBody => title=testTitle&author=testAuthor&content=testContent
      */
     @PostMapping("/write")
@@ -56,7 +61,7 @@ public class BoardController {
         } catch (Exception e) {
             log.error("Error. postRepository.save(post) 에서 에러 발생 : {}", e);
         }
-        log.info("success save post! id = {}", post.getId());
+        log.info("save post successfully! : id = {}", post.getId());
 
         return "redirect:/board/"+post.getId();
     }

@@ -2,8 +2,6 @@ package physicks.secondBoard.domain.board;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 /**
  * Post → BoardPostListDto <br>
  * 글 목록 페이지에 사용합니다. <br>

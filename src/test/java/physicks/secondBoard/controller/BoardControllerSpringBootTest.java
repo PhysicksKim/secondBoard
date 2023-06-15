@@ -40,9 +40,6 @@ public class BoardControllerSpringBootTest {
     private MockMvc mockMvc;
 
     @Autowired
-    BoardService boardService;
-
-    @Autowired
     PostRepository postRepository;
 
     private static int samplePostNum = 10;

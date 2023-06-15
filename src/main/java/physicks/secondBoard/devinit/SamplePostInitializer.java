@@ -3,7 +3,6 @@ package physicks.secondBoard.devinit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;

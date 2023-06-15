@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+h2 {
+    color: #555;
+    text-decoration: underline;
+}
+
+.post {
+    margin: 50px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f8f8f8;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.post-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.post-time {
+    font-size: 12px;
+    color: #999;
+}
+
+.post-author {
+    font-size: 18px;
+    margin: 20px 0;
+}
+
+.post-content {
+    line-height: 1.5;
+}
