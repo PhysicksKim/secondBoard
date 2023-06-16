@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Post Write Page</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/write.css}">
 </head>
 <body>
     <h1>Post Write Page</h1>
 
-    <!-- 현재 URL 에서 POST 로 submit -->
     <form id="post-form" name="post-form" method="post" >
-        <input type="text" id="title" name="title"> <br>
-        <input type="text" id="author" name="author"> <br>
-        <textarea id="content" name="content" form="post-form"></textarea> <br>
+        <div id="inputs-container">
+            <input type="text" id="title" name="title" placeholder="제목"> <br>
+            <input type="text" id="author" name="author" placeholder="작성자"> <br>
+        </div>
+        <textarea id="content" name="content" form="post-form" placeholder="내용"></textarea> <br>
         <input type="submit" value="Write">
     </form>
 </body>

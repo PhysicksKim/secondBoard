@@ -6,6 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>MAIN</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/index.css}">
 </head>
 <body>
 
@@ -14,23 +15,21 @@
     </div>
 
     <!--로그인 된 경우 로그아웃 표시-->
-    <div th:if="${username != null}">
-        <div th:text="'Logged in as : '+${username}" style="white-space: nowrap"> 유저이름 </div>
-        <a href="/logout" class="btn btn-info active" role="button">Logout</a>
+    <div th:if="${username != null}" class="flex-container">
+        <div th:text="'Logged in as : '+${username}"> 유저이름 </div>
+        <a href="/logout" class="btn-info active" role="button">Logout</a>
     </div>
 
     <!-- Google Oauth2 버튼 -->
-    <div th:unless="${username != null}">
-        <div>
-            <a href="/oauth2/authorization/google" class="bottomNav btn-success active" role="button">
-                Google Login
-            </a>
-        </div>
+    <div th:unless="${username != null}" class="flex-container">
+        <a href="/oauth2/authorization/google" class="btn-success active" role="button">
+            Google Login
+        </a>
     </div>
 
-    <div>
-        <a href="/board">
-            <h2>Board</h2>
+    <div id="board-group" class="board-group">
+        <a id="board-btn" class="board-btn" href="/board">
+            Board
         </a>
     </div>
 
