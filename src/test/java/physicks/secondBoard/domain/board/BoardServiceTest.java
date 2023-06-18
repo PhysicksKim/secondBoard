@@ -116,4 +116,5 @@ class BoardServiceTest {
         assertThat(savedPost.getAuthor()).isEqualTo(post1.getAuthor());
         assertThat(savedPost.getContent()).isEqualTo(post1.getContent());
     }
+
 }

@@ -1,5 +1,6 @@
 package physicks.secondBoard.domain.board;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import physicks.secondBoard.domain.post.Post;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -112,5 +114,27 @@ public class BoardServiceSpringTest {
         for(int i = 0 ; i < postNums%size ; i++) {
             assertThat(dtoList.get(i).getTitle()).isEqualTo("title"+(postNums-i-size*page));
         }
+    }
+
+
+    @Test
+    public void postUpdateTest() throws Exception {
+        // given
+        List<BoardPostListDto> boardPostList = boardService.getBoardPostList(Pageable.ofSize(1));
+        Long id = boardPostList.get(0).getId();
+        Post findPost = boardService.findPostById(id);
+
+        // when
+        String title = "Updated Title";
+        String author = "Updated Author";
+        String content = "Updated Content";
+        findPost.update(title, author, content);
+        boardService.savePost(findPost);
+
+        // then
+        Post updatedPost = boardService.findPostById(id);
+        assertThat(updatedPost.getTitle()).isEqualTo(findPost.getTitle());
+        assertThat(updatedPost.getAuthor()).isEqualTo(findPost.getAuthor());
+        assertThat(updatedPost.getTitle()).isEqualTo(findPost.getTitle());
     }
 }

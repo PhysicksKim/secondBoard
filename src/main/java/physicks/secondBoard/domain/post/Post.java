@@ -29,6 +29,11 @@ public class Post extends AuditBaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    public void update(String title, String author, String content) {
+        this.title = title;
+        this.author = author;
+        this.content = content;
+    }
 
     @Override
     public boolean equals(Object o) {
