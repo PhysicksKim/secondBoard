@@ -2,19 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Post Write Page</title>
+    <title th:if="${post == null}">Post Write Page</title>
+    <title th:unless="${post == null}">Post Edit Page</title>
     <link type="text/css" rel="stylesheet" th:href="@{/css/write.css}">
 </head>
 <body>
-    <h1>Post Write Page</h1>
+<h1 th:if="${post == null}">Post Write Page</h1>
+<h1 th:unless="${post == null}">Post Edit Page</h1>
 
-    <form id="post-form" name="post-form" method="post" >
-        <div id="inputs-container">
-            <input type="text" id="title" name="title" placeholder="제목"> <br>
-            <input type="text" id="author" name="author" placeholder="작성자"> <br>
-        </div>
-        <textarea id="content" name="content" form="post-form" placeholder="내용"></textarea> <br>
-        <input type="submit" value="Write">
-    </form>
+<form id="post-form" name="post-form" method="post"
+      th:action="${post == null} ? '/board/write' : '/board/write/' + ${post.id}" >
+    <div id="inputs-container">
+        <input type="text" id="title" name="title"
+               th:value="${post != null} ? ${post.title} : ''"
+               placeholder="제목"> <br>
+        <input type="text" id="author" name="author"
+               th:value="${post != null} ? ${post.author} : ''"
+               placeholder="작성자"> <br>
+        <input type="hidden" id="id" name="id"
+               th:value="${post != null} ? ${post.id} : ''" >
+    </div>
+    <textarea id="content" name="content" form="post-form"
+              th:text="${post != null} ? ${post.content} : ''"
+              placeholder="내용"></textarea> <br>
+    <input type="submit" th:value="${post == null} ? 'Write' : 'Edit'">
+</form>
 </body>
 </html>

@@ -13,20 +13,28 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * @WebMvcTest 를 수행합니다.
- * service를 사용해야 하는경우 {@link BoardControllerSpringBootTest} 에서 수행해주세요.
+ * @WebMvcTest 를 수행합니다. <br>
+ * service를 사용해야 하는경우 {@link BoardControllerSpringBootTest} 에서 수행해주세요. <br>
+ * <br>
+ * 아래 테스트들은 SpringTest 가 더 적합하므로 mock에서 테스트하지 않음. <br>
+ * writePost, postRead <br>
  */
 @WebMvcTest(BoardController.class) // class를 지정해주지 않으면 모든 @Controller 들을 로딩해버린다.
 @MockBean(JpaMetamodelMappingContext.class)
 @WithMockUser(roles = "GUEST") // 게시판은 Guest 권한으로 접근 가능
 class BoardControllerWebMvcTest {
 
+    // board main
     private static final String URL_MAIN = "/board";
     private static final String PAGE_MAIN = "board";
 
+    // board write page
     private static final String URL_WRITE = URL_MAIN + "/write";
     private static final String PAGE_WRITE = "write";
 
+    // board update page
+    private static final String URL_UPDATE = URL_MAIN + "/write/%d";
+    private static final String PAGE_UPDATE = PAGE_WRITE;
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,13 +57,6 @@ class BoardControllerWebMvcTest {
                 .andExpect(view().name(PAGE_MAIN));
     }
 
-    /*
-    @Test
-    void postRead() {
-        // MockTest 보다는 SpringBootTest 가 적절하므로 생략
-    }
-    */
-
     @Test
     void postWritePage() throws Exception{
         mockMvc.perform(get(URL_WRITE))
@@ -63,10 +64,13 @@ class BoardControllerWebMvcTest {
                 .andExpect(view().name(PAGE_WRITE));
     }
 
-    /*
+
     @Test
-    void writePost() {
-        // MockTest 보다는 SpringBootTest 가 적절하므로 생략
+    void postUpdatePage() throws Exception{
+        Long postId = 1L;
+
+        mockMvc.perform(get(String.format(URL_UPDATE, postId)))
+                .andExpect(status().isOk())
+                .andExpect(view().name(PAGE_UPDATE));
     }
-    */
 }
