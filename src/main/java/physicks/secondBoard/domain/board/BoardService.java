@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class BoardService {
 
     private final PostRepository postRepository;
@@ -38,6 +40,13 @@ public class BoardService {
 
     public Post savePost(Post post) {
         return postRepository.save(post);
+    }
+
+    @Transactional
+    public Post updatePost(Long id, String title, String author, String content) {
+        Post post = postRepository.findById(id).get();
+        post.update(title, author, content);
+        return post;
     }
 
     public List<Post> findAll() {

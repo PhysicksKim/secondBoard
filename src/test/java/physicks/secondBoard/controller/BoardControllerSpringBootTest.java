@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.RequestMatcher;
@@ -19,9 +21,10 @@ import physicks.secondBoard.domain.board.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -36,8 +39,14 @@ import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 @Transactional
 public class BoardControllerSpringBootTest {
 
+    private final String URL_MAIN = "/board";
+    private final String URL_EDIT = URL_MAIN + "/write";
+
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private EntityManager em;
 
     @Autowired
     PostRepository postRepository;
@@ -90,4 +99,44 @@ public class BoardControllerSpringBootTest {
         assertThat(post.getAuthor()).isEqualTo(author);
         assertThat(post.getContent()).isEqualTo(content);
     }
+
+    @Test
+    public void updatePost() throws Exception {
+        // given
+        // : 수정할 Post릉 하나 가져온다.
+        Pageable pageable = PageRequest.of(0,1);
+        Post targetPost = postRepository.findAll(pageable).getContent().get(0);
+        Long targetPostId = targetPost.getId();
+
+        // when
+        // : 게시글 수정 사항 및 mockMvc 수행
+        final String title_updated = "updated_" + targetPost.getTitle();
+        final String author_updated = "updated_" + targetPost.getAuthor();
+        final String content_updated = "updated_" + targetPost.getContent();
+
+        mockMvc.perform(post(getURL_EDIT(targetPostId))
+                .param("id", targetPostId.toString())
+                .param("title", title_updated)
+                .param("author", author_updated)
+                .param("content", content_updated))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl("/board/" + targetPostId));
+
+        // then
+        // : 수정한 post id 를 통해 db에서 다시 가져와서 제대로 수정됐는지 비교
+        // JPA 영속성 컨텍스트 때문에 캐싱될 수 있으므로
+        // 확실히 DB에서 가져오도록 하기 위해서 영속성 캐시를 초기화 해준다
+        em.flush();
+        em.clear();
+
+        Post afterUpdated = postRepository.findById(targetPostId).get();
+        assertThat(afterUpdated.getTitle()).isEqualTo(title_updated);
+        assertThat(afterUpdated.getAuthor()).isEqualTo(author_updated);
+        assertThat(afterUpdated.getContent()).isEqualTo(content_updated);
+    }
+
+    private final String getURL_EDIT(Long id) {
+        return URL_MAIN + "/write/" + id.toString();
+    }
+
 }

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import physicks.secondBoard.config.oauth.CustomOAuth2UserService;
@@ -94,10 +95,7 @@ public class BoardController {
             return "redirect:/";
         }
 
-        Post findPost = boardService.findPostById(id);
-        findPost.update(title, author, content);
-        boardService.savePost(findPost);
-
-        return "redirect:/board/" + pathId;
+        boardService.updatePost(id, title, author, content);
+        return "redirect:/board/" + id;
     }
 }
