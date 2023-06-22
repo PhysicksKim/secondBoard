@@ -40,7 +40,6 @@ import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 public class BoardControllerSpringBootTest {
 
     private final String URL_MAIN = "/board";
-    private final String URL_EDIT = URL_MAIN + "/write";
 
     @Autowired
     private MockMvc mockMvc;
