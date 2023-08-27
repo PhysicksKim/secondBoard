@@ -32,6 +32,11 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	// Bean Validation API
+	implementation 'javax.validation:validation-api:2.0.1.Final'
+	// Hibernate Validator (Bean Validation 구현체)
+	implementation 'org.hibernate.validator:hibernate-validator:6.0.13.Final'
+
 	// test 에서 slf4j 를 사용하기 위해 필요
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
