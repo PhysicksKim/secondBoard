@@ -29,6 +29,9 @@ public class Post extends AuditBaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    /**
+     * Setter 를 열어두면 무분별한 수정이 이뤄질 수 있으므로, update 메서드를 별도로 생성.
+     */
     public void update(String title, String author, String content) {
         this.title = title;
         this.author = author;
@@ -40,7 +43,9 @@ public class Post extends AuditBaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
-        return Objects.equals(getTitle(), post.getTitle()) && Objects.equals(getAuthor(), post.getAuthor()) && Objects.equals(getContent(), post.getContent());
+        return Objects.equals(getTitle(), post.getTitle())
+                && Objects.equals(getAuthor(), post.getAuthor())
+                && Objects.equals(getContent(), post.getContent());
     }
 
     @Override

@@ -18,13 +18,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * BoardService 의 메서드들을 테스트 합니다.  <br>
- * mock 대상 : PostRepository <br>
- * BoardService 는 PostRepository 주입을 필요로 하므로 mock을 생성해 setup()에서 Mock을 주입해줍니다.  <br>
- * <br>
- * 본 테스트는 BoardService 에 대한 테스트 입니다. <br>
- * 따라서 Post 객체 일치여부는 모든 필드에 대해 비교하지 않습니다. <br>
- * Post Mapping 비교는 아래 테스트에서 수행합니다 <br>
+ * <pre>
+ * BoardService 의 메서드들을 테스트 합니다.
+ * mock 대상 : PostRepository
+ * BoardService 는 PostRepository 주입을 필요로 하므로 mock을 생성해 setup()에서 Mock을 주입해줍니다.
+ *
+ * 본 테스트는 BoardService 에 대한 테스트 입니다.
+ * 따라서 Post 객체 일치여부는 모든 필드에 대해 비교하지 않습니다.
+ * Post Mapping 비교는 아래 테스트에서 수행합니다.
+ * </pre>
  * @see BoardPostListDtoMapperTest
  */
 @Slf4j

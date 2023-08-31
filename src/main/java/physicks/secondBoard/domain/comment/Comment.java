@@ -1,5 +1,11 @@
 package physicks.secondBoard.domain.comment;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.mapstruct.ap.internal.util.Strings;
 import physicks.secondBoard.domain.entity.AuditBaseEntity;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.user.User;
@@ -7,8 +13,12 @@ import physicks.secondBoard.domain.user.User;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA 엔티티 생성을 위해
+@SQLDelete(sql = "UPDATE comment SET is_deleted = true WHERE id = ?") // soft delete 수행
 public class Comment extends AuditBaseEntity {
 
     @NotNull
@@ -18,11 +28,7 @@ public class Comment extends AuditBaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @NotNull
-    @Size(min = 2, max = 10)
     private User author; // 댓글 작성자
-
-    @NotNull
-    private int depth; // 0 : 최상 부모 댓글 , 1 : 대댓글 (기능 확장을 위해 depth 를 만들어 둔 것임)
 
     @ManyToOne // 어떤 Post 의 Comment인지 FK 로 Post
     @NotNull
@@ -33,5 +39,80 @@ public class Comment extends AuditBaseEntity {
     @JoinColumn(name = "reply_parent", nullable = true)
     private Comment parentComment; // 대댓글 구조를 위한 Comment 참조
 
-    private String reply_depth;
+    @NotNull
+    private Integer reply_depth;
+
+    @NotNull
+    private Boolean isDeleted; // soft delete 를 위한 작업
+
+    private Comment(String content,
+                    User author,
+                    Post parentPost,
+                    Comment parentComment,
+                    Integer reply_depth) {
+        this.content = content;
+        this.author = author;
+        this.parentPost = parentPost;
+        this.parentComment = parentComment;
+        this.reply_depth = reply_depth;
+        this.isDeleted = false;
+    }
+
+    public static Comment of(String content, User author, Post parentPost, Comment parentComment) {
+        int depth = 0;
+        if(parentComment != null) {
+            depth = parentComment.getReply_depth() + 1;
+        }
+
+        return new Comment(content, author, parentPost, parentComment, depth);
+    }
+
+    public Comment update(String content) {
+        this.content = content;
+        return this;
+    }
+
+    /**
+     * 댓글의 내용까지 포함하여 동일한지를 반환한다.
+     */
+    public boolean equalsWithContent(Comment comment) {
+        return this.equals(comment) && (this.content == comment.getContent());
+    }
+
+    // ------ Override ------
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getParentComment(), getCreatedTime());
+    }
+
+    /**
+     *
+     * 댓글 내용은 제외하고 id, parentComment, createdTime 만 일치 여부를 검사한다.
+     * 이는 댓글이 생성, 수정, 삭제 되는 과정에서 내용이 변화할 수 있는데,
+     * 변경이 이뤄지더라도 해당 댓글의 정체성이 동일한지를 검증하기 위해 사용된다.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        // getClass 는 정확히 같은 클래스, instance of 는 상속 관계도 true
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Comment comment = (Comment) o;
+        return Objects.equals(getId(), comment.getId())
+                && Objects.equals(getParentPost(), comment.getParentPost())
+                && Objects.equals(getParentComment(), comment.getParentComment())
+                && Objects.equals(getCreatedTime(), comment.getCreatedTime());
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "content='" + content + '\'' +
+                ", author=" + author +
+                ", parentPost=" + (parentPost != null ? parentPost.getId() : null) +
+                ", parentComment=" + (parentComment != null ? parentComment.getId() : null) +
+                ", reply_depth=" + reply_depth +
+                '}';
+    }
 }

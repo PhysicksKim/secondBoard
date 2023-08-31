@@ -5,18 +5,17 @@ import physicks.secondBoard.domain.entity.BaseEntity;
 import javax.persistence.*;
 
 @Entity
+@Deprecated
 public class CommentClosure {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @Column(name = "parent_id")
+    @OneToOne
     private Comment parent;
 
-    @ManyToOne
-    @Column(name = "child_id")
+    @OneToOne
     private Comment child;
 
     private int depth;
