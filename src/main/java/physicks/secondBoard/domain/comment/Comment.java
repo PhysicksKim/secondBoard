@@ -1,11 +1,9 @@
 package physicks.secondBoard.domain.comment;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
-import org.mapstruct.ap.internal.util.Strings;
 import physicks.secondBoard.domain.entity.AuditBaseEntity;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.user.User;
@@ -43,7 +41,7 @@ public class Comment extends AuditBaseEntity {
     private Integer reply_depth;
 
     @NotNull
-    private Boolean isDeleted; // soft delete 를 위한 작업
+    private Boolean isDeleted; // soft delete 를 위한 필드
 
     private Comment(String content,
                     User author,
@@ -67,9 +65,12 @@ public class Comment extends AuditBaseEntity {
         return new Comment(content, author, parentPost, parentComment, depth);
     }
 
-    public Comment update(String content) {
+    public void update(String content) {
         this.content = content;
-        return this;
+    }
+
+    public void setParentComment(Comment parentComment) {
+        this.parentComment = parentComment;
     }
 
     /**

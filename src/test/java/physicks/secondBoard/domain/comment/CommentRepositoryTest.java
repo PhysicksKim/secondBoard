@@ -1,27 +1,26 @@
 package physicks.secondBoard.domain.comment;
 
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 import physicks.secondBoard.domain.user.Role;
 import physicks.secondBoard.domain.user.User;
 import physicks.secondBoard.domain.user.UserRepository;
+import physicks.secondBoard.exception.CommentNotFoundException;
+import physicks.secondBoard.exception.NotFoundException;
+import physicks.secondBoard.exception.PostNotFoundException;
+import physicks.secondBoard.exception.UserNotFoundException;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.springframework.data.crossstore.ChangeSetPersister.*;
 
 /**
  * <pre>
@@ -82,6 +81,9 @@ public class CommentRepositoryTest {
         SAMPLE_COMMENT_ID_2_1 = comment2_1.getId();
     }
 
+    /**
+     * 샘플 댓글 출력을 위한 테스트
+     */
     @Test
     void printComments() {
         List<Comment> all =
@@ -90,6 +92,8 @@ public class CommentRepositoryTest {
         for (Comment comment : all) {
             System.out.println("comment = " + comment + " jpa id = " + comment.getId());
         }
+
+        assertThat(all.size()).isGreaterThan(1);
     }
 
     // ------ C R U D 테스트 ------
@@ -97,11 +101,11 @@ public class CommentRepositoryTest {
     void 댓글_CREATE_READ() throws NotFoundException {
         // given
         Post post = postRepository.findById(SAMPLE_POST_ID)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(PostNotFoundException::new);
         User user1 = userRepository.findById(SAMPLE_USER_ID_1)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(UserNotFoundException::new);
         User user2 = userRepository.findById(SAMPLE_USER_ID_2)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         // when
         Comment comment = Comment.of("new Comment", user1, post, null);
@@ -109,7 +113,7 @@ public class CommentRepositoryTest {
 
         // then
         Comment findComment = commentRepository.findById(comment.getId())
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         assertThat(findComment).isEqualTo(comment);
     }
@@ -118,7 +122,7 @@ public class CommentRepositoryTest {
     void 댓글_UPDATE() throws NotFoundException {
         // given
         Comment comment = commentRepository.findById(SAMPLE_COMMENT_ID_1)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(CommentNotFoundException::new);
         LocalDateTime beforeLastUpdatedTime = comment.getLastUpdatedTime();
 
         // when
@@ -128,7 +132,7 @@ public class CommentRepositoryTest {
 
         // then
         Comment findComment = commentRepository.findById(SAMPLE_COMMENT_ID_1)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(CommentNotFoundException::new);
         assertThat(findComment.getContent()).isEqualTo("changed content");
         assertThat(findComment.getLastUpdatedTime()).isNotEqualTo(beforeLastUpdatedTime);
     }
@@ -137,7 +141,7 @@ public class CommentRepositoryTest {
     void 댓글_DELETE() throws NotFoundException {
         // given
         Comment comment = commentRepository.findById(SAMPLE_COMMENT_ID_1)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         // when
         commentRepository.delete(comment);
@@ -146,10 +150,11 @@ public class CommentRepositoryTest {
 
         // then
         Comment deletedComment = commentRepository.findById(SAMPLE_COMMENT_ID_1)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         // soft delete 경우 equals() overwriting 에 따라 equal 이 true 이다
         assertThat(deletedComment).isEqualTo(comment);
         assertThat(deletedComment.getIsDeleted()).isTrue();
     }
+
 }
