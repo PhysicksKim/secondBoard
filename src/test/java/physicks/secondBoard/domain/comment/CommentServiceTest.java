@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.board.BoardService;
 import physicks.secondBoard.domain.post.Post;
@@ -18,6 +19,9 @@ import physicks.secondBoard.exception.CommentNotFoundException;
 import physicks.secondBoard.exception.NotFoundException;
 
 import javax.persistence.EntityManager;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,7 +57,6 @@ class CommentServiceTest {
     private Long SAMPLE_COMMENT_ID_1;
     private Long SAMPLE_COMMENT_ID_2;
     private Long SAMPLE_COMMENT_ID_2_1;
-
 
     @BeforeEach
     void addSampleComments() throws NotFoundException{
@@ -101,25 +104,56 @@ class CommentServiceTest {
     }
 
     @Test
-    void 댓글수정() {}
+    void 댓글수정() throws NotFoundException {
+        // given
+        Comment comment = commentService.findCommentById(SAMPLE_COMMENT_ID_1);
+        final LocalDateTime beforeLastUpdatedTime = comment.getLastUpdatedTime();
+        final String beforeContent = comment.getContent();
+
+        // when
+        comment.update("modified content");
+        em.flush();
+        em.clear();
+
+        // then
+        Comment findComment = commentService.findCommentById(SAMPLE_COMMENT_ID_1);
+        assertThat(findComment.getLastUpdatedTime()).isAfter(beforeLastUpdatedTime);
+        assertThat(comment).isEqualTo(findComment);
+        assertThat(beforeContent).isNotEqualTo(findComment.getContent());
+    }
 
     @Test
-    void 댓글삭제() {}
+    void 댓글삭제() throws NotFoundException {
+        // given
+        Comment comment = commentService.findCommentById(SAMPLE_COMMENT_ID_1);
 
-    @Test
-    void 댓글좋아요() {}
+        // when
+        commentService.deleteComment(comment);
 
-    @Test
-    void 댓글좋아요취소() {}
+        // then
+        assertThrows(NotFoundException.class, () -> commentService.findCommentById(SAMPLE_COMMENT_ID_1));
+    }
+
+    // @Test
+    // void 댓글좋아요() {}
+
+    // @Test
+    // void 댓글좋아요취소() {}
 
     // ------ 대댓글 ------
     @Test
-    void 대댓글_CREATE_READ() throws CommentNotFoundException {
+    void 대댓글_CREATE_READ() throws NotFoundException {
         // given
         Post parentPost = boardService.findPostById(SAMPLE_POST_ID);
         Comment parentComment = commentService.findCommentById(SAMPLE_COMMENT_ID_1);
 
-        User replyUser = new User("ReplyUser", "reply@gmail.com", "", Role.USER);
+        User replyUser = User.builder()
+                .name("ReplyUser")
+                .email("reply@gmail.com")
+                .role(Role.USER)
+                .build();
+        userService.saveUser(replyUser);
+
         Comment replyComment = Comment.of("reply content", replyUser, parentPost, parentComment);
 
         // when
@@ -135,6 +169,7 @@ class CommentServiceTest {
         assertThat(findReplyComment.getParentComment().getId()).isEqualTo(parentComment.getId());
         assertThat(findReplyComment.getParentPost().getId()).isEqualTo(parentPost.getId());
     }
+
     @Test
     void 대댓글_DELETE() throws NotFoundException {
         // given
@@ -148,5 +183,6 @@ class CommentServiceTest {
         em.clear();
 
         // then
+        assertThrows(NotFoundException.class, () -> commentService.findCommentById(SAMPLE_COMMENT_ID_2_1));
     }
 }

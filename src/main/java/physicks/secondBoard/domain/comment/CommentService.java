@@ -38,6 +38,7 @@ public class CommentService {
     }
 
     public void saveReplyComment(Comment replyComment, Comment parentComment) {
+        saveComment(replyComment);
         replyComment.setParentComment(parentComment);
     }
 

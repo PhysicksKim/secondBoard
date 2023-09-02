@@ -77,7 +77,7 @@ public class Comment extends AuditBaseEntity {
      * 댓글의 내용까지 포함하여 동일한지를 반환한다.
      */
     public boolean equalsWithContent(Comment comment) {
-        return this.equals(comment) && (this.content == comment.getContent());
+        return this.equals(comment) && Objects.equals(this.content, comment.getContent());
     }
 
     // ------ Override ------
