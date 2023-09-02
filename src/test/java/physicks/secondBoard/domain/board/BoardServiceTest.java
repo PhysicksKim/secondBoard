@@ -42,7 +42,6 @@ class BoardServiceTest {
     private BoardService boardService;
 
     private static final String POST_ID_FIELD = "id";
-    private static final String POST_CREATED_TIME_FIELD = "createdTime";
 
     @BeforeEach
     public void setup() {
@@ -60,8 +59,6 @@ class BoardServiceTest {
         // postRepository와 boardPostListDtoMapper에 대해서 메서드 mock이 필요해지므로
         // 테스트의 대부분이 mock으로만 구성되는 결과로 이어짐.
     }
-
-
 
     /**
      * boardService 의 findPostById() 메서드를 테스트 합니다 <br>
@@ -118,5 +115,4 @@ class BoardServiceTest {
         assertThat(savedPost.getAuthor()).isEqualTo(post1.getAuthor());
         assertThat(savedPost.getContent()).isEqualTo(post1.getContent());
     }
-
 }

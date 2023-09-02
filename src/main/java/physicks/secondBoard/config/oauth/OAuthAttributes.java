@@ -42,11 +42,16 @@ public class OAuthAttributes {
     }
 
     public User toEntity() {
+        // Role.User
+        return User.of(name, email);
+        /*
+        // OAuth Picture 값을 처리하는 경우
         return User.builder()
                 .name(name)
                 .email(email)
                 .picture(picture)
                 .role(Role.GUEST)
                 .build();
+                */
     }
 }

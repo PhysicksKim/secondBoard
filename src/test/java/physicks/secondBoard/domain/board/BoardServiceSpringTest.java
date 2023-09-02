@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.post.Post;
+import physicks.secondBoard.domain.user.User;
 
 import java.util.List;
 
@@ -116,7 +117,6 @@ public class BoardServiceSpringTest {
         }
     }
 
-
     @Test
     public void postUpdateTest() throws Exception {
         // given
@@ -126,9 +126,9 @@ public class BoardServiceSpringTest {
 
         // when
         String title = "Updated Title";
-        String author = "Updated Author";
+        User guestAuthor = User.ofGuest("GuestAuthor");
         String content = "Updated Content";
-        findPost.update(title, author, content);
+        findPost.update(title, guestAuthor, content);
         boardService.savePost(findPost);
 
         // then

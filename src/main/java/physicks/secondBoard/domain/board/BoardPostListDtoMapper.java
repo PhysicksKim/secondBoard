@@ -41,6 +41,6 @@ public abstract class BoardPostListDtoMapper {
 
     @ObjectFactory
     public Post createPost(BoardPostListDto dto) {
-        return Post.of(dto.getTitle(), dto.getAuthor(), ""); // Adjust this as per your needs
+        return Post.of(dto.getTitle(), dto.getAuthor(), "");
     }
 }

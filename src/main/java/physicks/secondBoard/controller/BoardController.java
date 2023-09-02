@@ -12,6 +12,7 @@ import physicks.secondBoard.domain.board.BoardPostListDto;
 import physicks.secondBoard.domain.board.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.user.AuthService;
+import physicks.secondBoard.domain.user.User;
 
 import java.util.List;
 
@@ -106,8 +107,7 @@ public class BoardController {
             return "redirect:/";
         }
 
-
-        boardService.updatePost(id, title, author, content);
+        boardService.updatePost(id, title, User.ofGuest(author), content);
         return "redirect:/board/" + id;
     }
 }

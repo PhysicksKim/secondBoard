@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
+import physicks.secondBoard.domain.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +43,7 @@ public class BoardService {
         return postRepository.save(post);
     }
 
-    @Transactional
-    public Post updatePost(Long id, String title, String author, String content) {
+    public Post updatePost(Long id, String title, User author, String content) {
         Post post = postRepository.findById(id).get();
         post.update(title, author, content);
         return post;

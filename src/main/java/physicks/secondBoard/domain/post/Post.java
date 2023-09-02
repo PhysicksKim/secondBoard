@@ -2,6 +2,8 @@ package physicks.secondBoard.domain.post;
 
 import lombok.*;
 import physicks.secondBoard.domain.entity.AuditBaseEntity;
+import physicks.secondBoard.domain.user.Role;
+import physicks.secondBoard.domain.user.User;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -23,8 +25,9 @@ public class Post extends AuditBaseEntity {
     @Column(nullable = false)
     private String title;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @Column(nullable = false)
-    private String author;
+    private User author;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
@@ -32,7 +35,7 @@ public class Post extends AuditBaseEntity {
     /**
      * Setter 를 열어두면 무분별한 수정이 이뤄질 수 있으므로, update 메서드를 별도로 생성.
      */
-    public void update(String title, String author, String content) {
+    public void update(String title, User author, String content) {
         this.title = title;
         this.author = author;
         this.content = content;
@@ -54,6 +57,10 @@ public class Post extends AuditBaseEntity {
     }
 
     static public Post of(String title, String author, String content) {
-        return new Post(title, author, content);
+        return new Post(title, User.ofGuest(author), content);
+    }
+
+    static public Post of(String title, User user, String content) {
+        return new Post(title, user, content);
     }
 }

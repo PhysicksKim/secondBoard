@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Entity
 @Getter
 @NoArgsConstructor
-@Entity
 @Table(name = "users")
 public class User {
 
@@ -22,25 +22,26 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column
-    private String picture;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
-    @Builder
-    public User(String name, String email, String picture, Role role) {
+    private User(String name, String email, Role role) {
         this.name = name;
         this.email = email;
-        this.picture = picture;
         this.role = role;
     }
 
-    public User update(String name, String picture) {
-        this.name = name;
-        this.picture = picture;
+    public static User of(String name, String email) {
+        return new User(name, email, Role.USER);
+    }
 
+    public static User ofGuest(String name) {
+        return new User(name, "", Role.GUEST);
+    }
+
+    public User update(String name) {
+        this.name = name;
         return this;
     }
 

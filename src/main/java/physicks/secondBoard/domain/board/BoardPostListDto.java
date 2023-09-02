@@ -12,12 +12,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardPostListDto {
-
     private Long id;
     private String title;
     private String author;
     private String createdTime;
-
 }
 
 
