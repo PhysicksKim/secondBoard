@@ -62,8 +62,8 @@ public class CommentRepositoryTest {
         SAMPLE_POST_ID = samplePost.getId();
 
         // User
-        User user1 = new User("kim", "kim@gmail.com", "", Role.USER);
-        User user2 = new User("park", "park@naver.com", "", Role.USER);
+        User user1 = User.of("kim", "kim@gmail.com");
+        User user2 = User.of("park", "park@naver.com");
         userRepository.save(user1);
         userRepository.save(user2);
         SAMPLE_USER_ID_1 = user1.getId();

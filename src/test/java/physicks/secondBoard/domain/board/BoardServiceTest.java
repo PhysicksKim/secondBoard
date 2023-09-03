@@ -36,9 +36,6 @@ class BoardServiceTest {
     @Mock
     private PostRepository postRepository;
 
-    @Mock
-    private BoardPostListDtoMapper boardPostListDtoMapper;
-
     private BoardService boardService;
 
     private static final String POST_ID_FIELD = "id";
@@ -46,7 +43,7 @@ class BoardServiceTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this); // Mock 객체 초기화
-        boardService = new BoardService(postRepository, boardPostListDtoMapper); // 테스트할 Service에 Mock 객체를 주입
+        boardService = new BoardService(postRepository); // 테스트할 Service에 Mock 객체를 주입
     }
 
     /**

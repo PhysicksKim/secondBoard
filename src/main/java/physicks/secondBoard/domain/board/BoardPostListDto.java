@@ -17,5 +17,3 @@ public class BoardPostListDto {
     private String author;
     private String createdTime;
 }
-
-

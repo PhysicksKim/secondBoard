@@ -64,7 +64,6 @@ class BoardControllerWebMvcTest {
                 .andExpect(view().name(PAGE_WRITE));
     }
 
-
     @Test
     void postUpdatePage() throws Exception{
         Long postId = 1L;

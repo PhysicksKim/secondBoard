@@ -25,19 +25,31 @@ public class Post extends AuditBaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(nullable = false)
-    private User author;
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn
+    // private User author;
+
+    private String author;
+
+    private String guestAuthor;
+
+    private Boolean isGuest;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
+
+    private Post(String title, User user, String content) {
+        this.title = title;
+        this.author = user.getName();
+        this.content = content;
+    }
 
     /**
      * Setter 를 열어두면 무분별한 수정이 이뤄질 수 있으므로, update 메서드를 별도로 생성.
      */
     public void update(String title, User author, String content) {
         this.title = title;
-        this.author = author;
+        this.author = author.getName();
         this.content = content;
     }
 

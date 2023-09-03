@@ -22,13 +22,11 @@ public class BoardService {
 
     private final PostRepository postRepository;
 
-    private final BoardPostListDtoMapper boardPostListDtoMapper;
-
     public List<BoardPostListDto> getBoardPostList(Pageable pageable) {
         List<BoardPostListDto> result = new ArrayList<>();
         Page<Post> posts = postRepository.findAllByOrderByIdDesc(pageable);
         for (Post post : posts) {
-            BoardPostListDto dto = boardPostListDtoMapper.toDto(post);
+            BoardPostListDto dto = BoardPostListDtoMapper.toDto(post);
             result.add(dto);
         }
         return result;

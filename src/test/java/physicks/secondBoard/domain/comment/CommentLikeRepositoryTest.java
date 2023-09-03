@@ -29,16 +29,8 @@ public class CommentLikeRepositoryTest {
 
     @BeforeEach
     void addSamples() {
-        User user1 = User.builder()
-                .name("Tester1")
-                .email("tester1@gmail.com")
-                .role(Role.USER)
-                .build();
-        User user2 = User.builder()
-                .name("Tester2")
-                .email("tester2@gmail.com")
-                .role(Role.USER)
-                .build();
+        User user1 = User.of("kim", "kim@gmail.com");
+        User user2 = User.of("park", "park@naver.com");
         userRepository.save(user1);
         userRepository.save(user2);
 

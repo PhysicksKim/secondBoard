@@ -25,9 +25,6 @@ class BoardPostListDtoMapperTest {
     @Autowired
     PostRepository postRepository;
 
-    @Autowired
-    private BoardPostListDtoMapper boardPostListDtoMapper;
-
     @Test
     public void PostToDtoMappingTest_today인경우() throws Exception {
         //given
@@ -35,13 +32,13 @@ class BoardPostListDtoMapperTest {
         Post savedPost = postRepository.save(post);
 
         //when
-        BoardPostListDto dto = boardPostListDtoMapper.toDto(savedPost);
+        BoardPostListDto dto = BoardPostListDtoMapper.toDto(savedPost);
 
         //then
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         Assertions.assertThat(dto.getId()).isEqualTo(savedPost.getId());
         Assertions.assertThat(dto.getTitle()).isEqualTo(savedPost.getTitle());
-        Assertions.assertThat(dto.getAuthor()).isEqualTo(savedPost.getAuthor());
+        Assertions.assertThat(dto.getAuthor()).isEqualTo(savedPost.getAuthor().getName());
         Assertions.assertThat(dto.getCreatedTime()).isEqualTo(savedPost.getCreatedTime().format(formatter));
     }
 
@@ -56,13 +53,13 @@ class BoardPostListDtoMapperTest {
         ReflectionTestUtils.setField(savedPost, "createdTime", yesterday, LocalDateTime.class);
 
         //when
-        BoardPostListDto dto = boardPostListDtoMapper.toDto(savedPost);
+        BoardPostListDto dto = BoardPostListDtoMapper.toDto(savedPost);
 
         //then
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd");
         Assertions.assertThat(dto.getId()).isEqualTo(savedPost.getId());
         Assertions.assertThat(dto.getTitle()).isEqualTo(savedPost.getTitle());
-        Assertions.assertThat(dto.getAuthor()).isEqualTo(savedPost.getAuthor());
+        Assertions.assertThat(dto.getAuthor()).isEqualTo(savedPost.getAuthor().getName());
         Assertions.assertThat(dto.getCreatedTime()).isEqualTo(savedPost.getCreatedTime().format(formatter));
     }
 }

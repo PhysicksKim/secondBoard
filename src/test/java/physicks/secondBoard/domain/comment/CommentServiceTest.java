@@ -67,8 +67,8 @@ class CommentServiceTest {
         SAMPLE_POST_ID = samplePost.getId();
 
         // User
-        User user1 = new User("kim", "kim@gmail.com", "", Role.USER);
-        User user2 = new User("park", "park@naver.com", "", Role.USER);
+        User user1 = User.of("kim", "kim@gmail.com");
+        User user2 = User.of("park", "park@naver.com");
         userService.saveUser(user1);
         userService.saveUser(user2);
         SAMPLE_USER_ID_1 = user1.getId();
@@ -147,11 +147,7 @@ class CommentServiceTest {
         Post parentPost = boardService.findPostById(SAMPLE_POST_ID);
         Comment parentComment = commentService.findCommentById(SAMPLE_COMMENT_ID_1);
 
-        User replyUser = User.builder()
-                .name("ReplyUser")
-                .email("reply@gmail.com")
-                .role(Role.USER)
-                .build();
+        User replyUser = User.of("ReplyUser","reply@gmail.com");
         userService.saveUser(replyUser);
 
         Comment replyComment = Comment.of("reply content", replyUser, parentPost, parentComment);
