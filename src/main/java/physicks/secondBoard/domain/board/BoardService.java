@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
-import physicks.secondBoard.domain.user.User;
+import physicks.secondBoard.domain.post.PostService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +22,13 @@ public class BoardService {
 
     private final PostRepository postRepository;
 
-    public List<BoardPostListDto> getBoardPostList(Pageable pageable) {
-        List<BoardPostListDto> result = new ArrayList<>();
+    private final PostService postService;
+
+    public List<BoardPostDto> getBoardPostList(Pageable pageable) {
+        List<BoardPostDto> result = new ArrayList<>();
         Page<Post> posts = postRepository.findAllByOrderByIdDesc(pageable);
         for (Post post : posts) {
-            BoardPostListDto dto = BoardPostListDtoMapper.toDto(post);
+            BoardPostDto dto = BoardPostDtoMapper.toDto(post);
             result.add(dto);
         }
         return result;
@@ -37,13 +39,23 @@ public class BoardService {
         return post.get();
     }
 
-    public Post savePost(Post post) {
-        return postRepository.save(post);
+    public Post savePost(PostGuestWriteDto dto) {
+        Post savedPost = postService.savePost(dto);
+        return savedPost;
     }
 
-    public Post updatePost(Long id, String title, User author, String content) {
+    public Post updatePost(Long id, PostGuestUpdateDto dto) {
         Post post = postRepository.findById(id).get();
-        post.update(title, author, content);
+        post.updateTitleAndContent(dto.getTitle(), dto.getContent());
+        post.updateAuthor(dto.getNickname());
+
+        return post;
+    }
+
+    public Post updatePost(Long id, PostMemberUpdateDto dto) {
+        Post post = postRepository.findById(id).get();
+        post.updateTitleAndContent(dto.getTitle(), dto.getContent());
+
         return post;
     }
 

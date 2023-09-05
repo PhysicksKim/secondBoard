@@ -1,7 +1,7 @@
 package physicks.secondBoard.controller;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
@@ -9,11 +9,12 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import physicks.secondBoard.domain.board.BoardService;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
- * @WebMvcTest 를 수행합니다. <br>
+ * WebMvcTest 를 수행합니다. <br>
  * service를 사용해야 하는경우 {@link BoardControllerSpringBootTest} 에서 수행해주세요. <br>
  * <br>
  * 아래 테스트들은 SpringTest 가 더 적합하므로 mock에서 테스트하지 않음. <br>
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebMvcTest(BoardController.class) // class를 지정해주지 않으면 모든 @Controller 들을 로딩해버린다.
 @MockBean(JpaMetamodelMappingContext.class)
+@AutoConfigureMockMvc
 @WithMockUser(roles = "GUEST") // 게시판은 Guest 권한으로 접근 가능
 class BoardControllerWebMvcTest {
 
@@ -36,7 +38,6 @@ class BoardControllerWebMvcTest {
     private static final String URL_UPDATE = URL_MAIN + "/write/%d";
     private static final String PAGE_UPDATE = PAGE_WRITE;
 
-    @Autowired
     private MockMvc mockMvc;
 
     @MockBean

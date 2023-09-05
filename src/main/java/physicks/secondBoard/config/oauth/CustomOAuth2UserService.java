@@ -9,8 +9,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import physicks.secondBoard.domain.user.User;
-import physicks.secondBoard.domain.user.UserRepository;
+import physicks.secondBoard.domain.user.Member;
+import physicks.secondBoard.domain.user.MemberRepository;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
@@ -18,7 +18,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final HttpSession httpSession;
 
     @Override
@@ -38,22 +38,22 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                         userNameAttributeName,
                         oAuth2User.getAttributes());
 
-        User user = saveOrUpdate(attributes);
+        Member user = saveOrUpdate(attributes);
 
         httpSession.setAttribute("user", new SessionUser(user));
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
+                Collections.singleton(new SimpleGrantedAuthority("OauthUser")),
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey()
         );
     }
 
-    private User saveOrUpdate(OAuthAttributes attributes) {
-        User user = userRepository.findByEmail(attributes.getEmail())
-                .map(entity -> entity.update(attributes.getName()))
+    private Member saveOrUpdate(OAuthAttributes attributes) {
+        Member Member = memberRepository.findByEmail(attributes.getEmail())
+                .map(memberEntity -> memberEntity.update(attributes.getName()))
                 .orElse(attributes.toEntity());
 
-        return userRepository.save(user);
+        return memberRepository.save(Member);
     }
 }

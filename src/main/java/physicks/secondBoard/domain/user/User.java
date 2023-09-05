@@ -1,51 +1,29 @@
 package physicks.secondBoard.domain.user;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import physicks.secondBoard.domain.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
-@Entity
+/**
+ * User는 비회원/회원 둘 다 가능하다.
+ */
 @Getter
 @NoArgsConstructor
-@Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@MappedSuperclass
+public abstract class User extends BaseEntity {
 
     @Column(nullable = false)
-    private String name;
+    protected String nickName;
 
     @Column(nullable = false)
-    private String email;
+    protected String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @Column(nullable = true)
+    protected String shaSalt;
 
-    private User(String name, String email, Role role) {
-        this.name = name;
-        this.email = email;
-        this.role = role;
-    }
+    abstract public Role getRole();
 
-    public static User of(String name, String email) {
-        return new User(name, email, Role.USER);
-    }
-
-    public static User ofGuest(String name) {
-        return new User(name, "", Role.GUEST);
-    }
-
-    public User update(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public String getRoleKey() {
-        return this.role.getKey();
-    }
 }

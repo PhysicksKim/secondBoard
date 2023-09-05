@@ -3,7 +3,7 @@ package physicks.secondBoard.domain.comment;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import physicks.secondBoard.domain.user.User;
+import physicks.secondBoard.domain.user.Member;
 
 import javax.persistence.*;
 
@@ -22,14 +22,14 @@ public class CommentLike {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User likeUser;
+    private Member likeUser;
 
-    public CommentLike(Comment comment, User likeUser) {
+    public CommentLike(Comment comment, Member likeUser) {
         this.comment = comment;
         this.likeUser = likeUser;
     }
 
-    public static CommentLike of(Comment comment, User likeUser) {
+    public static CommentLike of(Comment comment, Member likeUser) {
         return new CommentLike(comment, likeUser);
     }
 }

@@ -1,7 +1,5 @@
 package physicks.secondBoard.domain.board;
 
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.post.Post;
-import physicks.secondBoard.domain.user.User;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -24,34 +22,40 @@ public class BoardServiceSpringTest {
     @Autowired
     private BoardService boardService;
 
+    @PersistenceContext
+    private EntityManager em;
+
     private final int postNums = 13;
     private final int size = 5;
 
     @BeforeEach
     public void setup() {
         for(int i = 1 ; i <= postNums ; i++) {
-            Post post = Post.of("title"+i,"author"+i,"content"+i);
-            boardService.savePost(post);
+            PostGuestWriteDto postGuestWriteDto = new PostGuestWriteDto("title" + i, "author" + i, "password" + i, "content" + i);
+            boardService.savePost(postGuestWriteDto);
         }
     }
 
     @Test
     public void post_saveAndFind() throws Exception {
         //given
-        Post post = Post.of("title", "author", "content");
+        PostGuestWriteDto postGuestWriteDto = new PostGuestWriteDto("title","author","password", "content");
 
         //when
-        Post savedPost = boardService.savePost(post);
+        Post savedPost = boardService.savePost(postGuestWriteDto);
+        em.flush();
+        em.clear();
+
         Post foundPost = boardService.findPostById(savedPost.getId());
 
         //then
         assertThat(savedPost).isNotNull();
         assertThat(foundPost).isNotNull();
 
-        assertThat(foundPost.getId()).isEqualTo(post.getId());
-        assertThat(foundPost.getTitle()).isEqualTo(post.getTitle());
-        assertThat(foundPost.getAuthor()).isEqualTo(post.getAuthor());
-        assertThat(foundPost.getContent()).isEqualTo(post.getContent());
+        assertThat(foundPost.getId()).isEqualTo(savedPost.getId());
+        assertThat(foundPost.getTitle()).isEqualTo(savedPost.getTitle());
+        assertThat(foundPost.getAuthor()).isEqualTo(savedPost.getAuthor());
+        assertThat(foundPost.getContent()).isEqualTo(savedPost.getContent());
     }
 
     /**
@@ -65,7 +69,7 @@ public class BoardServiceSpringTest {
         Pageable pageable = PageRequest.of(page, size);
 
         //when
-        List<BoardPostListDto> dtoList = boardService.getBoardPostList(pageable);
+        List<BoardPostDto> dtoList = boardService.getBoardPostList(pageable);
 
         //then
         assertThat(dtoList.size()).isEqualTo(size);
@@ -82,7 +86,7 @@ public class BoardServiceSpringTest {
         Pageable pageable = PageRequest.of(page, size);
 
         //when
-        List<BoardPostListDto> dtoList = boardService.getBoardPostList(pageable);
+        List<BoardPostDto> dtoList = boardService.getBoardPostList(pageable);
 
         //then
         assertThat(dtoList.size()).isEqualTo(size);
@@ -101,9 +105,9 @@ public class BoardServiceSpringTest {
         Pageable pageable = PageRequest.of(page, size);
 
         //when
-        List<BoardPostListDto> dtoList = boardService.getBoardPostList(pageable);
-        for (BoardPostListDto boardPostListDto : dtoList) {
-            System.out.println("dto title = " + boardPostListDto.getTitle());
+        List<BoardPostDto> dtoList = boardService.getBoardPostList(pageable);
+        for (BoardPostDto boardPostDto : dtoList) {
+            System.out.println("dto title = " + boardPostDto.getTitle());
         }
         List<Post> all = boardService.findAll();
         for (Post post : all) {
@@ -120,16 +124,20 @@ public class BoardServiceSpringTest {
     @Test
     public void postUpdateTest() throws Exception {
         // given
-        List<BoardPostListDto> boardPostList = boardService.getBoardPostList(Pageable.ofSize(1));
+        List<BoardPostDto> boardPostList = boardService.getBoardPostList(Pageable.ofSize(1));
         Long id = boardPostList.get(0).getId();
         Post findPost = boardService.findPostById(id);
 
         // when
         String title = "Updated Title";
-        User guestAuthor = User.ofGuest("GuestAuthor");
         String content = "Updated Content";
-        findPost.update(title, guestAuthor, content);
-        boardService.savePost(findPost);
+        String authorName = "GuestAuthor";
+
+        findPost.updateTitleAndContent(title, content);
+        findPost.updateAuthor(authorName);
+
+        em.flush();
+        em.clear();
 
         // then
         Post updatedPost = boardService.findPostById(id);

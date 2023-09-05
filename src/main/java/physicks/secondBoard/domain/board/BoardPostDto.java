@@ -11,7 +11,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardPostListDto {
+public class BoardPostDto {
     private Long id;
     private String title;
     private String author;

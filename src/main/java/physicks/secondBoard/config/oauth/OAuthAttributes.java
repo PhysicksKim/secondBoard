@@ -2,8 +2,7 @@ package physicks.secondBoard.config.oauth;
 
 import lombok.Builder;
 import lombok.Getter;
-import physicks.secondBoard.domain.user.Role;
-import physicks.secondBoard.domain.user.User;
+import physicks.secondBoard.domain.user.Member;
 
 import java.util.Map;
 
@@ -41,9 +40,8 @@ public class OAuthAttributes {
                 .build();
     }
 
-    public User toEntity() {
-        // Role.User
-        return User.of(name, email);
+    public Member toEntity() {
+        return Member.ofOauth(name, email);
         /*
         // OAuth Picture 값을 처리하는 경우
         return User.builder()

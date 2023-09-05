@@ -6,30 +6,29 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.client.RequestMatcher;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import physicks.secondBoard.domain.board.BoardService;
+import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
@@ -41,10 +40,9 @@ public class BoardControllerSpringBootTest {
 
     private final String URL_MAIN = "/board";
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
+    @PersistenceContext
     private EntityManager em;
 
     @Autowired
@@ -57,7 +55,7 @@ public class BoardControllerSpringBootTest {
     @BeforeEach
     void addSamplePosts() {
         for (int i = 0; i < samplePostNum; i++) {
-            postRepository.save(Post.of("title" + i, "tester" + i, "content" + i));
+            postRepository.save(Post.of("title" + i, Author.ofGuest("tester" + i,"password"+i), "content" + i));
         }
     }
 

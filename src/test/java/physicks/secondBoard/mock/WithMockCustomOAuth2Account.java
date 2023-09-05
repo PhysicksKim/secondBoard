@@ -18,7 +18,7 @@ public @interface WithMockCustomOAuth2Account {
 
     String picture() default "https://get_my_picture.com";
 
-    Role role() default Role.USER;
+    Role role() default Role.MEMBER;
 
     String registrationId();
 

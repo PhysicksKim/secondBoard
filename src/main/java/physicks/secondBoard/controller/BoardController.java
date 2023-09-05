@@ -6,14 +6,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import physicks.secondBoard.domain.board.BoardAuthenticationService;
-import physicks.secondBoard.domain.board.BoardPostListDto;
-import physicks.secondBoard.domain.board.BoardService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import physicks.secondBoard.domain.board.*;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.user.AuthService;
-import physicks.secondBoard.domain.user.User;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RequestMapping("/board")
@@ -25,16 +26,16 @@ public class BoardController {
     // 게시글 관련 인증로직
     private final BoardAuthenticationService boardAuthenticationService;
 
-    private final BoardService boardService;
-
     private final AuthService authService;
+
+    private final BoardService boardService;
 
     @GetMapping
     public String mainPage(Model model, Pageable pageable, Authentication authentication) {
         String userName = authService.getUserName(authentication);
         log.info("userName : {}", userName);
 
-        List<BoardPostListDto> postList = boardService.getBoardPostList(pageable);
+        List<BoardPostDto> postList = boardService.getBoardPostList(pageable);
         model.addAttribute("postList", postList);
         return "board";
     }
@@ -59,20 +60,21 @@ public class BoardController {
         return "write";
     }
 
-
     /**
      * from message 예시 <br>
      * @ResponseBody => title=testTitle&author=testAuthor&content=testContent
      */
     @PostMapping("/write")
-    public String writePost(String title, String author, String content) {
-        Post post = Post.of(title, author, content);
-        System.out.println("post.toString() = " + post);
+    public String writePost(String title, String author, String content, HttpServletResponse response) {
+        Post post;
+        PostGuestWriteDto postGuestWriteDto = new PostGuestWriteDto(title, author, "password", content);
 
         try {
-            boardService.savePost(post);
+            post = boardService.savePost(postGuestWriteDto);
         } catch (Exception e) {
             log.error("Error. postRepository.save(post) 에서 에러 발생 : {}", e);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return "서버 오류로 글 작성에 실패했습니다. 잠시 후 다시 시도해 주세요.";
         }
         log.info("save post successfully! : id = {}", post.getId());
 
@@ -80,7 +82,7 @@ public class BoardController {
     }
 
     @PostMapping("/write/{pathId}")
-    public String updatePost(@PathVariable Long pathId,
+    public String updateGuestPost(@PathVariable Long pathId,
                              Long id, String title, String author, String content) {
 
         // !!! 수정 필요 !!!
@@ -107,7 +109,10 @@ public class BoardController {
             return "redirect:/";
         }
 
-        boardService.updatePost(id, title, User.ofGuest(author), content);
+        // 임시로 Guest 권한으로 그냥 PostAuthor 집어넣었음.
+        // 차후 회원 비회원 권한 구분이 필요하면 요청이 별도 컨트롤러로 분리되므로 그건 그때가서 생각
+        PostGuestUpdateDto dto = new PostGuestUpdateDto(title, "guestNick", content);
+        boardService.updatePost(id, dto);
         return "redirect:/board/" + id;
     }
 }

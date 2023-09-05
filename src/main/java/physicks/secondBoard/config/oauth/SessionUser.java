@@ -1,7 +1,7 @@
 package physicks.secondBoard.config.oauth;
 
 import lombok.Getter;
-import physicks.secondBoard.domain.user.User;
+import physicks.secondBoard.domain.user.Member;
 
 import java.io.Serializable;
 
@@ -11,9 +11,9 @@ public class SessionUser implements Serializable {
     private String email;
     // private String picture;
 
-    public SessionUser(User user) {
-        this.name = user.getName();
-        this.email = user.getEmail();
+    public SessionUser(Member member) {
+        this.name = member.getNickName();
+        this.email = member.getEmail();
         // this.picture = user.getPicture();
     }
 }

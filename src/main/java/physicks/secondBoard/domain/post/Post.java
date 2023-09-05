@@ -1,11 +1,13 @@
 package physicks.secondBoard.domain.post;
 
 import lombok.*;
+import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.entity.AuditBaseEntity;
-import physicks.secondBoard.domain.user.Role;
-import physicks.secondBoard.domain.user.User;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.util.Objects;
 
 // @Data 어노테이션을 붙이면 toString() 이 자동으로 추가되는데,
@@ -22,35 +24,55 @@ import java.util.Objects;
 @AllArgsConstructor(access = AccessLevel.PRIVATE) // 정적 팩토리를 위해
 public class Post extends AuditBaseEntity {
 
+    @ManyToOne
+    @JoinColumn(name = "author")
+    private Author author;
+
     @Column(nullable = false)
     private String title;
-
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn
-    // private User author;
-
-    private String author;
-
-    private String guestAuthor;
-
-    private Boolean isGuest;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    private Post(String title, User user, String content) {
+    private Post(String title, Author author, String content) {
         this.title = title;
-        this.author = user.getName();
+        this.author = author;
         this.content = content;
     }
 
     /**
      * Setter 를 열어두면 무분별한 수정이 이뤄질 수 있으므로, update 메서드를 별도로 생성.
      */
-    public void update(String title, User author, String content) {
+    public void updateTitleAndContent(String title, String content) {
         this.title = title;
-        this.author = author.getName();
         this.content = content;
+    }
+
+    public void updateAuthor(String nickname) {
+        author.updateNickname(nickname);
+    }
+
+    public void updateAuthor(Author author) {
+        author.updateNickname(author.getAuthorName());
+    }
+
+    public boolean isGuest() {
+        return this.author.isGuest();
+    }
+
+    /**
+     * 주어진 author의 role 이, post 객체의 role과 일치하는지 체크한다.
+     *
+     * @param author 객체와 Role 일치 여부를 체크할 대상
+     * @return 매개변수와 객체의 Role이 일치하면 true, 일치하지 않으면 false
+     */
+    private boolean isAuthorRoleMatching(Author author) {
+        boolean isArgumentGuest = author.isGuest();
+        boolean isInstanceGuest = this.isGuest();
+
+        // 둘 다 true 거나, 둘 다 false 일때 올바른 RoleMatching 이다.
+        // 따라서 XNOR 로 연산한 결과를 반환한다.
+        return isArgumentGuest == isInstanceGuest;
     }
 
     @Override
@@ -68,11 +90,7 @@ public class Post extends AuditBaseEntity {
         return Objects.hash(getTitle(), getAuthor(), getContent());
     }
 
-    static public Post of(String title, String author, String content) {
-        return new Post(title, User.ofGuest(author), content);
-    }
-
-    static public Post of(String title, User user, String content) {
-        return new Post(title, user, content);
+    static public Post of(String title, Author author, String content) {
+        return new Post(title, author, content);
     }
 }

@@ -6,24 +6,25 @@ import physicks.secondBoard.exception.NullMappingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class BoardPostListDtoMapper {
+public class BoardPostDtoMapper {
 
-    static public BoardPostListDto toDto(Post post) {
+    static public BoardPostDto toDto(Post post) {
         if(post == null) {
             throw new NullMappingException();
         }
 
         String formattedCreatedTime = formatCreatedTime(post.getCreatedTime());
-        BoardPostListDto dto = new BoardPostListDto(
+        BoardPostDto dto = new BoardPostDto(
                 post.getId(),
                 post.getTitle(),
-                post.getAuthor(),
+                post.getAuthor().getAuthorName(),
                 formattedCreatedTime
         );
         return dto;
     }
 
-    // public Post toEntity(BoardPostListDto dto) {
+    // public Post toEntity(BoardPostDto dto) {
+    //
     //     return null;
     // }
 

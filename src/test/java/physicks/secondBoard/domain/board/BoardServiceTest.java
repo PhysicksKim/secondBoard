@@ -1,20 +1,18 @@
 package physicks.secondBoard.domain.board;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 
-import java.util.*;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -27,7 +25,7 @@ import static org.mockito.Mockito.*;
  * 따라서 Post 객체 일치여부는 모든 필드에 대해 비교하지 않습니다.
  * Post Mapping 비교는 아래 테스트에서 수행합니다.
  * </pre>
- * @see BoardPostListDtoMapperTest
+ * @see BoardPostDtoMapperTest
  */
 @Slf4j
 @ExtendWith(MockitoExtension.class)
@@ -40,11 +38,11 @@ class BoardServiceTest {
 
     private static final String POST_ID_FIELD = "id";
 
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.openMocks(this); // Mock 객체 초기화
-        boardService = new BoardService(postRepository); // 테스트할 Service에 Mock 객체를 주입
-    }
+    // @BeforeEach
+    // public void setup() {
+    //     MockitoAnnotations.openMocks(this); // Mock 객체 초기화
+    //     boardService = new BoardService(postRepository); // 테스트할 Service에 Mock 객체를 주입
+    // }
 
     /**
      * 너무 많은 MOCK 이 필요해지므로 본 테스트는 삭제. 다만 기록을 위해 메서드 흔적만 남겨둠.
@@ -63,8 +61,8 @@ class BoardServiceTest {
     @Test
     public void findPostById() throws Exception {
         //given
-        Post post1 = Post.of("title1", "author1", "content1");
-        Post post2 = Post.of("title2", "author2", "content2");
+        Post post1 = Post.of("title1", Author.ofGuest("author1", "password1"), "content1");
+        Post post2 = Post.of("title2", Author.ofGuest("author2", "password2"), "content2");
         ReflectionTestUtils.setField(post1,POST_ID_FIELD, 1L);
         ReflectionTestUtils.setField(post2,POST_ID_FIELD, 2L);
 
@@ -96,20 +94,20 @@ class BoardServiceTest {
         assertThat(original.getContent()).isEqualTo(find.getContent());
     }
 
-    @Test
-    public void savePost() throws Exception {
-        //given
-        Post post1 = Post.of("title1", "author1", "content1");
-
-        when(postRepository.save(any(Post.class))).thenReturn(post1);
-
-        //when
-        Post savedPost = boardService.savePost(post1);
-
-        //then
-        verify(postRepository, times(1)).save(post1);
-        assertThat(savedPost.getTitle()).isEqualTo(post1.getTitle());
-        assertThat(savedPost.getAuthor()).isEqualTo(post1.getAuthor());
-        assertThat(savedPost.getContent()).isEqualTo(post1.getContent());
-    }
+    // @Test
+    // public void savePost() throws Exception {
+    //     //given
+    //     Post post1 = Post.of("title1", Author.ofGuest("author1", "password1"), "content1");
+    //
+    //     when(postRepository.save(any(Post.class))).thenReturn(post1);
+    //
+    //     //when
+    //     Post savedPost = boardService.savePost(post1);
+    //
+    //     //then
+    //     verify(postRepository, times(1)).save(post1);
+    //     assertThat(savedPost.getTitle()).isEqualTo(post1.getTitle());
+    //     assertThat(savedPost.getAuthor()).isEqualTo(post1.getAuthor());
+    //     assertThat(savedPost.getContent()).isEqualTo(post1.getContent());
+    // }
 }

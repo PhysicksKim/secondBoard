@@ -4,11 +4,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.entity.AuditBaseEntity;
 import physicks.secondBoard.domain.post.Post;
-import physicks.secondBoard.domain.user.User;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -26,9 +28,9 @@ public class Comment extends AuditBaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @NotNull
-    private User author; // 댓글 작성자
+    private Author author; // 댓글 작성자
 
-    @ManyToOne // 어떤 Post 의 Comment인지 FK 로 Post
+    @ManyToOne // 어떤 Post 의 Comment 인지 FK 로 Post
     @NotNull
     @JoinColumn(name = "post_id", nullable = false)
     private Post parentPost;
@@ -44,7 +46,7 @@ public class Comment extends AuditBaseEntity {
     private Boolean isDeleted; // soft delete 를 위한 필드
 
     private Comment(String content,
-                    User author,
+                    Author author,
                     Post parentPost,
                     Comment parentComment,
                     Integer reply_depth) {
@@ -56,7 +58,7 @@ public class Comment extends AuditBaseEntity {
         this.isDeleted = false;
     }
 
-    public static Comment of(String content, User author, Post parentPost, Comment parentComment) {
+    public static Comment of(String content, Author author, Post parentPost, Comment parentComment) {
         int depth = 0;
         if(parentComment != null) {
             depth = parentComment.getReply_depth() + 1;

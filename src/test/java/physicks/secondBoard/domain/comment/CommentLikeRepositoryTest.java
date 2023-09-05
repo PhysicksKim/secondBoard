@@ -1,16 +1,9 @@
 package physicks.secondBoard.domain.comment;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
-import physicks.secondBoard.domain.user.Role;
-import physicks.secondBoard.domain.user.User;
-import physicks.secondBoard.domain.user.UserRepository;
-
-import static org.assertj.core.api.Assertions.*;
+import physicks.secondBoard.domain.user.MemberRepository;
 
 @DataJpaTest
 public class CommentLikeRepositoryTest {
@@ -25,25 +18,25 @@ public class CommentLikeRepositoryTest {
     private PostRepository postRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private MemberRepository memberRepository;
 
-    @BeforeEach
-    void addSamples() {
-        User user1 = User.of("kim", "kim@gmail.com");
-        User user2 = User.of("park", "park@naver.com");
-        userRepository.save(user1);
-        userRepository.save(user2);
-
-        Post post1 = Post.of("title1", user1, "post Content1");
-        Post post2 = Post.of("title2", user2, "post Content2");
-        postRepository.save(post1);
-        postRepository.save(post2);
-
-        Comment comment1 = Comment.of("content1", user1, post1, null);
-        Comment comment2 = Comment.of("content2", user2, post2, null);
-        commentRepository.save(comment1);
-        commentRepository.save(comment2);
-    }
+    // @BeforeEach
+    // void addSamples() {
+    //     Member member1 = Member.of("loginidkim","passwordkim","kim","kim@gmail.com");
+    //     Member member2 = Member.of("loginidpark","passwordpark","park","park@naver.com");
+    //     memberRepository.save(member1);
+    //     memberRepository.save(member2);
+    //
+    //     Post post1 = Post.of("title1", Author.ofMember(member1), "post Content1");
+    //     Post post2 = Post.of("title2", Author.ofMember(member2), "post Content2");
+    //     postRepository.save(post1);
+    //     postRepository.save(post2);
+    //
+    //     Comment comment1 = Comment.of("content1", Author.ofMember(member1), post1, null);
+    //     Comment comment2 = Comment.of("content2", Author.ofMember(member2), post2, null);
+    //     commentRepository.save(comment1);
+    //     commentRepository.save(comment2);
+    // }
     //
     // @Test
     // void testAddLike() {
