@@ -12,6 +12,7 @@ import physicks.secondBoard.exception.AuthorRoleException;
 import physicks.secondBoard.exception.EntityConstraintViolation;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,7 +21,7 @@ public class Author extends AuditBaseEntity {
     @Column(nullable = false)
     protected Boolean isGuest;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true)
     protected Member user;
 
@@ -97,5 +98,21 @@ public class Author extends AuditBaseEntity {
         author.nickName = member.getNickName();
 
         return author;
+    }
+
+    public boolean equalsById(Author author) {
+        return Objects.equals(this.getId(), author.getId());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        Author author = (Author) o;
+        if(isGuest) {
+            return Objects.equals(getId(), author.getId());
+        } else {
+            return user.equals(author.user);
+        }
     }
 }

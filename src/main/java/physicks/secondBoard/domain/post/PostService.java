@@ -9,6 +9,7 @@ import physicks.secondBoard.domain.author.AuthorRepository;
 import physicks.secondBoard.domain.board.PostGuestWriteDto;
 import physicks.secondBoard.exception.RoleMismatchException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,8 +28,14 @@ public class PostService {
         return postRepository.findAllByOrderByIdDesc(pageable);
     }
 
+    public List<Post> getPostAll() {
+        return postRepository.findAll();
+    }
+
     public Post savePost(PostGuestWriteDto dto) {
         Author author = Author.ofGuest(dto.getAuthor(), dto.getPassword());
+        authorRepository.save(author);
+
         Post post = Post.of(dto.getTitle(), author, dto.getContent());
         return postRepository.save(post);
     }

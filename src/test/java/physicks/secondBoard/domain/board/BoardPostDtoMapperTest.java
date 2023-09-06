@@ -37,7 +37,7 @@ class BoardPostDtoMapperTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         Assertions.assertThat(dto.getId()).isEqualTo(savedPost.getId());
         Assertions.assertThat(dto.getTitle()).isEqualTo(savedPost.getTitle());
-        Assertions.assertThat(dto.getAuthor()).isEqualTo(savedPost.getAuthor());
+        Assertions.assertThat(dto.getAuthor()).isEqualTo(savedPost.getAuthor().getAuthorName());
         Assertions.assertThat(dto.getCreatedTime()).isEqualTo(savedPost.getCreatedTime().format(formatter));
     }
 
@@ -58,7 +58,7 @@ class BoardPostDtoMapperTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd");
         Assertions.assertThat(dto.getId()).isEqualTo(savedPost.getId());
         Assertions.assertThat(dto.getTitle()).isEqualTo(savedPost.getTitle());
-        Assertions.assertThat(dto.getAuthor()).isEqualTo(savedPost.getAuthor());
+        Assertions.assertThat(dto.getAuthor()).isEqualTo(savedPost.getAuthor().getAuthorName());
         Assertions.assertThat(dto.getCreatedTime()).isEqualTo(savedPost.getCreatedTime().format(formatter));
     }
 }

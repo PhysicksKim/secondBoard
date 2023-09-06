@@ -4,10 +4,7 @@ import lombok.*;
 import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.entity.AuditBaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Objects;
 
 // @Data 어노테이션을 붙이면 toString() 이 자동으로 추가되는데,
@@ -24,7 +21,7 @@ import java.util.Objects;
 @AllArgsConstructor(access = AccessLevel.PRIVATE) // 정적 팩토리를 위해
 public class Post extends AuditBaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author")
     private Author author;
 

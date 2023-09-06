@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.post.Post;
-import physicks.secondBoard.domain.post.PostRepository;
 import physicks.secondBoard.domain.post.PostService;
 
 import java.util.ArrayList;
@@ -20,13 +19,11 @@ import java.util.Optional;
 @Transactional
 public class BoardService {
 
-    private final PostRepository postRepository;
-
     private final PostService postService;
 
     public List<BoardPostDto> getBoardPostList(Pageable pageable) {
         List<BoardPostDto> result = new ArrayList<>();
-        Page<Post> posts = postRepository.findAllByOrderByIdDesc(pageable);
+        Page<Post> posts = postService.getPostList(pageable);
         for (Post post : posts) {
             BoardPostDto dto = BoardPostDtoMapper.toDto(post);
             result.add(dto);
@@ -34,8 +31,13 @@ public class BoardService {
         return result;
     }
 
+    public PostReadDto readPost(long id) {
+        Post postById = findPostById(id);
+        return PostReadDtoMapper.toDto(postById);
+    }
+
     public Post findPostById(long id) {
-        Optional<Post> post = postRepository.findById(id);
+        Optional<Post> post = postService.findPostById(id);
         return post.get();
     }
 
@@ -45,7 +47,7 @@ public class BoardService {
     }
 
     public Post updatePost(Long id, PostGuestUpdateDto dto) {
-        Post post = postRepository.findById(id).get();
+        Post post = postService.findPostById(id).get();
         post.updateTitleAndContent(dto.getTitle(), dto.getContent());
         post.updateAuthor(dto.getNickname());
 
@@ -53,13 +55,14 @@ public class BoardService {
     }
 
     public Post updatePost(Long id, PostMemberUpdateDto dto) {
-        Post post = postRepository.findById(id).get();
+        Post post = postService.findPostById(id).get();
         post.updateTitleAndContent(dto.getTitle(), dto.getContent());
 
         return post;
     }
 
     public List<Post> findAll() {
-        return postRepository.findAll();
+        // return postRepository.findAll();
+        return postService.getPostAll();
     }
 }

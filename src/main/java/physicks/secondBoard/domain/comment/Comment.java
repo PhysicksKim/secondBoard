@@ -9,6 +9,7 @@ import physicks.secondBoard.domain.entity.AuditBaseEntity;
 import physicks.secondBoard.domain.post.Post;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
@@ -25,17 +26,17 @@ public class Comment extends AuditBaseEntity {
     @Size(min = 1, max = 300)
     private String content; // 댓글 내용
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @NotNull
     private Author author; // 댓글 작성자
 
-    @ManyToOne // 어떤 Post 의 Comment 인지 FK 로 Post
+    @ManyToOne(fetch = FetchType.LAZY) // 어떤 Post 의 Comment 인지 FK 로 Post
     @NotNull
     @JoinColumn(name = "post_id", nullable = false)
     private Post parentPost;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reply_parent", nullable = true)
     private Comment parentComment; // 대댓글 구조를 위한 Comment 참조
 

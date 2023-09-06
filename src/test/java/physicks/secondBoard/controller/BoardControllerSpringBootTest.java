@@ -14,7 +14,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-import physicks.secondBoard.domain.author.Author;
+import physicks.secondBoard.domain.board.BoardService;
+import physicks.secondBoard.domain.board.PostGuestWriteDto;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 
@@ -29,7 +30,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 @Slf4j
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,13 +40,17 @@ public class BoardControllerSpringBootTest {
 
     private final String URL_MAIN = "/board";
 
+    @Autowired
     private MockMvc mockMvc;
 
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
-    PostRepository postRepository;
+    private PostRepository postRepository;
+
+    @Autowired
+    private BoardService boardService;
 
     private static int samplePostNum = 10;
 
@@ -55,7 +59,8 @@ public class BoardControllerSpringBootTest {
     @BeforeEach
     void addSamplePosts() {
         for (int i = 0; i < samplePostNum; i++) {
-            postRepository.save(Post.of("title" + i, Author.ofGuest("tester" + i,"password"+i), "content" + i));
+            PostGuestWriteDto postGuestWriteDto = new PostGuestWriteDto("title" + i, "tester" + i,"password"+i, "content" + i);
+            boardService.savePost(postGuestWriteDto);
         }
     }
 
@@ -69,7 +74,7 @@ public class BoardControllerSpringBootTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("post"))
                 .andExpect(model().attribute("post", hasProperty("title", is(post.getTitle()))))
-                .andExpect(model().attribute("post", hasProperty("author", is(post.getAuthor()))))
+                .andExpect(model().attribute("post", hasProperty("author", is(post.getAuthor().getAuthorName()))))
                 .andExpect(model().attribute("post", hasProperty("content", is(post.getContent()))));
     }
 
@@ -93,14 +98,18 @@ public class BoardControllerSpringBootTest {
                 .andExpect(redirectedUrl("/board/" + post.getId()));
 
         assertThat(post.getTitle()).isEqualTo(title);
-        assertThat(post.getAuthor()).isEqualTo(author);
+        assertThat(post.getAuthor().getAuthorName()).isEqualTo(author);
         assertThat(post.getContent()).isEqualTo(content);
     }
 
     @Test
     public void updatePost() throws Exception {
+        // 본래라면 url에 path Variable에 있는 post id를 바탕으로 수정 request를 보내게 된다.
+        // 이 과정을 생략하고 게시글 수정 자체만 테스트하기 위해서
+        // given 에서 그냥 0번째 게시글을 가져온다.
+
         // given
-        // : 수정할 Post릉 하나 가져온다.
+        // : 수정할 Post 를 하나 가져온다.
         Pageable pageable = PageRequest.of(0,1);
         Post targetPost = postRepository.findAll(pageable).getContent().get(0);
         Long targetPostId = targetPost.getId();
@@ -108,7 +117,7 @@ public class BoardControllerSpringBootTest {
         // when
         // : 게시글 수정 사항 및 mockMvc 수행
         final String title_updated = "updated_" + targetPost.getTitle();
-        final String author_updated = "updated_" + targetPost.getAuthor();
+        final String author_updated = "updated_" + targetPost.getAuthor().getAuthorName();
         final String content_updated = "updated_" + targetPost.getContent();
 
         mockMvc.perform(post(getURL_EDIT(targetPostId))
@@ -128,7 +137,7 @@ public class BoardControllerSpringBootTest {
 
         Post afterUpdated = postRepository.findById(targetPostId).get();
         assertThat(afterUpdated.getTitle()).isEqualTo(title_updated);
-        assertThat(afterUpdated.getAuthor()).isEqualTo(author_updated);
+        assertThat(afterUpdated.getAuthor().getAuthorName()).isEqualTo(author_updated);
         assertThat(afterUpdated.getContent()).isEqualTo(content_updated);
     }
 
