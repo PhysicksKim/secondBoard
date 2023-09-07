@@ -1,16 +1,15 @@
-package physicks.secondBoard.domain.board;
+package physicks.secondBoard.domain.board.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import physicks.secondBoard.domain.author.Author;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostReadDto {
-    private Long id;
+public class PostMemberUpdateDto {
     private String title;
-    private String author;
+    private Author author;
     private String content;
-    private String createdTime;
 }

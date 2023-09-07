@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import physicks.secondBoard.domain.author.Author;
-import physicks.secondBoard.domain.board.PostGuestWriteDto;
+import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 import physicks.secondBoard.exception.RoleMismatchException;

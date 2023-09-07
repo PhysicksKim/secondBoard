@@ -10,7 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import physicks.secondBoard.domain.board.*;
+import physicks.secondBoard.domain.board.dto.BoardPostDto;
+import physicks.secondBoard.domain.board.dto.PostGuestUpdateDto;
+import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
+import physicks.secondBoard.domain.board.dto.PostReadDto;
+import physicks.secondBoard.domain.board.service.BoardAuthenticationService;
+import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.user.AuthService;
 

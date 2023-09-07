@@ -1,24 +1,14 @@
 package physicks.secondBoard.domain.comment;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import physicks.secondBoard.domain.author.Author;
-import physicks.secondBoard.domain.board.BoardService;
-import physicks.secondBoard.domain.post.Post;
+import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.user.*;
-import physicks.secondBoard.exception.NotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import java.time.LocalDateTime;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * <pre>

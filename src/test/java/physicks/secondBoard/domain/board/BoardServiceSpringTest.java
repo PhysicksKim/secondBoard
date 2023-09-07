@@ -7,6 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+import physicks.secondBoard.domain.board.dto.BoardPostDto;
+import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
+import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 
 import javax.persistence.EntityManager;

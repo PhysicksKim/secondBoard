@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.author.Author;
+import physicks.secondBoard.domain.board.dto.BoardPostDto;
+import physicks.secondBoard.domain.board.mapper.BoardPostDtoMapper;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 

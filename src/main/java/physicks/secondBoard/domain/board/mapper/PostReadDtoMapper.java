@@ -1,5 +1,6 @@
-package physicks.secondBoard.domain.board;
+package physicks.secondBoard.domain.board.mapper;
 
+import physicks.secondBoard.domain.board.dto.PostReadDto;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.util.BoardTimeFormatter;
 

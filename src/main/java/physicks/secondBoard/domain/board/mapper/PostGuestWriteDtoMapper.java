@@ -1,6 +1,7 @@
-package physicks.secondBoard.domain.board;
+package physicks.secondBoard.domain.board.mapper;
 
 import physicks.secondBoard.domain.author.Author;
+import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
 import physicks.secondBoard.domain.post.Post;
 
 public class PostGuestWriteDtoMapper {

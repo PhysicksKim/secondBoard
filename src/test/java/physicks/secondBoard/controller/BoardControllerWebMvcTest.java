@@ -8,8 +8,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import physicks.secondBoard.domain.board.BoardAuthenticationService;
-import physicks.secondBoard.domain.board.BoardService;
+import physicks.secondBoard.domain.board.service.BoardAuthenticationService;
+import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.user.AuthService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

@@ -1,5 +1,6 @@
-package physicks.secondBoard.domain.board;
+package physicks.secondBoard.domain.board.mapper;
 
+import physicks.secondBoard.domain.board.dto.BoardPostDto;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.exception.NullMappingException;
 import physicks.secondBoard.util.BoardTimeFormatter;

@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.board;
+package physicks.secondBoard.domain.board.dto;
 
 
 import lombok.AllArgsConstructor;
