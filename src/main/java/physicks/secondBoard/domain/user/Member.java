@@ -3,6 +3,7 @@ package physicks.secondBoard.domain.user;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.Entity;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?") // soft delete 수행
 public class Member extends User {
 
     @Column(nullable = false)
@@ -18,7 +20,9 @@ public class Member extends User {
     @Column(name = "login_id")
     protected String loginId;
 
-    public Member update(String nickname) {
+    protected boolean isDeleted;
+
+    public Member updateNickname(String nickname) {
         this.nickName = nickname;
         return this;
     }

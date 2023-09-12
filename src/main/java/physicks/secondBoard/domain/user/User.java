@@ -21,9 +21,6 @@ public abstract class User extends BaseEntity {
     @Column(nullable = false)
     protected String password;
 
-    @Column(nullable = true)
-    protected String shaSalt;
-
     abstract public Role getRole();
 
 }
