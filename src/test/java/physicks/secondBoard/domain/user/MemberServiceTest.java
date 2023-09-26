@@ -40,7 +40,7 @@ class MemberServiceTest {
     }
 
     @Test
-    void PasswordEncoding() {
+    void 패스워드인코더_테스트() {
         final String rawHello = "hello";
         String encodedHello = passwordEncoder.encode(rawHello);
 
@@ -49,7 +49,7 @@ class MemberServiceTest {
     }
 
     @Test
-    void memberRegister() throws UserNotFoundException {
+    void 회원가입() throws UserNotFoundException {
         // given
         final String loginId = "kim";
         final String rawPassword = "kim1357!";
@@ -69,7 +69,7 @@ class MemberServiceTest {
     }
 
     @Test
-    void loginTest_Success() throws UserNotFoundException{
+    void 로그인_성공() throws UserNotFoundException{
         // given
         final String loginId = "sampleMember1";
         final String rawPassword = "password1";
@@ -89,7 +89,7 @@ class MemberServiceTest {
     }
 
     @Test
-    void loginTest_Fail() {
+    void 로그인_실패() {
         // given
         final String loginId = "sampleMember1";
         final String rawPassword = "wrongPassword";

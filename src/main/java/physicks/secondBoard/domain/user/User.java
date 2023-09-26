@@ -18,7 +18,7 @@ public abstract class User extends BaseEntity {
     @Column(nullable = false)
     protected String nickName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     protected String password;
 
     abstract public Role getRole();
