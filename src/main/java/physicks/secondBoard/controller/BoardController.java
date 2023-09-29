@@ -28,6 +28,8 @@ import java.util.List;
 @Slf4j
 public class BoardController {
 
+    private static final String VIEW_PREFIX = "pages/board/";
+
     // 게시글 관련 인증로직
     private final BoardAuthenticationService boardAuthenticationService;
 
@@ -42,7 +44,7 @@ public class BoardController {
 
         List<BoardPostDto> postList = boardService.getBoardPostList(pageable);
         model.addAttribute("postList", postList);
-        return "board";
+        return VIEW_PREFIX + "board";
     }
 
     @GetMapping("/{id}")
@@ -50,12 +52,12 @@ public class BoardController {
         // Post findPost = boardService.findPostById(id);
         PostReadDto findPost = boardService.readPost(id);
         model.addAttribute("post", findPost);
-        return "post";
+        return VIEW_PREFIX + "post";
     }
 
     @GetMapping("/write")
     public String postWritePage() {
-        return "write";
+        return VIEW_PREFIX + "write";
     }
 
     @GetMapping("/write/{id}")
@@ -63,7 +65,7 @@ public class BoardController {
         // Post findPost = boardService.findPostById(id);
         PostReadDto findPost = boardService.readPost(id);
         model.addAttribute("post", findPost);
-        return "write";
+        return VIEW_PREFIX + "write";
     }
 
     /**

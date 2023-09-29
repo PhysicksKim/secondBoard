@@ -1,0 +1,9 @@
+.header-container-wrapper {
+    margin-left: 25px !important;
+    margin-right: 25px !important;
+}
+.header-bar {
+    width: 100%;
+    border-bottom: 1px solid gray;
+}
+

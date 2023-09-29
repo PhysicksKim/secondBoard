@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="/fragment/htmlHead.html :: html-head"></th:block>
+    <title>Board Post</title>
+    <link rel="stylesheet" th:href="@{/css/post.css}" type="text/css">
+</head>
+<body>
+<th:block th:replace="/fragment/headerBar.html :: header-bar"/>
+
+<h1> 게시판 </h1>
+
+<div id="post-container">
+    <div class="post" id="post" th:object="${post}">
+        <div class="post-header">
+            <div class="post-title" th:field="*{title}" th:text="*{title}">제목</div>
+            <div class="post-time" th:field="*{createdTime}" th:text="*{createdTime}">작성시간</div>
+        </div>
+        <div class="post-author">
+            <div th:field="*{author}" th:text="*{author}">작성자</div>
+        </div>
+        <div class="post-content" th:field="*{content}" th:text="*{content}">
+            본문
+        </div>
+    </div>
+    <div class="button-group" id="button-group-div">
+        <button class="post-buttons board-page-button" onclick="location.href='/board'"
+                type="button"> 글 목록
+        </button>
+        <button class="post-buttons edit-page-button" th:onclick="'location.href=\'/board/write/' + ${post.id} + '\''"
+                type="button"
+        > 수정
+        </button>
+    </div>
+</div>
+
+
+</body>
+</html>

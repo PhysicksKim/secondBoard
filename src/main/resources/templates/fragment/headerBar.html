@@ -1,0 +1,30 @@
+<th:block th:fragment="header-bar">
+    <div class="header-container-wrapper">
+        <div class="container-fluid header-container">
+            <header class="header-bar d-flex flex-wrap justify-content-center py-3 mb-4">
+                <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none" href="/">
+                    <img class="bi me-2" height="32" src="/p_logo.svg" width="40" />
+                    <span class="fs-4">Physicks Board</span>
+                </a>
+
+                <ul class="nav nav-pills">
+                    <!--                <li class="nav-item"><a href="#" class="nav-link active" aria-current="page"></a></li>--> <!-- 활성시 active 클래스 추가 -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Story</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About Me</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="/board"
+                           th:classappend="${#httpServletRequest.requestURI == '/board' ? 'active' : ''}">Board</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Login</a>
+                    </li>
+                </ul>
+            </header>
+        </div>
+    </div>
+</th:block>

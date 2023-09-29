@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <th:block th:replace="/fragment/html-head.html :: html-head"></th:block>
+    <th:block th:replace="/fragment/htmlHead.html :: html-head"></th:block>
     <title th:if="${post == null}">Post Write Page</title>
     <title th:unless="${post == null}">Post Edit Page</title>
     <link type="text/css" rel="stylesheet" th:href="@{/css/write.css}">
 </head>
 <body>
+<th:block th:replace="/fragment/headerBar.html :: header-bar" />
+
 <h1 th:if="${post == null}">Post Write Page</h1>
 <h1 th:unless="${post == null}">Post Edit Page</h1>
 

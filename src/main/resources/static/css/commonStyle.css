@@ -1,0 +1,36 @@
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+body {
+    font-family: 'Pretendard-Regular', 'Karla', sans-serif;
+}
+
+/* 스크롤바의 전체 너비 */
+::-webkit-scrollbar {
+    width: 10px;  /* 수직 스크롤바의 너비 */
+    height: 10px; /* 수평 스크롤바의 높이 */
+}
+
+/* 스크롤바의 트랙 (바탕) */
+::-webkit-scrollbar-track {
+    background: #d3d3d3; /* 스크롤바의 바탕 색 */
+}
+
+/* 스크롤바의 핸들 (움직이는 부분) */
+::-webkit-scrollbar-thumb {
+    background: #888; /* 스크롤바 핸들의 기본 색 */
+    border-radius: 5px; /* 스크롤바 핸들의 모서리 둥글게 */
+}
+
+/* 스크롤바 핸들에 마우스를 올렸을 때의 색 */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 스크롤바 핸들에 마우스 호버 시 색 */
+}
