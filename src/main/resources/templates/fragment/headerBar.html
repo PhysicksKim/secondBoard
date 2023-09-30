@@ -1,6 +1,6 @@
 <th:block th:fragment="header-bar">
     <div class="header-container-wrapper">
-        <div class="container-fluid header-container">
+        <div class="header-container">
             <header class="header-bar d-flex flex-wrap justify-content-center py-3 mb-4">
                 <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none" href="/">
                     <img class="bi me-2" height="32" src="/p_logo.svg" width="40" />
@@ -18,13 +18,31 @@
                     <li class="nav-item">
                         <a class="nav-link"
                            href="/board"
-                           th:classappend="${#httpServletRequest.requestURI == '/board' ? 'active' : ''}">Board</a>
+                           th:classappend="${#httpServletRequest.requestURI == '/board' ? 'active' : ''}">
+                            Board
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Login</a>
+                        <div th:unless="${username != null}">
+                            <button type="button" class="btn login-btn"
+                                    data-bs-toggle="modal" data-bs-target="#login-modal">
+                                Login
+                            </button>
+                        </div>
+                        <div th:if="${username != null}">
+                            <div>
+                                <a href="/logout" class="btn logout-btn" role="button">Logout</a>
+                            </div>
+                            <div style="visibility: hidden; display: none" th:text="'Logged in as : '+${username}"> 유저이름 </div>
+                        </div>
                     </li>
                 </ul>
             </header>
         </div>
+    </div>
+
+    <!-- Login Modal 창 -->
+    <div class="modal-section-wrapper">
+        <th:block th:replace="fragment/login.html :: login-modal" />
     </div>
 </th:block>

@@ -1,9 +1,52 @@
 .header-container-wrapper {
     margin-left: 25px !important;
     margin-right: 25px !important;
+    display: flex;
+    justify-content: center;
 }
 .header-bar {
-    width: 100%;
     border-bottom: 1px solid gray;
 }
 
+.header-container {
+    width: 1280px;
+}
+
+/* login modal 열릴 시 body 태그에 padding이 생기는 것을 막습니다 */
+body.modal-open {
+    padding-right: 0 !important;
+}
+
+.login-btn {
+    background-color: #c5c5c5;
+    border: none;
+    padding: 8px 12px;
+    margin-left: 8px;
+}
+
+.login-btn:hover {
+    background-color: #a8a8a8;
+}
+
+.logout-btn {
+    color: #f0f0f0;
+    background-color: rgb(52, 60, 182);
+    border: none;
+    padding: 8px 12px;
+    margin-left: 8px;
+}
+
+.logout-btn:hover {
+    background-color: rgb(74, 83, 222);
+}
+
+.google-login {
+    display: inline-block;
+    height: inherit;
+    vertical-align: middle;
+    margin: 5px 0;
+}
+
+.google-login img {
+    height: 38px;
+}

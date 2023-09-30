@@ -39,6 +39,8 @@ public class BoardController {
 
     @GetMapping
     public String mainPage(Model model, Pageable pageable, Authentication authentication) {
+        log.info("raw authentication : {}", authentication);
+
         String userName = authService.getUserName(authentication);
         log.info("userName : {}", userName);
 

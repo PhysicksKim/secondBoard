@@ -46,11 +46,22 @@ public class Member extends User {
         return member;
     }
 
-    public static Member ofOauth(String email, String nickname) {
+    public static Member ofOauth(String name, String email) {
         Member member = new Member();
         member.email = email;
-        member.nickName = nickname;
+        member.nickName = name;
 
         return member;
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "email='" + email + '\'' +
+                ", loginId='" + loginId + '\'' +
+                ", isDeleted=" + isDeleted +
+                ", nickName='" + nickName + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

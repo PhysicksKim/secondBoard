@@ -11,25 +11,5 @@
     <div id="title" name="title">
         <h1> Index Page </h1>
     </div>
-
-    <!--로그인 된 경우 로그아웃 표시-->
-    <div th:if="${username != null}" class="flex-container">
-        <div th:text="'Logged in as : '+${username}"> 유저이름 </div>
-        <a href="/logout" class="btn-info active" role="button">Logout</a>
-    </div>
-
-    <!-- Google Oauth2 버튼 -->
-    <div th:unless="${username != null}" class="flex-container">
-        <a href="/oauth2/authorization/google" class="btn-success active" role="button">
-            Google Login
-        </a>
-    </div>
-
-    <div id="board-group" class="board-group">
-        <a id="board-btn" class="board-btn" href="/board">
-            Board
-        </a>
-    </div>
-
 </body>
 </html>

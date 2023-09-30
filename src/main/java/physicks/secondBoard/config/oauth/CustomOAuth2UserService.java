@@ -1,6 +1,7 @@
 package physicks.secondBoard.config.oauth;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -17,6 +18,7 @@ import java.util.Collections;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final MemberRepository memberRepository;
     private final HttpSession httpSession;
@@ -50,10 +52,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private Member saveOrUpdate(OAuthAttributes attributes) {
-        Member Member = memberRepository.findByEmail(attributes.getEmail())
+        Member member = memberRepository.findByEmail(attributes.getEmail())
                 .map(memberEntity -> memberEntity.updateNickname(attributes.getName()))
                 .orElse(attributes.toEntity());
-
-        return memberRepository.save(Member);
+        return memberRepository.save(member);
     }
 }
