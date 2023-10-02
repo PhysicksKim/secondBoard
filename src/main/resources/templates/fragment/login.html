@@ -1,3 +1,4 @@
+<!--css: header.css-->
 <th:block th:fragment="login-modal" >
     <div class="modal" id="login-modal" tabindex="-1">
         <div class="modal-dialog">
@@ -12,15 +13,25 @@
                     <p>로그인 창이 여기 들어감</p>
                 </div>
                 <div class="modal-footer">
-                    <a href="/oauth2/authorization/google"
-                       class="google-login" role="button">
-                        <img src="https://madeby.google.com/static/images/google_g_logo.svg" alt="google login" />
-                    </a>
-                    <button type="button"
-                            class="btn btn-secondary login-modal-close"
-                            data-bs-dismiss="modal">
-                        Close
-                    </button>
+                    <div class="modal-footer-wrapper">
+                        <div class="modal-oauth-wrapper">
+                            <div class="google-login">
+                                <a href="/oauth2/authorization/google" role="button">
+                                    <img src="https://madeby.google.com/static/images/google_g_logo.svg" alt="google login" />
+                                </a>
+                                <div>
+                                    Google로 로그인
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-footer">
+                            <button type="button"
+                                    class="btn btn-secondary login-modal-close"
+                                    data-bs-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

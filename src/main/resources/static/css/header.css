@@ -41,12 +41,64 @@ body.modal-open {
 }
 
 .google-login {
-    display: inline-block;
+    display: flex;
     height: inherit;
-    vertical-align: middle;
+    align-items: center;
     margin: 5px 0;
+    padding: 15px 20px;
+    border: 1px solid #c7c7c7;
+    background-color: #fafafa;
+    border-radius: 5px;
+}
+
+.google-login:hover {
+    background-color: #d5d5d5;
+}
+
+.google-login a, .google-login div {
+    display: inline-block;
+    margin-right: 10px;
 }
 
 .google-login img {
+    vertical-align: middle;
     height: 38px;
+}
+
+.modal-footer {
+    justify-content: center;
+}
+
+.footer-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.oauth-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-oauth-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.btn-footer {
+    padding-top: 10px;
+    border-top: 1px solid #e8e8e8;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.modal-footer-wrapper {
+    width: 100%;
 }
