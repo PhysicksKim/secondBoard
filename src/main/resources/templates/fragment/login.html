@@ -1,36 +1,34 @@
 <!--css: header.css-->
 <th:block th:fragment="login-modal" >
-    <div class="modal" id="login-modal" tabindex="-1">
+    <div class="modal fade" id="login-modal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-wrapper">
                     <h5 class="modal-title">Login</h5>
-                    <button type="button" class="btn-close"
-                            data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>로그인 창이 여기 들어감</p>
-                </div>
-                <div class="modal-footer">
-                    <div class="modal-footer-wrapper">
-                        <div class="modal-oauth-wrapper">
-                            <div class="google-login">
-                                <a href="/oauth2/authorization/google" role="button">
-                                    <img src="https://madeby.google.com/static/images/google_g_logo.svg" alt="google login" />
-                                </a>
-                                <div>
-                                    Google로 로그인
-                                </div>
+                    <div class="login-area">
+                        <div class="login-area-input-wrapper">
+                            <input class="login-id-input" placeholder="아이디를 입력해 주세요">
+                        </div>
+                        <div class="login-area-input-wrapper">
+                            <input class="login-password-input" placeholder="패스워드를 입력해 주세요">
+                        </div>
+                    </div>
+                    <div class="modal-oauth-wrapper">
+                        <div class="google-login">
+                            <a href="/oauth2/authorization/google" role="button">
+                                <img src="https://madeby.google.com/static/images/google_g_logo.svg" alt="google login" />
+                            </a>
+                            <div>
+                                Google로 로그인
                             </div>
                         </div>
-                        <div class="btn-footer">
-                            <button type="button"
-                                    class="btn btn-secondary login-modal-close"
-                                    data-bs-dismiss="modal">
-                                Close
-                            </button>
-                        </div>
+                    </div>
+                    <div class="btn-footer">
+                        <button type="button"
+                                class="btn btn-secondary login-modal-close"
+                                data-bs-dismiss="modal">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
