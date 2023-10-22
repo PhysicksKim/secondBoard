@@ -52,7 +52,7 @@ public class BoardService {
     public Post updatePost(Long id, PostGuestUpdateDto dto) {
         Post post = postService.findPostById(id).get();
         post.updateTitleAndContent(dto.getTitle(), dto.getContent());
-        post.updateAuthor(dto.getNickname());
+        post.updateAuthor(dto.getName());
 
         return post;
     }

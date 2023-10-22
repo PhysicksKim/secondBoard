@@ -80,10 +80,9 @@ class MemberServiceTest {
         Member loginMember = memberService.findMemberById(memberId);
 
         // then
-        assertThat(loginMember.getLoginId()).isEqualTo(loginId);
         assertThat(loginMember.getPassword()).isNotEqualTo(rawPassword);
         Assertions.assertTrue(passwordEncoder.matches(rawPassword, loginMember.getPassword()));
-        assertThat(loginMember.getNickName()).isEqualTo("sampleNickname1");
+        assertThat(loginMember.getName()).isEqualTo("sampleNickname1");
         assertThat(loginMember.getEmail()).isEqualTo("member1@physicks.com");
         assertThat(loginMember.getRole()).isEqualTo(Role.MEMBER);
     }

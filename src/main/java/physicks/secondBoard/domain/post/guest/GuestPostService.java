@@ -38,12 +38,12 @@ public class GuestPostService {
         return post;
     }
 
-    public Post updateAuthorForGuest(Long id, String nickname) {
+    public Post updateAuthorForGuest(Long id, String name) {
         Post post = postRepository.findById(id).get();
         if(!post.isGuest()) {
             throw new RoleMismatchException("비회원 게시글만 작성자 이름 변경이 가능합니다");
         }
-        post.updateAuthor(nickname);
+        post.updateAuthor(name);
         return post;
     }
 }

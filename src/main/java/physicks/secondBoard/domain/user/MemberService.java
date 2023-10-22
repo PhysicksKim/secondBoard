@@ -28,11 +28,7 @@ public class MemberService {
      */
     public Long registerMember(MemberRegisterDto dto) {
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
-        Member member = Member.of(dto.getLoginId(),
-                encodedPassword,
-                dto.getNickname(),
-                dto.getEmail()
-        );
+        Member member = Member.of(encodedPassword, dto.getName(), dto.getEmail());
 
         // --- validation ---
         // ------------------
@@ -45,11 +41,11 @@ public class MemberService {
 
     public Long login(MemberLoginDto dto) {
         // find
-        Member member = memberRepository.findByLoginId(dto.getLoginId())
+        Member member = memberRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("해당 Login id 를 찾을 수 없습니다"));
 
         // validation
-        if (passwordEncoder.matches(dto.getRawPassword(), member.getPassword())) {
+        if (passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
             return member.getId();
         } else {
             throw new BadCredentialsException("Invalid password");
@@ -61,9 +57,9 @@ public class MemberService {
     }
 
     // 회원 정보 변경. 닉네임
-    public void updateNickname(Long id, String nickname) throws UserNotFoundException{
+    public void updateName(Long id, String name) throws UserNotFoundException{
         Member memberById = findMemberById(id);
-        memberById.updateNickname(nickname);
+        memberById.updateName(name);
     }
 
     // soft delete

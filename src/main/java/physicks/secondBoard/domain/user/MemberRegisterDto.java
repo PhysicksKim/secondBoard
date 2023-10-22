@@ -9,7 +9,7 @@ public class MemberRegisterDto {
 
     private String loginId;
     private String password;
-    private String nickname;
+    private String name;
     private String email;
 
 }

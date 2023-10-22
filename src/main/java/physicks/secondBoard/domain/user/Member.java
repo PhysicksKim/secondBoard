@@ -17,13 +17,12 @@ public class Member extends User {
     @Column(nullable = false)
     protected String email;
 
-    @Column(name = "login_id")
-    protected String loginId;
-
     protected boolean isDeleted;
 
-    public Member updateNickname(String nickname) {
-        this.nickName = nickname;
+    protected boolean isOauthUser;
+
+    public Member updateName(String name) {
+        this.name = name;
         return this;
     }
 
@@ -32,15 +31,12 @@ public class Member extends User {
         return Role.MEMBER;
     }
 
-    public static Member of(String loginId,
-                            String password,
-                            String nickname,
+    public static Member of(String password,
+                            String name,
                             String email) {
 
         Member member = new Member();
-        member.loginId = loginId;
-        member.password = password;
-        member.nickName = nickname;
+        member.name = name;
         member.email = email;
 
         return member;
@@ -49,7 +45,7 @@ public class Member extends User {
     public static Member ofOauth(String name, String email) {
         Member member = new Member();
         member.email = email;
-        member.nickName = name;
+        member.name = name;
 
         return member;
     }
@@ -58,9 +54,8 @@ public class Member extends User {
     public String toString() {
         return "Member{" +
                 "email='" + email + '\'' +
-                ", loginId='" + loginId + '\'' +
                 ", isDeleted=" + isDeleted +
-                ", nickName='" + nickName + '\'' +
+                ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }

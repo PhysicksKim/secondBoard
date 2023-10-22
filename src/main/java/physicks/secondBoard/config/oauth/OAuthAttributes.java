@@ -23,6 +23,13 @@ public class OAuthAttributes {
         this.picture = picture;
     }
 
+    /**
+     *
+     * @param registrationId google 과 같이 OAuth2 provider 의 이름이 담겨있음 (ex.google)
+     * @param userNameAttributeName attribute 에서 username 부분이 어디에 있는지 key string 을 알려줌 (ex.sub)
+     * @param attributes 이메일, 이름, 프로필 사진 등 정보들이 담긴 Map
+     * @return
+     */
     public  static OAuthAttributes of(String registrationId,
                                       String userNameAttributeName,
                                       Map<String, Object> attributes) {

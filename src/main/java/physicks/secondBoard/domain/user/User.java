@@ -16,7 +16,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class User extends BaseEntity {
 
     @Column(nullable = false)
-    protected String nickName;
+    protected String name;
 
     @Column(nullable = true)
     protected String password;

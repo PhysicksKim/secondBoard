@@ -26,7 +26,7 @@ public class Author extends AuditBaseEntity {
     protected Member user;
 
     @Column(nullable = false)
-    protected String nickName;
+    protected String name;
 
     @Getter
     @Column(nullable = true, length = 64)
@@ -36,9 +36,9 @@ public class Author extends AuditBaseEntity {
         return isGuest;
     }
 
-    public void updateNickname(String nickName) {
+    public void updateName(String name) {
         if(isGuest) { // 비회원 게시글인 경우에만 글 닉네임 수정 가능
-            this.nickName = nickName;
+            this.name = name;
         }
     }
 
@@ -46,7 +46,7 @@ public class Author extends AuditBaseEntity {
         if(isGuest == false && user == null) {
             throw new AuthorUserNullException("작성자(Author)의 회원 객체(User)가 NULL 입니다");
         }
-        return isGuest ? nickName : user.getNickName();
+        return isGuest ? name : user.getName();
     }
 
     /**
@@ -64,7 +64,7 @@ public class Author extends AuditBaseEntity {
     public static Author of(User user) {
         Author author;
         if(user.getRole().equals(Role.GUEST)) {
-            author = ofGuest(user.getNickName(), user.getPassword());
+            author = ofGuest(user.getName(), user.getPassword());
         } else if(user.getRole().equals(Role.MEMBER)) {
             author = ofMember((Member) user);
         } else {
@@ -77,16 +77,16 @@ public class Author extends AuditBaseEntity {
     public static Author ofGuest(Guest guest) {
         Author author = new Author();
         author.isGuest = true;
-        author.nickName = guest.getNickName();
+        author.name = guest.getName();
         author.password = guest.getPassword();
 
         return author;
     }
 
-    public static Author ofGuest(String nickName, String password) {
+    public static Author ofGuest(String name, String password) {
         Author author = new Author();
         author.isGuest = true;
-        author.nickName = nickName;
+        author.name = name;
         author.password = password;
 
         return author;
@@ -95,7 +95,7 @@ public class Author extends AuditBaseEntity {
     public static Author ofMember(Member member) {
         Author author = new Author();
         author.isGuest = false;
-        author.nickName = member.getNickName();
+        author.name = member.getName();
 
         return author;
     }

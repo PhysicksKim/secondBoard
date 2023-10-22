@@ -45,12 +45,12 @@ public class Post extends AuditBaseEntity {
         this.content = content;
     }
 
-    public void updateAuthor(String nickname) {
-        author.updateNickname(nickname);
+    public void updateAuthor(String name) {
+        author.updateName(name);
     }
 
     public void updateAuthor(Author author) {
-        author.updateNickname(author.getAuthorName());
+        author.updateName(author.getAuthorName());
     }
 
     public boolean isGuest() {

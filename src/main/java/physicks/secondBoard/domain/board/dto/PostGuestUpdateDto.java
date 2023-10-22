@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostGuestUpdateDto {
     private String title;
-    private String nickname;
+    private String name;
     private String content;
 }

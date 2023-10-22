@@ -1,0 +1,38 @@
+.register-form-wrapper {
+    padding: 30px 10px;
+    border: 1px black solid;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    background-color: rgb(223, 233, 255);
+    width: 720px;
+    margin: auto;
+}
+
+.register-header {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.register-form-wrapper form{
+    display: flex;
+    flex-direction: column;
+}
+
+.register-form-wrapper .input-wrapper {
+    margin-top: 15px;
+}
+
+.register-form .input-wrapper {
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.input-wrapper .input-field {
+    border-radius: 15px;
+    padding-left: 20px;
+}

@@ -3,8 +3,8 @@ package physicks.secondBoard.domain.user;
 
 public class Guest extends User {
 
-    public Guest(String nickname, String password) {
-        this.nickName = nickname;
+    public Guest(String name, String password) {
+        this.name = name;
         this.password = password;
     }
 
