@@ -1,38 +1,112 @@
-.register-form-wrapper {
-    padding: 30px 10px;
-    border: 1px black solid;
-    border-radius: 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    background-color: rgb(223, 233, 255);
-    width: 720px;
-    margin: auto;
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', 'Poppins', sans-serif;
 }
 
-.register-header {
-    margin-top: 20px;
+i {
+    margin: 5px;
+    margin-right: 10px;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #4070f4;
+}
+
+/* body color : #4070f4  Border Color : #C7BEBE  hover : #0e4bf1 */
+
+.register-form-wrapper {
+    position: relative;
+    max-width: 430px;
+    width: 100%;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+}
+
+.register-form-wrapper h2 {
+    position: relative;
+    font-size: 25px;
+    font-weight: 600;
+    color: #333;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    margin-left: 5px;
+}
+
+.register-form-wrapper h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -15px;
+    height: 3px;
+    width: 100%;
+    border-radius: 12px;
+    background: #4070f4;
+}
+
+.register-form-wrapper form {
+    margin-top: 25px;
+}
+
+.input-wrapper {
+    height: 52px;
+    margin: 25px 0;
+}
+
+.form-btn {
+    margin: 0;
+}
+
+form .input-wrapper input {
+    height: 100%;
+    width: 100%;
+    outline: none;
+    padding: 0 15px;
+    font-size: 17px;
+    font-weight: 400;
+    color: #333;
+    border: 1.5px solid #c8bebec6;
+    border-bottom-width: 2.5px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.input-wrapper input:focus,
+.input-wrapper input:valid{
+    border-color: #4070f4;
+}
+
+form .policy {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+    margin-top: 30px;
     margin-bottom: 20px;
 }
 
-.register-form-wrapper form{
-    display: flex;
-    flex-direction: column;
+form .policy h3 {
+    color: #707070;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 10px;
+    margin-bottom: 0;
 }
 
-.register-form-wrapper .input-wrapper {
-    margin-top: 15px;
+form .policy input:hover {
+    cursor: pointer;
 }
 
-.register-form .input-wrapper {
-    margin-left: 30px;
-    margin-right: 30px;
-    margin-top: 15px;
-    margin-bottom: 5px;
-}
-
-.input-wrapper .input-field {
-    border-radius: 15px;
-    padding-left: 20px;
+form .form-btn input {
+    font-size: 20px;
+    color: #fff;
 }
