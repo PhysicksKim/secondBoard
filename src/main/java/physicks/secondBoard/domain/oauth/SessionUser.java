@@ -1,4 +1,4 @@
-package physicks.secondBoard.config.oauth;
+package physicks.secondBoard.domain.oauth;
 
 import lombok.Getter;
 import physicks.secondBoard.domain.user.Member;

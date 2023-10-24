@@ -19,29 +19,29 @@
 </head>
 <body>
 <div class="register-form-wrapper">
-    <h2 class="register-header">회원 가입</h1>
+    <h2 class="register-header">회원 가입</h2>
 
-        <form action="/register" method="post"
+        <form action="/signup" method="post"
               class="register-form" id="register-form" name="register-form">
 
             <div class="input-wrapper form-floating">
-                <input type="email" class="input-field form-control" id="email" placeholder="email" required>
+                <input type="email" class="input-field form-control" id="email" name="email" placeholder="email" required>
                 <label for="email"><i class="fa-solid fa-envelope"></i>이메일</label>
             </div>
             <div class="input-wrapper form-floating">
-                <input type="password" class="input-field form-control" id="password" placeholder="password" required>
+                <input type="password" class="input-field form-control" id="password" name="password" placeholder="password" required>
                 <label for="password"><i class="fa-solid fa-lock"></i>비밀번호</label>
             </div>
             <div class="input-wrapper form-floating">
-                <input type="password" class="input-field form-control" id="password-check" placeholder="password check" required>
+                <input type="password" class="input-field form-control" id="password-check" name="passwordCheck" placeholder="password check" required>
                 <label for="password-check"><i class="fa-solid fa-lock"></i>비밀번호 확인</label>
             </div>
             <div class="input-wrapper form-floating">
-                <input type="text" class="input-field form-control" id="username" placeholder="name" required>
+                <input type="text" class="input-field form-control" id="username" name="username" placeholder="name" required>
                 <label for="username"><i class="fa-solid fa-user"></i>이름</label>
             </div>
             <div class="policy">
-                <input type="checkbox">
+                <input type="checkbox" id="check" name="check">
                 <h3>이용 및 개인정보 수집 및 이용 약관에 동의합니다.</h3>
             </div>
 

@@ -1,4 +1,4 @@
-package physicks.secondBoard.config.oauth;
+package physicks.secondBoard.domain.oauth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

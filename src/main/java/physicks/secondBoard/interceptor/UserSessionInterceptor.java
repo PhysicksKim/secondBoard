@@ -4,12 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import physicks.secondBoard.config.oauth.SessionUser;
+import physicks.secondBoard.domain.oauth.SessionUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+/**
+ * <pre>
+ * thymeleaf 가 로그인한 사용자의 username 을 얻을 수 있도록
+ * model 에 attributeName : "username" 으로 유저 이름을 담아준다.
+ * 만약 user 가 세션에 없는 경우에는
+ * thymeleaf 가 user 정보를 쓸 수 없으므로
+ * "username" attribute 에 null 을 담아주며
+ * thymeleaf 에서는 null 체크로 user 가 있는지 없는지 판단한다.
+ * </pre>
+ */
 @Component
 public class UserSessionInterceptor implements HandlerInterceptor {
 
