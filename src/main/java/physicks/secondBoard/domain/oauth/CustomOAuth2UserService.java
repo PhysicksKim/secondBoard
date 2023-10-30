@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import physicks.secondBoard.domain.user.Member;
-import physicks.secondBoard.domain.user.MemberRepository;
+import physicks.secondBoard.domain.member.MemberRepository;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;

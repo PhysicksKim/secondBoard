@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.user;
+package physicks.secondBoard.domain.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -22,5 +22,4 @@ public abstract class User extends BaseEntity {
     protected String password;
 
     abstract public Role getRole();
-
 }

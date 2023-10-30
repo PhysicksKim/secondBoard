@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.post.PostRepository;
-import physicks.secondBoard.domain.user.MemberRepository;
+import physicks.secondBoard.domain.member.MemberRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

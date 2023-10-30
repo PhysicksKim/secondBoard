@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.user;
+package physicks.secondBoard.domain.member;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,6 +6,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import physicks.secondBoard.domain.member.signup.MemberRegisterDto;
+import physicks.secondBoard.domain.user.Member;
 import physicks.secondBoard.exception.UserNotFoundException;
 
 @Service
@@ -17,10 +19,6 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
 
-    /*
-    회원가입, 로그인 기능
-     */
-
     /**
      * 회원가입
      * @param dto {@link MemberRegisterDto}
@@ -28,17 +26,16 @@ public class MemberService {
      */
     public Long registerMember(MemberRegisterDto dto) {
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
-        Member member = Member.of(encodedPassword, dto.getName(), dto.getEmail());
-
-        // --- validation ---
-        // ------------------
-
-        // 검증 과정 통과
-        Member savedMember = memberRepository.save(member);
-
+        Member savedMember = memberRepository.save(Member
+                .of(encodedPassword, dto.getName(), dto.getEmail(), false));
         return savedMember.getId();
     }
 
+    /**
+     * 로그인
+     * @param dto
+     * @return
+     */
     public Long login(MemberLoginDto dto) {
         // find
         Member member = memberRepository.findByEmail(dto.getEmail())
@@ -54,16 +51,5 @@ public class MemberService {
 
     public Member findMemberById(Long savedId) throws UserNotFoundException{
         return memberRepository.findMemberById(savedId).orElseThrow(UserNotFoundException::new);
-    }
-
-    // 회원 정보 변경. 닉네임
-    public void updateName(Long id, String name) throws UserNotFoundException{
-        Member memberById = findMemberById(id);
-        memberById.updateName(name);
-    }
-
-    // soft delete
-    public void deleteMember(Long id) {
-        memberRepository.deleteById(id);
     }
 }

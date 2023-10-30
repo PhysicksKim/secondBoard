@@ -32,10 +32,12 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	// --- Validation ---
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	// Bean Validation API
 	implementation 'javax.validation:validation-api:2.0.1.Final'
 	// Hibernate Validator (Bean Validation 구현체)
-	implementation 'org.hibernate.validator:hibernate-validator:6.0.13.Final'
+	implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
 
 	// test 에서 slf4j 를 사용하기 위해 필요
 	testCompileOnly 'org.projectlombok:lombok'
@@ -47,8 +49,7 @@ dependencies {
 
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.5'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools:3.0.4'
 }
 
 tasks.named('test') {

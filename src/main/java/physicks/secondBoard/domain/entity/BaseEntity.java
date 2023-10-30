@@ -9,9 +9,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * 수정일 등록일 기능을 추가해주는 @MappedSuperclass Entity 이다. <br>
- * CreatedTime : 등록일 <br>
- * LastUpdatedTime : 최종 수정일 <br>
+ * <pre>
+ * 수정일 등록일 기능을 추가해주는 @MappedSuperclass Entity 이다.
+ * Annotation 기반 Audit 기능을 통해 자동으로 값이 추가되므로 수동으로 값을 넣어줄 필요가 없다.
+ * CreatedTime : 등록일
+ * LastUpdatedTime : 최종 수정일
+ * </pre>
  */
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass

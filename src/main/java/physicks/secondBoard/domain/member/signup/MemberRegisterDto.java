@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.user;
+package physicks.secondBoard.domain.member.signup;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,9 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MemberRegisterDto {
 
-    private String loginId;
+    private String email;
     private String password;
     private String name;
-    private String email;
 
 }

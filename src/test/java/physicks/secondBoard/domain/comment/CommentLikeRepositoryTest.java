@@ -3,7 +3,7 @@ package physicks.secondBoard.domain.comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import physicks.secondBoard.domain.post.PostRepository;
-import physicks.secondBoard.domain.user.MemberRepository;
+import physicks.secondBoard.domain.member.MemberRepository;
 
 @DataJpaTest
 public class CommentLikeRepositoryTest {

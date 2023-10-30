@@ -4,21 +4,29 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import physicks.secondBoard.domain.member.signup.SignupForm;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA 를 위한 기본 생성자
 @SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE id = ?") // soft delete 수행
 public class Member extends User {
 
     @Column(nullable = false)
+    @NotBlank
+    @Email
     protected String email;
 
-    protected boolean isDeleted;
+    @NotNull
+    protected boolean isDeleted = false;
 
+    @NotNull
     protected boolean isOauthUser;
 
     public Member updateName(String name) {
@@ -26,19 +34,27 @@ public class Member extends User {
         return this;
     }
 
-    @Override
-    public Role getRole() {
-        return Role.MEMBER;
-    }
-
-    public static Member of(String password,
+    public static Member of(String encodedPassword,
                             String name,
-                            String email) {
+                            String email,
+                            boolean isOauthUser) {
 
         Member member = new Member();
-        member.name = name;
         member.email = email;
+        member.password = encodedPassword;
+        member.name = name;
+        member.isOauthUser = isOauthUser;
 
+        return member;
+    }
+
+    public static Member ofSignupDTO(SignupForm dto) {
+        Member member = new Member();
+        member.email = dto.getEmail();
+        member.password = dto.getPassword();
+        member.name = dto.getName();
+
+        member.isOauthUser = false;
         return member;
     }
 
@@ -47,7 +63,13 @@ public class Member extends User {
         member.email = email;
         member.name = name;
 
+        member.isOauthUser = true;
         return member;
+    }
+
+    @Override
+    public Role getRole() {
+        return Role.MEMBER;
     }
 
     @Override

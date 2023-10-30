@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.board.service.BoardService;
+import physicks.secondBoard.domain.member.MemberRepository;
 import physicks.secondBoard.domain.user.*;
 
 import javax.persistence.EntityManager;
