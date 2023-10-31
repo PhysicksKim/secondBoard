@@ -1,14 +1,28 @@
 package physicks.secondBoard.domain.member.signup;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import physicks.secondBoard.validator.ValidPassword;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 
+/**
+ * <pre>
+ * - request data example
+ * email=test@xxx.com,
+ * password=123456a!,
+ * passwordCheck=12341235123a!,
+ * username=kim,
+ * check=true
+ * </pre>
+ */
 @Getter
 @ToString
+@NoArgsConstructor
+@Setter
 public class SignupForm {
 
     @Email

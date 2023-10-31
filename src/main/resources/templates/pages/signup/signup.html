@@ -22,27 +22,37 @@
     <h2 class="register-header">회원 가입</h2>
 
         <form action="/signup" method="post"
+              th:object="${signupForm}"
               class="register-form" id="register-form" name="register-form">
 
             <div class="input-wrapper form-floating">
                 <input type="email" class="input-field form-control" id="email" name="email" placeholder="email" required>
                 <label for="email"><i class="fa-solid fa-envelope"></i>이메일</label>
+                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback">email error</div>
+                <div th:if="${!#fields.hasErrors('email') and not #strings.isEmpty(signupForm.name)}" class="valid-feedback">유효한 이메일 입니다.</div>
             </div>
             <div class="input-wrapper form-floating">
                 <input type="password" class="input-field form-control" id="password" name="password" placeholder="password" required>
                 <label for="password"><i class="fa-solid fa-lock"></i>비밀번호</label>
+                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback">password error</div>
+                <div th:if="${!#fields.hasErrors('password') and not #strings.isEmpty(signupForm.name)}" class="valid-feedback">유효한 비밀번호 입니다.</div>
             </div>
             <div class="input-wrapper form-floating">
                 <input type="password" class="input-field form-control" id="password-check" name="passwordCheck" placeholder="password check" required>
                 <label for="password-check"><i class="fa-solid fa-lock"></i>비밀번호 확인</label>
+                <div th:if="${#fields.hasErrors('passwordCheck')}" th:errors="*{passwordCheck}" class="invalid-feedback">passwordCheck error</div>
+                <div th:if="${!#fields.hasErrors('passwordCheck') and not #strings.isEmpty(signupForm.name)}" class="valid-feedback">비밀번호 확인이 일치합니다.</div>
             </div>
             <div class="input-wrapper form-floating">
-                <input type="text" class="input-field form-control" id="username" name="name" placeholder="name" required>
+                <input type="text" class="input-field form-control" id="username" name="name" th:field="*{name}" placeholder="name" required>
                 <label for="username"><i class="fa-solid fa-user"></i>이름</label>
+                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback">name error</div>
+                <div th:if="${!#fields.hasErrors('name') and not #strings.isEmpty(signupForm.name)}" class="valid-feedback">사용가능한 이름 입니다.</div>
             </div>
             <div class="policy">
                 <input type="checkbox" id="check" name="check">
                 <h3>이용 및 개인정보 수집 및 이용 약관에 동의합니다.</h3>
+                <div th:if="${#fields.hasErrors('check')}" th:errors="*{check}" class="invalid-feedback"></div>
             </div>
 
             <div class="input-wrapper form-btn">
