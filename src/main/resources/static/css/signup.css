@@ -59,7 +59,7 @@ body {
 }
 
 .input-wrapper {
-    height: 52px;
+    height: 70px;
     margin: 25px 0;
 }
 
@@ -111,7 +111,17 @@ form .form-btn input {
     color: #fff;
 }
 
+.password-toggle-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    background: none;
+    border: none;
+}
+
 .invalid-feedback {
+    display: block !important;
     color: #db4f4f;
 }
 
