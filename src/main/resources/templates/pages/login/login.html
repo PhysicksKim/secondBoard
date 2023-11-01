@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="/fragment/commonHead.html :: common-head" />
+    <th:block th:replace="/fragment/loginModalHead.html :: login-modal-head" />
+    <title>로그인</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/loginModalContent.css}" />
+    <link type="text/css" rel="stylesheet" th:href="@{/css/loginPage.css}" />
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-box">
+            <form action="/login" method="post"
+                  th:object="${signupForm}"
+                  class="login-form" id="login-form" name="login-form">
+                <h1>로그인</h1>
+                <div class="login-area">
+                    <div class="login-area-input-wrapper">
+                        <input type="email" id="email" name="email" class="login-id-input" placeholder="이메일을 입력해 주세요">
+                    </div>
+                    <div class="login-area-input-wrapper">
+                        <input type="password" id="password" name="password" class="login-password-input" placeholder="패스워드를 입력해 주세요">
+                    </div>
+                </div>
+                <div class="btn-footer">
+                    <button type="submit"
+                            class="btn btn-primary">
+                        로그인
+                    </button>
+                </div>
+            </form>
+            <div class="modal-oauth-wrapper">
+                <div class="google-login">
+                    <a class="oauth-a" href="/oauth2/authorization/google" role="button">
+                        <img src="https://madeby.google.com/static/images/google_g_logo.svg" alt="google login"/>
+                        <div class="oauth-provider-name">
+                            Google로 로그인
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

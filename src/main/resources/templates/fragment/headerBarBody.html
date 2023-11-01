@@ -1,4 +1,4 @@
-<th:block th:fragment="header-bar">
+<th:block th:fragment="header-bar-body">
     <div class="header-container-wrapper">
         <div class="header-container">
             <header class="header-bar d-flex flex-wrap justify-content-center py-3 mb-4">
@@ -43,6 +43,6 @@
 
     <!-- Login Modal 창 -->
     <div class="modal-section-wrapper">
-        <th:block th:replace="fragment/login.html :: login-modal" />
+        <th:block th:replace="fragment/loginModalBody.html :: login-modal-body" />
     </div>
 </th:block>

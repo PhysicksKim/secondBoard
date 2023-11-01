@@ -1,12 +1,13 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="/fragment/htmlHead.html :: html-head" />
+    <th:block th:replace="/fragment/commonHead.html :: common-head" />
+    <th:block th:replace="/fragment/headerBarHead.html :: header-bar-head" />
     <title>Board</title>
     <link type="text/css" rel="stylesheet" th:href="@{/css/board.css}">
 </head>
 <body>
-    <th:block th:replace="/fragment/headerBar.html :: header-bar" />
+    <th:block th:replace="/fragment/headerBarBody.html :: header-bar-body" />
 
     <div class="board-wrapper">
         <h1> 게시판 </h1>

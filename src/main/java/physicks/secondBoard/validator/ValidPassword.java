@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidPassword {
-    String message() default "Invalid password";
+    String message() default "유효하지 않은 형식의 비밀번호입니다.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
