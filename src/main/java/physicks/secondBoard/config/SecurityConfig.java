@@ -5,13 +5,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import physicks.secondBoard.domain.member.login.CustomAuthenticationFailureHandler;
 import physicks.secondBoard.domain.oauth.CustomOAuth2UserService;
 
 @RequiredArgsConstructor
 @EnableWebSecurity(debug = false)
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
-
+    private final CustomAuthenticationFailureHandler authenticationFailureHandler;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -36,7 +37,8 @@ public class SecurityConfig {
                         .loginPage("/login").permitAll()
                 .and()
                     .formLogin()
-                        .loginPage("/login").permitAll();
+                        .loginPage("/login").permitAll()
+                        .failureHandler(authenticationFailureHandler);
 
         return http.build();
     }

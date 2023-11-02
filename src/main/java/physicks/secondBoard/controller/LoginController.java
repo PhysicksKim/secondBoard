@@ -25,7 +25,10 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute MemberLoginDto memberLoginDto) {
+    public String login(@ModelAttribute MemberLoginDto dto) {
+
+        log.info("dto : {}", dto);
+        memberService.login(dto);
 
 
         return "redirect:/";

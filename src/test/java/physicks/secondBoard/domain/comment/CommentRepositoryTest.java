@@ -140,7 +140,7 @@ public class CommentRepositoryTest {
     //     Comment deletedComment = commentRepository.findById(SAMPLE_COMMENT_ID_1)
     //             .orElseThrow(CommentNotFoundException::new);
     //
-    //     // soft delete 경우 equals() overwriting 에 따라 equal 이 true 이다
+    //     // soft delete 경우 equals() override 에 따라 equal 이 true 이다
     //     assertThat(deletedComment).isEqualTo(comment);
     //     assertThat(deletedComment.getIsDeleted()).isTrue();
     // }
