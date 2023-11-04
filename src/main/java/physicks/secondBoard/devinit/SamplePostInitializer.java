@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.author.AuthorRepository;
+import physicks.secondBoard.domain.member.MemberService;
+import physicks.secondBoard.domain.member.signup.MemberSignupDto;
 import physicks.secondBoard.domain.post.Post;
 
 import java.time.LocalDateTime;
@@ -24,11 +26,19 @@ public class SamplePostInitializer implements CommandLineRunner {
     @Autowired
     private AuthorRepository authorRepository;
 
+    @Autowired
+    private MemberService memberService;
+
     @Override
     public void run(String... args) throws Exception {
         int numPosts = 20;
         addSamplePosts(numPosts);
         minusCreatedTime1Day();
+        addSampleMembers();
+    }
+
+    private void addSampleMembers() {
+        memberService.signupMember(new MemberSignupDto("tester@test.com", "123456aA!", "kim"));
     }
 
     private void addSamplePosts(int numPosts) {
