@@ -41,9 +41,6 @@ public class BoardController {
     public String mainPage(Model model, Pageable pageable, Authentication authentication) {
         log.info("raw authentication : {}", authentication);
 
-        String userName = authService.getUserName(authentication);
-        log.info("userName : {}", userName);
-
         List<BoardPostDto> postList = boardService.getBoardPostList(pageable);
         model.addAttribute("postList", postList);
         return VIEW_PREFIX + "board";

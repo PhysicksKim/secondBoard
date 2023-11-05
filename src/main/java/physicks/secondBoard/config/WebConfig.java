@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import physicks.secondBoard.interceptor.UserSessionInterceptor;
+import physicks.secondBoard.interceptor.UsernameAddInterceptor;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
-    private UserSessionInterceptor userSessionInterceptor;
+    private UsernameAddInterceptor userSessionInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

@@ -2,6 +2,7 @@ package physicks.secondBoard.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,15 +17,8 @@ public class IndexController {
     HttpSession httpSession;
 
     @GetMapping("/")
-    public String index(Model model) {
-        // SessionUser user = (SessionUser) httpSession.getAttribute("user");
-        //
-        // if (user != null) {
-        //     model.addAttribute("username", user.getName());
-        // } else {
-        //     model.addAttribute("username", null);
-        // }
-
+    public String index(Model model, Authentication authentication) {
+        log.debug("auth username : {}", authentication != null ? authentication : "NULL");
         return "index";
     }
 }

@@ -63,3 +63,7 @@ h1 {
     height: 40vh;
     width: 100%;
 }
+
+input[readonly] {
+    background-color: #e8e8e8;
+}

@@ -19,9 +19,15 @@
         <input type="text" id="title" name="title"
                th:value="${post != null} ? ${post.title} : ''"
                placeholder="제목"> <br>
-        <input type="text" id="author" name="author"
-               th:value="${post != null} ? ${post.author} : ''"
+
+        <input th:if="${username == null && post == null}"
+               type="text" th:id="author" name="author"
                placeholder="작성자"> <br>
+        <input th:unless="${username == null && post == null}"
+               type="text" th:id="author" name="author"
+               th:value="${post != null ? post.author : username}"
+               placeholder="작성자" readonly> <br>
+
         <input type="hidden" id="id" name="id"
                th:value="${post != null} ? ${post.id} : ''" >
     </div>

@@ -6,17 +6,17 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import physicks.secondBoard.domain.member.login.CustomAuthenticationFailureHandler;
-import physicks.secondBoard.domain.member.login.CustomAuthenticationSuccessHandler;
 import physicks.secondBoard.domain.member.login.H2UserDetailsService;
 import physicks.secondBoard.domain.oauth.CustomOAuth2UserService;
 
 @RequiredArgsConstructor
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity(debug = false)
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final SavedRequestAwareAuthenticationSuccessHandler savedRequestAwareAuthenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
     private final H2UserDetailsService h2UserDetailsService;
 
@@ -46,13 +46,14 @@ public class SecurityConfig {
                     .loginPage("/login").permitAll()
                     .loginProcessingUrl("/login")
                     .usernameParameter("email")
-                .failureHandler(customAuthenticationFailureHandler)
-                .successHandler(customAuthenticationSuccessHandler)
+                    .failureHandler(customAuthenticationFailureHandler)
+                    .successHandler(savedRequestAwareAuthenticationSuccessHandler)
                 .and()
                     .logout()
                     .logoutSuccessUrl("/");
 
         return http.build();
     }
+
 
 }
