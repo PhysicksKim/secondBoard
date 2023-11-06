@@ -33,19 +33,17 @@ import static org.mockito.Mockito.*;
  */
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-class BoardServiceTest {
+class BoardServiceMockTest {
 
     @Mock
     private PostService postService;
-
     private BoardService boardService;
-
     private static final String POST_ID_FIELD = "id";
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this); // Mock 객체 초기화
-        boardService = new BoardService(postService); // 테스트할 Service에 Mock 객체를 주입
+        boardService = new BoardService(postService); // 테스트할 Service 에 Mock 객체를 주입
     }
 
     /**

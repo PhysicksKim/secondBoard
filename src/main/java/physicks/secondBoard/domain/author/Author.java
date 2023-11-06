@@ -14,6 +14,10 @@ import physicks.secondBoard.exception.EntityConstraintViolation;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * Guest Author : isGuest = true, user = null, password = Not null
+ * Member Author : isGuest = false, user = Not null, password = null
+ */
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Author extends AuditBaseEntity {

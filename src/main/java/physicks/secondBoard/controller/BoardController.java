@@ -94,11 +94,11 @@ public class BoardController {
         // !!! 수정 필요 !!!
         // - 일단은 간단하게 검증 함
         // 만약 post id 가 form hidden 에 없이 url만 날아온 경우
-        // 잘못된 접근으로 판단해서 그냥 home으로 redirect 한다
+        // 잘못된 접근으로 판단해서 그냥 home 으로 redirect 한다
         //
         // - 검증 개선 방향
         // 어차피 postman 같은거로 /write/11 에서 보낸 것 처럼 출발 url 꾸미고
-        // form data도 다 위처럼 넣으면 이정도 필터링은 바로 뚫린다.
+        // form data 도 다 위처럼 넣으면 이정도 필터링은 바로 뚫린다.
         // 그래서 사용할 방법이 JWT 토큰이다
         //
         // - JWT 토큰을 이용한 검증된 사용자 체크

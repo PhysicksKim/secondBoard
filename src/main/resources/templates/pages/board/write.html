@@ -13,12 +13,17 @@
 <h1 th:if="${post == null}">Post Write Page</h1>
 <h1 th:unless="${post == null}">Post Edit Page</h1>
 
+<!-- post == null 인 경우 글 신규작성 / post != null 인 경우 글 수정 -->
 <form id="post-form" name="post-form" method="post"
       th:action="${post == null} ? '/board/write' : '/board/write/' + ${post.id}" >
     <div id="inputs-container">
         <input type="text" id="title" name="title"
                th:value="${post != null} ? ${post.title} : ''"
                placeholder="제목"> <br>
+
+        <input th:if="${post == null}"
+               type="text" id="password" name="password"
+               placeholder="게시글 비밀번호"> <br>
 
         <input th:if="${username == null && post == null}"
                type="text" th:id="author" name="author"
