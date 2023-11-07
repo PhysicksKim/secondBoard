@@ -51,3 +51,9 @@ logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
 
+
+# ------ 커스텀 설정 변수들 ------
+
+## jwt token secret key !! ONLY FOR 'dev'
+secret:
+  key: dFoxgaXiaq8jOVZ8br9WjihM0mommzgp9DPSTaOYR5s
