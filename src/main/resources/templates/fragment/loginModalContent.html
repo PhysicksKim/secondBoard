@@ -1,27 +1,28 @@
 <th:block th:fragment="login-modal-content">
-    <div class="login-area">
-        <div class="login-area-input-wrapper">
-            <input class="login-id-input" placeholder="아이디를 입력해 주세요">
+    <form action="/login" method="post">
+        <div class="login-area">
+            <div class="login-area-input-wrapper">
+                <input type="text" class="login-id-input" placeholder="이메일을 입력해 주세요" name="email" required>
+            </div>
+            <div class="login-area-input-wrapper">
+                <input type="password" class="login-password-input" placeholder="비밀번호를 입력해 주세요" name="password" required>
+            </div>
         </div>
-        <div class="login-area-input-wrapper">
-            <input type="password" class="login-password-input" placeholder="패스워드를 입력해 주세요">
+        <div class="btn-footer">
+            <button type="submit"
+                    class="btn btn-primary login-modal-login-btn">
+                로그인
+            </button>
         </div>
-    </div>
-    <div class="modal-oauth-wrapper">
-        <div class="google-login">
-            <a class="oauth-a" href="/oauth2/authorization/google" role="button">
-                <img src="https://madeby.google.com/static/images/google_g_logo.svg" alt="google login"/>
-                <div class="oauth-provider-name">
-                    Google로 로그인
-                </div>
-            </a>
+        <div class="modal-oauth-wrapper">
+            <div class="google-login">
+                <a class="oauth-a" href="/oauth2/authorization/google" role="button">
+                    <img th:src="@{/google_web_light_rd_na.svg}" alt="google login"/>
+                    <div class="oauth-provider-name">
+                        Google로 로그인
+                    </div>
+                </a>
+            </div>
         </div>
-    </div>
-    <div class="btn-footer">
-        <button type="button"
-                class="btn btn-secondary login-modal-close"
-                data-bs-dismiss="modal">
-            Close
-        </button>
-    </div>
+    </form>
 </th:block>

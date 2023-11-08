@@ -28,31 +28,23 @@ body {
 .login-btn {
     border: none;
     padding: 10px;
-    margin: 10px 0;
+    margin-bottom: 5px;
     width: 100%;
 }
 
 .login-btn:hover {
-    background-color: #a8a8a8;
+    background-color: #0c3eae;
 }
-
-.logout-btn {
-    color: #f0f0f0;
-    background-color: rgb(52, 60, 182);
-    border: none;
-    padding: 8px 12px;
-    margin-left: 8px;
-}
-
-.logout-btn:hover {
-    background-color: rgb(74, 83, 222);
-}
-
-
-/* MODAL WINDOW */
 
 .modal-title {
     margin-top: 20px;
+}
+
+.login-error {
+    margin-top: 15px;
+    margin-left: 3px;
+    font-size: 14px;
+    color: #db4f4f;
 }
 
 .google-login {
@@ -87,7 +79,7 @@ body {
 }
 
 .google-login img {
-    height: 1em;
+    height: 2em;
 }
 
 .footer-wrapper {
@@ -119,9 +111,9 @@ body {
 }
 
 .btn-footer {
-    padding-top: 10px;
-    border-top: 1px solid #e8e8e8;
-    margin-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8e8e8;
+    margin-bottom: 0;
     display: flex;
     justify-content: center;
     width: 100%;

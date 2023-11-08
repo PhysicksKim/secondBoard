@@ -12,6 +12,9 @@
                   th:object="${memberLoginDto}"
                   class="login-form" id="login-form" name="login-form">
                 <h1>로그인</h1>
+                <div th:if="${param.error}" class="login-error" role="alert">
+                    로그인 정보가 올바르지 않습니다.
+                </div>
                 <div class="login-area">
                     <div class="login-area-input-wrapper">
                         <input type="email" id="email" name="email" class="login-id-input" placeholder="이메일을 입력해 주세요">
@@ -33,7 +36,7 @@
             <div class="modal-oauth-wrapper">
                 <div class="google-login">
                     <a class="oauth-a" href="/oauth2/authorization/google" role="button">
-                        <img src="https://madeby.google.com/static/images/google_g_logo.svg" alt="google login"/>
+                        <img th:src="@{/google_web_light_rd_na.svg}" alt="google login"/>
                         <div class="oauth-provider-name">
                             Google로 로그인
                         </div>
