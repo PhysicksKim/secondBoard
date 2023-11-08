@@ -33,7 +33,7 @@ public class Author extends AuditBaseEntity {
     protected String name;
 
     @Getter
-    @Column(nullable = true, length = 64)
+    @Column(nullable = true)
     protected String password;
 
     public boolean isGuest() {

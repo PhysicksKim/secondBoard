@@ -1,4 +1,4 @@
-package physicks.secondBoard.jwt;
+package physicks.secondBoard.token;
 
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class BasicJwtTest {
                 .header()
                 .keyId("testKeyId")
                 .and()
-                .subject("phy")
+                .subject("testBasic")
                 .signWith(key)
                 .compact();
 

@@ -18,7 +18,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model, Authentication authentication) {
-        log.debug("auth username : {}", authentication != null ? authentication : "NULL");
+        log.info("auth username : {}", authentication != null ? authentication : "NULL");
         return "index";
     }
 }
