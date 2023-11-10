@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.author.Author;
-import physicks.secondBoard.domain.board.dto.BoardPostDto;
-import physicks.secondBoard.domain.board.mapper.BoardPostDtoMapper;
+import physicks.secondBoard.domain.board.dto.PostListDto;
+import physicks.secondBoard.domain.board.mapper.PostListDtoMapper;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 
@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
  */
 @SpringBootTest
 @Transactional
-class BoardPostDtoMapperTest {
+class PostListDtoMapperTest {
 
     @Autowired
     PostRepository postRepository;
@@ -33,7 +33,7 @@ class BoardPostDtoMapperTest {
         Post savedPost = postRepository.save(post);
 
         //when
-        BoardPostDto dto = BoardPostDtoMapper.toDto(savedPost);
+        PostListDto dto = PostListDtoMapper.toDto(savedPost);
 
         //then
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -54,7 +54,7 @@ class BoardPostDtoMapperTest {
         ReflectionTestUtils.setField(savedPost, "createdTime", yesterday, LocalDateTime.class);
 
         //when
-        BoardPostDto dto = BoardPostDtoMapper.toDto(savedPost);
+        PostListDto dto = PostListDtoMapper.toDto(savedPost);
 
         //then
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd");

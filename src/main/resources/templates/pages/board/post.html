@@ -28,7 +28,17 @@
         <button class="post-buttons board-page-button" onclick="location.href='/board'"
                 type="button"> 글 목록
         </button>
-        <button class="post-buttons edit-page-button" th:onclick="'location.href=\'/board/write/' + ${post.id} + '\''"
+        <!-- 비회원 작성 포스트인 경우 : 비밀번호 입력 페이지로 이동 -->
+        <button th:if="${post.isGuest}"
+                class="post-buttons edit-page-button"
+                th:onclick="'location.href=\'/board/' + ${post.id} + '/password\''"
+                type="button"
+        > 수정
+        </button>
+        <!-- 회원 작성 포스트인 경우 -->
+        <button th:unless="${post.isGuest}"
+                class="post-buttons edit-page-button"
+                th:onclick="'location.href=\'/board/' + ${post.id} + '/edit\''"
                 type="button"
         > 수정
         </button>

@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import physicks.secondBoard.domain.board.dto.BoardPostDto;
+import physicks.secondBoard.domain.board.dto.PostListDto;
 import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
 import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
@@ -72,7 +72,7 @@ public class BoardServiceSpringTest {
         Pageable pageable = PageRequest.of(page, size);
 
         //when
-        List<BoardPostDto> dtoList = boardService.getBoardPostList(pageable);
+        List<PostListDto> dtoList = boardService.getPostListDtos(pageable);
 
         //then
         assertThat(dtoList.size()).isEqualTo(size);
@@ -89,7 +89,7 @@ public class BoardServiceSpringTest {
         Pageable pageable = PageRequest.of(page, size);
 
         //when
-        List<BoardPostDto> dtoList = boardService.getBoardPostList(pageable);
+        List<PostListDto> dtoList = boardService.getPostListDtos(pageable);
 
         //then
         assertThat(dtoList.size()).isEqualTo(size);
@@ -108,9 +108,9 @@ public class BoardServiceSpringTest {
         Pageable pageable = PageRequest.of(page, size);
 
         //when
-        List<BoardPostDto> dtoList = boardService.getBoardPostList(pageable);
-        for (BoardPostDto boardPostDto : dtoList) {
-            System.out.println("dto title = " + boardPostDto.getTitle());
+        List<PostListDto> dtoList = boardService.getPostListDtos(pageable);
+        for (PostListDto postListDto : dtoList) {
+            System.out.println("dto title = " + postListDto.getTitle());
         }
         List<Post> all = boardService.findAll();
         for (Post post : all) {
@@ -127,7 +127,7 @@ public class BoardServiceSpringTest {
     @Test
     public void postUpdateTest() throws Exception {
         // given
-        List<BoardPostDto> boardPostList = boardService.getBoardPostList(Pageable.ofSize(1));
+        List<PostListDto> boardPostList = boardService.getPostListDtos(Pageable.ofSize(1));
         Long id = boardPostList.get(0).getId();
         Post findPost = boardService.findPostById(id);
 

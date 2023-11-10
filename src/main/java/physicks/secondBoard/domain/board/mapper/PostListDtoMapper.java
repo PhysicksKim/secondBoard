@@ -1,20 +1,20 @@
 package physicks.secondBoard.domain.board.mapper;
 
-import physicks.secondBoard.domain.board.dto.BoardPostDto;
+import physicks.secondBoard.domain.board.dto.PostListDto;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.exception.NullMappingException;
 import physicks.secondBoard.util.BoardTimeFormatter;
 
-public class BoardPostDtoMapper {
+public class PostListDtoMapper {
 
-    static public BoardPostDto toDto(Post post) {
+    static public PostListDto toDto(Post post) {
         if(post == null) {
             throw new NullMappingException();
         }
 
         String formattedCreatedTime
                 = BoardTimeFormatter.forPostRead(post.getCreatedTime());
-        BoardPostDto dto = new BoardPostDto(
+        PostListDto dto = new PostListDto(
                 post.getId(),
                 post.getTitle(),
                 post.getAuthor().getAuthorName(),
@@ -22,10 +22,4 @@ public class BoardPostDtoMapper {
         );
         return dto;
     }
-
-    // public Post toEntity(BoardPostDto dto) {
-    //
-    //     return null;
-    // }
-
 }

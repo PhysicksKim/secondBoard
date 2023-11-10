@@ -11,7 +11,8 @@ public class PostReadDtoMapper {
                 post.getTitle(),
                 post.getAuthor().getAuthorName(),
                 post.getContent(),
-                BoardTimeFormatter.forPostRead(post.getCreatedTime())
+                BoardTimeFormatter.forPostRead(post.getCreatedTime()),
+                post.getAuthor().isGuest()
         );
     }
 }

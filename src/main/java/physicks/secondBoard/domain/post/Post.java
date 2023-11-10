@@ -22,7 +22,7 @@ import java.util.Objects;
 public class Post extends AuditBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author")
+    @JoinColumn(name = "author_id")
     private Author author;
 
     @Column(nullable = false)

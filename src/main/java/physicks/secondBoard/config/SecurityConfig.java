@@ -10,9 +10,10 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import physicks.secondBoard.domain.member.login.CustomAuthenticationFailureHandler;
 import physicks.secondBoard.domain.member.login.H2UserDetailsService;
 import physicks.secondBoard.domain.oauth.CustomOAuth2UserService;
+import physicks.secondBoard.domain.user.Role;
 
 @RequiredArgsConstructor
-@EnableWebSecurity(debug = false)
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -22,7 +23,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authBuilder.userDetailsService(h2UserDetailsService);
 
@@ -36,24 +36,24 @@ public class SecurityConfig {
                     .antMatchers("/board/**").permitAll()
                     .anyRequest().permitAll()
                 .and()
+                    .anonymous().authorities(Role.GUEST.getKey())
+                .and()
                     .oauth2Login()
                         .userInfoEndpoint()
                             .userService(customOAuth2UserService)
-                    .and()
-                        .loginPage("/login").permitAll()
+                        .and()
+                            .loginPage("/login").permitAll()
                 .and()
-                .formLogin()
-                    .loginPage("/login").permitAll()
-                    .loginProcessingUrl("/login")
-                    .usernameParameter("email")
-                    .failureHandler(customAuthenticationFailureHandler)
-                    .successHandler(savedRequestAwareAuthenticationSuccessHandler)
+                    .formLogin()
+                        .loginPage("/login").permitAll()
+                        .loginProcessingUrl("/login")
+                        .usernameParameter("email")
+                        .failureHandler(customAuthenticationFailureHandler)
+                        .successHandler(savedRequestAwareAuthenticationSuccessHandler)
                 .and()
                     .logout()
-                    .logoutSuccessUrl("/");
+                        .logoutSuccessUrl("/");
 
         return http.build();
     }
-
-
 }

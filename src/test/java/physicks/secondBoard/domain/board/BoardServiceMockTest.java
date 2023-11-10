@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
  * 따라서 Post 객체 일치여부는 모든 필드에 대해 비교하지 않습니다.
  * Post Mapping 비교는 아래 테스트에서 수행합니다.
  * </pre>
- * @see BoardPostDtoMapperTest
+ * @see PostListDtoMapperTest
  */
 @Slf4j
 @ExtendWith(MockitoExtension.class)

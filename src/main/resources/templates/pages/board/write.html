@@ -15,7 +15,7 @@
 
 <!-- post == null 인 경우 글 신규작성 / post != null 인 경우 글 수정 -->
 <form id="post-form" name="post-form" method="post"
-      th:action="${post == null} ? '/board/write' : '/board/write/' + ${post.id}" >
+      th:action="${post == null} ? '/board/write' : '/board/' + ${post.id} + '/edit'" >
     <div id="inputs-container">
         <input type="text" id="title" name="title"
                th:value="${post != null} ? ${post.title} : ''"
