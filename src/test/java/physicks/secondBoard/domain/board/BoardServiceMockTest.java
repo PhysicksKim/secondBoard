@@ -7,12 +7,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
 import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
+import physicks.secondBoard.domain.token.PostUpdateTokenService;
 
 import java.util.Optional;
 
@@ -33,17 +35,22 @@ import static org.mockito.Mockito.*;
  */
 @Slf4j
 @ExtendWith(MockitoExtension.class)
+@Deprecated
 class BoardServiceMockTest {
 
     @Mock
     private PostService postService;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
+    private PostUpdateTokenService postUpdateTokenService;
     private BoardService boardService;
     private static final String POST_ID_FIELD = "id";
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this); // Mock 객체 초기화
-        boardService = new BoardService(postService); // 테스트할 Service 에 Mock 객체를 주입
+        boardService = new BoardService(postService, passwordEncoder, postUpdateTokenService); // 테스트할 Service 에 Mock 객체를 주입
     }
 
     /**

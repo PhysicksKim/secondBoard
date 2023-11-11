@@ -3,6 +3,7 @@ package physicks.secondBoard.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,9 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import physicks.secondBoard.domain.board.dto.PostListDto;
 import physicks.secondBoard.domain.board.dto.PostGuestUpdateDto;
 import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
+import physicks.secondBoard.domain.board.dto.PostListDto;
 import physicks.secondBoard.domain.board.dto.PostReadDto;
 import physicks.secondBoard.domain.board.service.BoardAuthenticationService;
 import physicks.secondBoard.domain.board.service.BoardService;
@@ -21,8 +22,8 @@ import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.token.TokenDto;
 import physicks.secondBoard.domain.user.AuthService;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
 import java.util.List;
 
 @RequestMapping("/board")
@@ -84,16 +85,22 @@ public class BoardController {
         TokenDto tokenDto = boardService.validatePostPasswordAndGenerateToken(id, password);
 
         // 2. 일치하는 경우 jwt token 을 발급함. 회원인 경우에도 동일하게 "비회원 게시글 수정"에 대해서는 jwt token 을 통해 인증
-        Cookie accessToken = new Cookie("accessToken", tokenDto.getAccessToken());
-        // Cookie refreshToken = new Cookie("refreshToken", tokenDto.getRefreshToken());
-        accessToken.setHttpOnly(true); // HTTP Only 설정
-        accessToken.setSecure(true); // Secure 설정
-        accessToken.setPath("/"); // 쿠키의 경로 설정
-        accessToken.setMaxAge(7 * 24 * 60 * 60); // 쿠키 유효기간 설정 (예: 7일)
-
-        // SameSite 설정 (Java 11 이상에서 지원. 낮은 버전의 Java에서는 별도의 처리가 필요)
-        // accessToken.setSameSite("Strict"); // Strict, Lax, None 중 선택
-        response.addCookie(accessToken);
+        ResponseCookie accessToken = ResponseCookie.from("accessToken", tokenDto.getAccessToken())
+                .httpOnly(true)
+                .sameSite("strict")
+                .secure(true)
+                .path("/"+id)
+                .maxAge(Duration.ofSeconds(60*10))
+                .build();
+        ResponseCookie refreshToken = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+                .httpOnly(true)
+                .sameSite("strict")
+                .secure(true)
+                .path("/"+id)
+                .maxAge(Duration.ofSeconds(60*11))
+                .build();
+        response.addHeader("set-cookie", accessToken.toString());
+        response.addHeader("set-cookie", refreshToken.toString());
 
         // 3. /{id}/edit 으로 redirect 해줌
         redirectAttributes.addAttribute("id", id);
