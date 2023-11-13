@@ -75,7 +75,7 @@ public class BoardService {
         }
 
         // 유효성 통과
-        String accessToken = postUpdateTokenService.generateUpdateAccessToken(postId);
+        String accessToken = postUpdateTokenService.generateEditAccessToken(postId);
         String refreshToken = "리프래쉬 토큰 생성 로직 필요";
 
         return new TokenDto(accessToken, refreshToken);

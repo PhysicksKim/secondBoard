@@ -16,14 +16,14 @@ import java.util.Map;
 @Service
 public class PostUpdateTokenService {
 
-    private static final String CLAIM_POST_ID = "postId";
-    private static final String CLAIM_TOKEN_TYPE_KEY = "type";
-    private static final String CLAIM_TOKEN_TYPE_VALUE_ACCESS = "access";
-    private static final String CLAIM_TOKEN_TYPE_VALUE_REFRESH = "refresh";
-    private static final String SUBJECT_ACCESS = "postUpdate";
-    private static final String SUBJECT_REFRESH = "postUpdateRefresh";
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 86400000; // 86400000 ms = 24 hr
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 86400000; // 86400000 ms = 24 hr
+    private static final String CLAIM_KEY_POST_ID = "postId";
+    private static final String CLAIM_KEY_TOKEN_TYPE = "type";
+    private static final String CLAIM_VALUE_TYPE_ACCESS = "access";
+    private static final String CLAIM_VALUE_TYPE_REFRESH = "refresh";
+    private static final String SUBJECT_FOR_ACCESS_TOKEN = "postUpdate";
+    private static final String SUBJECT_FOR_REFRESH_TOKEN = "postUpdateRefresh";
+    private static final long ACCESS_TOKEN_EXPIRATION_MS = 86400000; // 86400000 ms = 24 hr
+    private static final long REFRESH_TOKEN_EXPIRATION_MS = 86400000; // 86400000 ms = 24 hr
 
     private final SecretKey SECRET_KEY; // provider 에 의해 주입받음
 
@@ -31,42 +31,34 @@ public class PostUpdateTokenService {
         SECRET_KEY = provider.getSECRET_KEY();
     }
 
-    public String generateUpdateAccessToken(long postId) {
+    public String generateEditAccessToken(long postId) {
+        return generateToken(postId, CLAIM_VALUE_TYPE_ACCESS, ACCESS_TOKEN_EXPIRATION_MS, SUBJECT_FOR_ACCESS_TOKEN);
+    }
+
+    public String generateEditRefreshToken(long postId) {
+        return generateToken(postId, CLAIM_VALUE_TYPE_REFRESH, REFRESH_TOKEN_EXPIRATION_MS, SUBJECT_FOR_REFRESH_TOKEN);
+    }
+
+    private String generateToken(long postId, String claimTokenTypeValueRefresh, long refreshTokenExpirationTime, String subjectRefresh) {
         Map<String, Object> claims = getPostIdClaim(postId);
-        claims.put(CLAIM_TOKEN_TYPE_KEY, CLAIM_TOKEN_TYPE_VALUE_ACCESS);
+        claims.put(CLAIM_KEY_TOKEN_TYPE, claimTokenTypeValueRefresh);
 
         Date issuedDate = getIssuedDate();
-        Date expirationDate = getExpirationDate(ACCESS_TOKEN_EXPIRATION_TIME);
+        Date expirationDate = getExpirationDate(refreshTokenExpirationTime);
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(SUBJECT_ACCESS)
+                .subject(subjectRefresh)
                 .issuedAt(issuedDate)
                 .expiration(expirationDate)
                 .signWith(SECRET_KEY)
                 .compact();
     }
 
-    public String generateUpdateRefreshToken(long postId) {
-        Map<String, Object> claims = getPostIdClaim(postId);
-        claims.put(CLAIM_TOKEN_TYPE_KEY, CLAIM_TOKEN_TYPE_VALUE_REFRESH);
-
-        Date issuedDate = getIssuedDate();
-        Date expirationDate = getExpirationDate(REFRESH_TOKEN_EXPIRATION_TIME);
-
-        return Jwts.builder()
-                .claims(claims)
-                .subject(SUBJECT_REFRESH)
-                .issuedAt(issuedDate)
-                .expiration(expirationDate)
-                .signWith(SECRET_KEY)
-                .compact();
-    }
-
-    public boolean validateUpdateAccessToken(String token, long postId) {
+    public boolean validateEditAccessToken(String token, long postId) {
         try {
-            Jws<Claims> claimsJws = Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token);
-            return isValidTokenPostId(claimsJws, postId) && isNotExpired(claimsJws) && isAccessToken(claimsJws);
+            Jws<Claims> claimsJws = getClaimsFromToken(token);
+            return isAccessToken(claimsJws) && isValidTokenPostId(claimsJws, postId) && isNotExpired(claimsJws);
         } catch (JwtException | IllegalArgumentException e) {
             log.error("Token validation error", e);
             return false;
@@ -76,10 +68,10 @@ public class PostUpdateTokenService {
         }
     }
 
-    public boolean validateUpdateRefreshToken(String token, long postId) {
+    public boolean validateEditRefreshToken(String token, long postId) {
         try {
-            Jws<Claims> claimsJws = Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token);
-            return isValidTokenPostId(claimsJws, postId) && isNotExpired(claimsJws) && isRefreshToken(claimsJws);
+            Jws<Claims> claimsJws = getClaimsFromToken(token);
+            return isRefreshToken(claimsJws) && isValidTokenPostId(claimsJws, postId) && isNotExpired(claimsJws);
         } catch (JwtException | IllegalArgumentException e) {
             log.error("Token validation error", e);
             return false;
@@ -87,20 +79,24 @@ public class PostUpdateTokenService {
             log.error("Unexpected Token error", e);
             return false;
         }
+    }
+
+    private Jws<Claims> getClaimsFromToken(String token) {
+        return Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token);
     }
 
     private boolean isAccessToken(Jws<Claims> claimsJws) {
-        String tokenType = claimsJws.getPayload().get(CLAIM_TOKEN_TYPE_KEY, String.class);
-        return tokenType != null && tokenType.equals(CLAIM_TOKEN_TYPE_VALUE_ACCESS);
+        String tokenType = claimsJws.getPayload().get(CLAIM_KEY_TOKEN_TYPE, String.class);
+        return tokenType != null && tokenType.equals(CLAIM_VALUE_TYPE_ACCESS);
     }
 
     private boolean isRefreshToken(Jws<Claims> claimsJws) {
-        String tokenType = claimsJws.getPayload().get(CLAIM_TOKEN_TYPE_KEY, String.class);
-        return tokenType != null && tokenType.equals(CLAIM_TOKEN_TYPE_VALUE_REFRESH);
+        String tokenType = claimsJws.getPayload().get(CLAIM_KEY_TOKEN_TYPE, String.class);
+        return tokenType != null && tokenType.equals(CLAIM_VALUE_TYPE_REFRESH);
     }
 
     private boolean isValidTokenPostId(Jws<Claims> claimsJws, long postId) {
-        Long tokenPostId = claimsJws.getPayload().get(CLAIM_POST_ID, Long.class);
+        Long tokenPostId = claimsJws.getPayload().get(CLAIM_KEY_POST_ID, Long.class);
         return tokenPostId != null && tokenPostId.equals(postId);
     }
 
@@ -114,7 +110,7 @@ public class PostUpdateTokenService {
 
     private Map<String, Object> getPostIdClaim(long postId) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(CLAIM_POST_ID, postId);
+        claims.put(CLAIM_KEY_POST_ID, postId);
         return claims;
     }
 

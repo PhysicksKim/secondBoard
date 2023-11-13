@@ -34,13 +34,24 @@ public class PostUpdateTokenServiceTest {
     }
 
     @Test
-    @DisplayName("기본 토큰 생성 및 유효성 검사")
-    void token_create_validation() {
+    @DisplayName("Access Token 생성 및 유효성 검사")
+    void access_token_create_validation() {
         // given
-        String token = postUpdateTokenService.generateUpdateAccessToken(savedPostId);
+        String token = postUpdateTokenService.generateEditAccessToken(savedPostId);
 
         // when && then
-        boolean isValidToken = postUpdateTokenService.validateUpdateAccessToken(token, savedPostId);
+        boolean isValidToken = postUpdateTokenService.validateEditAccessToken(token, savedPostId);
+
+        Assertions.assertTrue(isValidToken, "토큰 유효성 검사");
+    }
+    @Test
+    @DisplayName("Refresh Token 생성 및 유효성 검사")
+    void refresh_token_create_validation() {
+        // given
+        String token = postUpdateTokenService.generateEditRefreshToken(savedPostId);
+
+        // when && then
+        boolean isValidToken = postUpdateTokenService.validateEditRefreshToken(token, savedPostId);
 
         Assertions.assertTrue(isValidToken, "토큰 유효성 검사");
     }
