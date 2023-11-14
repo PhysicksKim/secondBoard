@@ -14,7 +14,7 @@ import java.util.Map;
  */
 @Slf4j
 @Service
-public class PostUpdateTokenService {
+public class PostEditTokenService {
 
     private static final String CLAIM_KEY_POST_ID = "postId";
     private static final String CLAIM_KEY_TOKEN_TYPE = "type";
@@ -27,7 +27,7 @@ public class PostUpdateTokenService {
 
     private final SecretKey SECRET_KEY; // provider 에 의해 주입받음
 
-    public PostUpdateTokenService(HS256KeyProvider provider) {
+    public PostEditTokenService(HS256KeyProvider provider) {
         SECRET_KEY = provider.getSECRET_KEY();
     }
 

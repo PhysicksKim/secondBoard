@@ -12,7 +12,7 @@ import physicks.secondBoard.domain.board.mapper.PostListDtoMapper;
 import physicks.secondBoard.domain.board.mapper.PostReadDtoMapper;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
-import physicks.secondBoard.domain.token.PostUpdateTokenService;
+import physicks.secondBoard.domain.token.PostEditTokenService;
 import physicks.secondBoard.domain.token.TokenDto;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class BoardService {
 
     private final PostService postService;
     private final PasswordEncoder passwordEncoder;
-    private final PostUpdateTokenService postUpdateTokenService;
+    private final PostEditTokenService postEditTokenService;
 
     public List<PostListDto> getPostListDtos(Pageable pageable) {
         List<PostListDto> result = new ArrayList<>();
@@ -75,7 +75,7 @@ public class BoardService {
         }
 
         // 유효성 통과
-        String accessToken = postUpdateTokenService.generateEditAccessToken(postId);
+        String accessToken = postEditTokenService.generateEditAccessToken(postId);
         String refreshToken = "리프래쉬 토큰 생성 로직 필요";
 
         return new TokenDto(accessToken, refreshToken);

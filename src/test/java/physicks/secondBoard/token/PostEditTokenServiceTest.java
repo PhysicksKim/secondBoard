@@ -10,14 +10,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
-import physicks.secondBoard.domain.token.PostUpdateTokenService;
+import physicks.secondBoard.domain.token.PostEditTokenService;
 
 @Slf4j
 @SpringBootTest
-public class PostUpdateTokenServiceTest {
+public class PostEditTokenServiceTest {
 
     @Autowired
-    private PostUpdateTokenService postUpdateTokenService;
+    private PostEditTokenService postEditTokenService;
 
     @Autowired
     private PostService postService;
@@ -37,10 +37,10 @@ public class PostUpdateTokenServiceTest {
     @DisplayName("Access Token 생성 및 유효성 검사")
     void access_token_create_validation() {
         // given
-        String token = postUpdateTokenService.generateEditAccessToken(savedPostId);
+        String token = postEditTokenService.generateEditAccessToken(savedPostId);
 
         // when && then
-        boolean isValidToken = postUpdateTokenService.validateEditAccessToken(token, savedPostId);
+        boolean isValidToken = postEditTokenService.validateEditAccessToken(token, savedPostId);
 
         Assertions.assertTrue(isValidToken, "토큰 유효성 검사");
     }
@@ -48,10 +48,10 @@ public class PostUpdateTokenServiceTest {
     @DisplayName("Refresh Token 생성 및 유효성 검사")
     void refresh_token_create_validation() {
         // given
-        String token = postUpdateTokenService.generateEditRefreshToken(savedPostId);
+        String token = postEditTokenService.generateEditRefreshToken(savedPostId);
 
         // when && then
-        boolean isValidToken = postUpdateTokenService.validateEditRefreshToken(token, savedPostId);
+        boolean isValidToken = postEditTokenService.validateEditRefreshToken(token, savedPostId);
 
         Assertions.assertTrue(isValidToken, "토큰 유효성 검사");
     }

@@ -14,7 +14,7 @@ import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
 import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
-import physicks.secondBoard.domain.token.PostUpdateTokenService;
+import physicks.secondBoard.domain.token.PostEditTokenService;
 
 import java.util.Optional;
 
@@ -43,14 +43,14 @@ class BoardServiceMockTest {
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
-    private PostUpdateTokenService postUpdateTokenService;
+    private PostEditTokenService postEditTokenService;
     private BoardService boardService;
     private static final String POST_ID_FIELD = "id";
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this); // Mock 객체 초기화
-        boardService = new BoardService(postService, passwordEncoder, postUpdateTokenService); // 테스트할 Service 에 Mock 객체를 주입
+        boardService = new BoardService(postService, passwordEncoder, postEditTokenService); // 테스트할 Service 에 Mock 객체를 주입
     }
 
     /**
