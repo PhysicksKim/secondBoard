@@ -2,7 +2,7 @@ package physicks.secondBoard.domain.user;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import physicks.secondBoard.domain.entity.BaseEntity;
+import physicks.secondBoard.baseEntity.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;

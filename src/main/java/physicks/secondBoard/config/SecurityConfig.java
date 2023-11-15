@@ -13,7 +13,7 @@ import physicks.secondBoard.domain.oauth.CustomOAuth2UserService;
 import physicks.secondBoard.domain.user.Role;
 
 @RequiredArgsConstructor
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity(debug = false)
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;

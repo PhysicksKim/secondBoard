@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import physicks.secondBoard.domain.author.Author;
-import physicks.secondBoard.domain.entity.AuditBaseEntity;
+import physicks.secondBoard.baseEntity.AuditBaseEntity;
 import physicks.secondBoard.domain.post.Post;
 
 import javax.persistence.Entity;

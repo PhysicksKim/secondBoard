@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.entity;
+package physicks.secondBoard.baseEntity;
 
 import lombok.Getter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

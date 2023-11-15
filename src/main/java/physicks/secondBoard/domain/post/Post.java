@@ -2,7 +2,7 @@ package physicks.secondBoard.domain.post;
 
 import lombok.*;
 import physicks.secondBoard.domain.author.Author;
-import physicks.secondBoard.domain.entity.AuditBaseEntity;
+import physicks.secondBoard.baseEntity.AuditBaseEntity;
 
 import javax.persistence.*;
 import java.util.Objects;

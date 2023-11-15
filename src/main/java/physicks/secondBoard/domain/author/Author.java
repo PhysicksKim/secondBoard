@@ -3,7 +3,7 @@ package physicks.secondBoard.domain.author;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import physicks.secondBoard.domain.entity.AuditBaseEntity;
+import physicks.secondBoard.baseEntity.AuditBaseEntity;
 import physicks.secondBoard.domain.user.Guest;
 import physicks.secondBoard.domain.user.Member;
 import physicks.secondBoard.domain.user.Role;

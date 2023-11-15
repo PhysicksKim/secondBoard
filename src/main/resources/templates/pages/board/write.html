@@ -21,7 +21,7 @@
                th:value="${post != null} ? ${post.title} : ''"
                placeholder="제목"> <br>
 
-        <input th:if="${post == null}"
+        <input th:if="${username == null && post == null}"
                type="text" id="password" name="password"
                placeholder="게시글 비밀번호"> <br>
 

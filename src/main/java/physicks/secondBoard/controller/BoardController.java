@@ -20,9 +20,10 @@ import physicks.secondBoard.domain.board.service.BoardAuthenticationService;
 import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.token.TokenDto;
-import physicks.secondBoard.domain.user.AuthService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 
@@ -37,8 +38,6 @@ public class BoardController {
     // 게시글 관련 인증로직
     private final BoardAuthenticationService boardAuthenticationService;
 
-    private final AuthService authService;
-
     private final BoardService boardService;
 
     @GetMapping
@@ -50,9 +49,9 @@ public class BoardController {
         return VIEW_PREFIX + "board";
     }
 
-    @GetMapping("/{id}")
-    public String postRead(@PathVariable Long id, Model model) {
-        PostReadDto dto = boardService.getPostReadDto(id);
+    @GetMapping("/{postId}")
+    public String postRead(@PathVariable Long postId, Model model) {
+        PostReadDto dto = boardService.getPostReadDto(postId);
         model.addAttribute("post", dto);
         return VIEW_PREFIX + "post";
     }
@@ -62,49 +61,55 @@ public class BoardController {
         return VIEW_PREFIX + "write";
     }
 
-    @GetMapping("/{id}/password")
-    public String guestPostEditPasswordPage(@PathVariable Long id, Model model) {
-        if(boardService.isGuestPost(id) == false) {
+    @GetMapping("/{postId}/password")
+    public String guestPostEditPasswordPage(@PathVariable Long postId, Model model) {
+        if(boardService.isGuestPost(postId) == false) {
             // 회원 게시글에 게시글 비밀번호 페이지 요청을 한 경우 잘못된 접근임
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
 
-        model.addAttribute("postId", id);
+        model.addAttribute("postId", postId);
         return VIEW_PREFIX + "guestPostPassword";
     }
 
-    @PostMapping("/{id}/password")
-    public String guestPostEditPasswordMatch(@PathVariable Long id, HttpServletResponse response, String password, RedirectAttributes redirectAttributes) {
+    @PostMapping("/{postId}/password")
+    public String guestPostEditPasswordMatch(@PathVariable Long postId, HttpServletResponse response, String password, RedirectAttributes redirectAttributes) {
         // 0. 해당 게시글이 회원 게시글인 경우에는 잘못된 접근 반환
-        if(boardService.isGuestPost(id) == false) {
+        if(boardService.isGuestPost(postId) == false) {
             // 회원 게시글에 패스워드 요청을 보내는 경우
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
 
-        // 1. 패스워드와 postId 를 넘겨서 게시글에 담긴 정보와 일치하는지 체크하고
-        TokenDto tokenDto = boardService.validatePostPasswordAndGenerateToken(id, password);
+        // 1. 패스워드와 postId 를 넘겨서 게시글에 담긴 정보와 일치하는지 체크하고 토큰을 받아옴
+        TokenDto tokenDto = boardService.validatePostPasswordAndGenerateToken(postId, password);
 
-        // 2. 일치하는 경우 jwt token 을 발급함. 회원인 경우에도 동일하게 "비회원 게시글 수정"에 대해서는 jwt token 을 통해 인증
-        ResponseCookie accessToken = ResponseCookie.from("accessToken", tokenDto.getAccessToken())
+        // 2. jwt token 을 쿠키에 넣어줌
+        addTokenCookie(response, tokenDto, postId);
+
+        // 3. /{postId}/edit 으로 redirect 해줌
+        redirectAttributes.addAttribute("id", postId);
+        return "redirect:/board/{postId}/edit";
+    }
+
+    private void addTokenCookie(HttpServletResponse response, TokenDto tokenDto, long postId) {
+        String rawAccessToken = URLEncoder.encode(tokenDto.getAccessToken(), StandardCharsets.UTF_8);
+        String rawRefreshToken = URLEncoder.encode(tokenDto.getRefreshToken(), StandardCharsets.UTF_8);
+        ResponseCookie accessToken = ResponseCookie.from("accessToken", rawAccessToken)
                 .httpOnly(true)
                 .sameSite("strict")
                 .secure(true)
-                .path("/"+id)
+                .path("/board/"+postId)
                 .maxAge(Duration.ofSeconds(60*10))
                 .build();
-        ResponseCookie refreshToken = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+        ResponseCookie refreshToken = ResponseCookie.from("refreshToken", rawRefreshToken)
                 .httpOnly(true)
                 .sameSite("strict")
                 .secure(true)
-                .path("/"+id)
+                .path("/board/"+postId)
                 .maxAge(Duration.ofSeconds(60*11))
                 .build();
         response.addHeader("set-cookie", accessToken.toString());
         response.addHeader("set-cookie", refreshToken.toString());
-
-        // 3. /{id}/edit 으로 redirect 해줌
-        redirectAttributes.addAttribute("id", id);
-        return "redirect:/board/{id}/edit";
     }
 
     /**
@@ -113,17 +118,17 @@ public class BoardController {
      * 해당 게시글이 회원 게시글인지 비회원 게시글인지 우선 체크함.
      * 회원/비회원 따라서 다르게 동작함.
      * <pre>
-     * 비회원 : /board/{id}/password
+     * 비회원 : /board/{postId}/password
      *      비회원 게시글 패스워드 입력 페이지로 이동
      *      패스워드 입력 과정에서 authorize (1. 비회원 게시글인지 체크 2. 비회원 게시글인 경우 패스워드 일치 체크)
      *      권한 통과시 JWT token 발급해서 첨부하고 회원 페이지로 이동.
-     * 회원 : /board/{id}/edit
+     * 회원 : /board/{postId}/edit
      *      세션 기반 Spring Security 회원 검증 후에 일치 시 수정 페이지로 이동.
      * </pre>
      */
-    @GetMapping("/{id}/edit")
-    public String postUpdatePage(@PathVariable Long id, Authentication authentication, Model model) {
-        boolean isGuestPost = boardService.isGuestPost(id);
+    @GetMapping("/{postId}/edit")
+    public String postUpdatePage(@PathVariable Long postId, Authentication authentication, Model model) {
+        boolean isGuestPost = boardService.isGuestPost(postId);
         boolean isAuthNull = (authentication == null);
         // 비회원 게시글인 경우
         if (isGuestPost == true && isAuthNull == true) {
@@ -161,8 +166,8 @@ public class BoardController {
         }
     }
 
-    @PostMapping("/write/{pathId}")
-    public String updateGuestPost(@PathVariable Long pathId,
+    @PostMapping("/write/{postId}")
+    public String updateGuestPost(@PathVariable Long postId,
                              Long id, String title, String author, String content) {
 
         // !!! 수정 필요 !!!
@@ -182,7 +187,7 @@ public class BoardController {
         // 3. 다시, 수정된 게시글 내용이 담긴 Form Request가 돌아오면, JWT 토큰을 확인해서 유효한지 체크하도록 한다
 
         if(!boardAuthenticationService
-                .isValidUpdateJWT(pathId, id)) {
+                .isValidUpdateJWT(postId, id)) {
             // ==========================================================
             // !!! 차후 "유효하지 않은 수정 요청입니다" 라는 페이지 보여주도록 수정 !!!
             // ==========================================================

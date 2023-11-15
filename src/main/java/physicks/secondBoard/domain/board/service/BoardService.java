@@ -71,6 +71,8 @@ public class BoardService {
         }
 
         if (!passwordEncoder.matches(rawPassword, findPost.getAuthor().getPassword())) {
+            log.info("rawPassword : {}", rawPassword);
+            log.info("post password : {}", findPost.getAuthor().getPassword());
             throw new IllegalArgumentException("일치하지 않는 비밀번호 입니다");
         }
 

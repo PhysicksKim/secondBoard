@@ -43,12 +43,8 @@ public class UsernameAddInterceptor implements HandlerInterceptor {
         log.debug("authentication instanceof OAuth2AuthenticationToken == {}", authentication instanceof OAuth2AuthenticationToken);
         if(authentication instanceof OAuth2AuthenticationToken) {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+            printDebugLog(authentication);
             OAuth2User principal = oauthToken.getPrincipal();
-            log.debug("OAuth2 User Intercept :: registrationId = {}", oauthToken.getAuthorizedClientRegistrationId());
-            log.debug("OAuth2 User Intercept :: principal = {}", principal);
-            log.debug("OAuth2 User Intercept :: principal.getAttributes().get(\"name\") = {}", principal.getAttributes().get("name")); // 사용자 닉네임
-            log.debug("OAuth2 User Intercept :: principal.getName() = {}", principal.getName()); // oauth 식별자. Long 형식 ID (ex. 1142082040193305)
-
             modelAndView.addObject("username", principal.getAttributes().get("name"));
         } else {
             modelAndView.addObject("username", authentication.getName());
@@ -68,5 +64,14 @@ public class UsernameAddInterceptor implements HandlerInterceptor {
     private boolean isRedirectView(ModelAndView modelAndView) {
         String viewName = modelAndView.getViewName();
         return viewName != null && viewName.startsWith("redirect:");
+    }
+
+    private void printDebugLog(Authentication authentication) {
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+        OAuth2User principal = oauthToken.getPrincipal();
+        log.debug("OAuth2 User Intercept :: registrationId = {}", oauthToken.getAuthorizedClientRegistrationId());
+        log.debug("OAuth2 User Intercept :: principal = {}", principal);
+        log.debug("OAuth2 User Intercept :: principal.getAttributes().get(\"name\") = {}", principal.getAttributes().get("name")); // 사용자 닉네임
+        log.debug("OAuth2 User Intercept :: principal.getName() = {}", principal.getName()); // oauth 식별자. Long 형식 ID (ex. 1142082040193305)
     }
 }
