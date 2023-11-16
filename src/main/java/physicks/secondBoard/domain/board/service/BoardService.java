@@ -51,6 +51,9 @@ public class BoardService {
 
     public Post findPostById(long id) {
         Optional<Post> post = postService.findPostById(id);
+        if(post.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 게시글 입니다");
+        }
         return post.get();
     }
 
@@ -59,7 +62,40 @@ public class BoardService {
         return savedPost;
     }
 
+    public boolean isValidEditAccessToken(long postId, String accessToken) {
+        return postEditTokenService.validateEditAccessToken(accessToken, postId);
+    }
+
+    public PostUpdatePageDto getPostUpdatePageDtoByToken(long postId, String accessToken) {
+        if (!postEditTokenService.validateEditAccessToken(accessToken, postId)) {
+            throw new IllegalArgumentException("토큰이 유효하지 않습니다");
+        }
+
+        Post findPost = findPostById(postId);
+        return new PostUpdatePageDto(findPost.getId(), findPost.getTitle(), findPost.getAuthor().getAuthorName(), findPost.getContent());
+    }
+
     public TokenDto validatePostPasswordAndGenerateToken(long postId, String rawPassword) {
+        canEditPostByPassword(postId);
+
+        Post findPost = postService.findPostById(postId).get();
+
+        if (!passwordEncoder.matches(rawPassword, findPost.getAuthor().getPassword())) {
+            throw new IllegalArgumentException("일치하지 않는 비밀번호 입니다");
+        }
+
+        // 유효성 통과
+        String accessToken = postEditTokenService.generateEditAccessToken(postId);
+        String refreshToken = postEditTokenService.generateEditRefreshToken(postId);
+
+        return new TokenDto(accessToken, refreshToken);
+    }
+
+    /**
+     * 게시글을 비밀번호 입력 방식으로 수정할 수 있는지 체크함
+     * @param postId 대상 post
+     */
+    private Post canEditPostByPassword(long postId) {
         Optional<Post> optionalPost = postService.findPostById(postId);
         if(optionalPost.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 게시글 입니다");
@@ -70,17 +106,20 @@ public class BoardService {
             throw new IllegalArgumentException("회원 게시글은 게시글 비밀번호로 수정 권한을 요청할 수 없습니다");
         }
 
-        if (!passwordEncoder.matches(rawPassword, findPost.getAuthor().getPassword())) {
-            log.info("rawPassword : {}", rawPassword);
-            log.info("post password : {}", findPost.getAuthor().getPassword());
-            throw new IllegalArgumentException("일치하지 않는 비밀번호 입니다");
+        return findPost;
+    }
+
+    public TokenDto generateNewTokensByRefreshToken(long postId, String refreshToken) {
+        if(!postEditTokenService.validateEditRefreshToken(refreshToken, postId)) {
+            throw new IllegalArgumentException("유효하지 않은 리프래쉬 토큰입니다");
         }
 
-        // 유효성 통과
-        String accessToken = postEditTokenService.generateEditAccessToken(postId);
-        String refreshToken = "리프래쉬 토큰 생성 로직 필요";
+        // 기존 refresh token 파기 로직
 
-        return new TokenDto(accessToken, refreshToken);
+        String newAccessToken = postEditTokenService.generateEditAccessToken(postId);
+        String newRefreshToken = postEditTokenService.generateEditRefreshToken(postId);
+        TokenDto tokenDto = new TokenDto(newAccessToken, newRefreshToken);
+        return tokenDto;
     }
 
     public Post updatePost(Long id, PostGuestUpdateDto dto) {
@@ -95,6 +134,14 @@ public class BoardService {
         Post post = postService.findPostById(id).get();
         post.updateTitleAndContent(dto.getTitle(), dto.getContent());
 
+        return post;
+    }
+
+    public Post updatePost(PostUpdateRequestDto dto) {
+        Post post = postService.findPostById(dto.getId()).get();
+        log.info("post 수정 전 :: {}", post);
+        post.updateTitleAndContent(dto.getTitle(), dto.getContent());
+        log.info("post 수정 후 :: {}", post);
         return post;
     }
 

@@ -4,18 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import physicks.secondBoard.domain.board.dto.PostGuestUpdateDto;
-import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
-import physicks.secondBoard.domain.board.dto.PostListDto;
-import physicks.secondBoard.domain.board.dto.PostReadDto;
+import physicks.secondBoard.domain.board.dto.*;
 import physicks.secondBoard.domain.board.service.BoardAuthenticationService;
 import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
@@ -91,27 +86,6 @@ public class BoardController {
         return "redirect:/board/{postId}/edit";
     }
 
-    private void addTokenCookie(HttpServletResponse response, TokenDto tokenDto, long postId) {
-        String rawAccessToken = URLEncoder.encode(tokenDto.getAccessToken(), StandardCharsets.UTF_8);
-        String rawRefreshToken = URLEncoder.encode(tokenDto.getRefreshToken(), StandardCharsets.UTF_8);
-        ResponseCookie accessToken = ResponseCookie.from("accessToken", rawAccessToken)
-                .httpOnly(true)
-                .sameSite("strict")
-                .secure(true)
-                .path("/board/"+postId)
-                .maxAge(Duration.ofSeconds(60*10))
-                .build();
-        ResponseCookie refreshToken = ResponseCookie.from("refreshToken", rawRefreshToken)
-                .httpOnly(true)
-                .sameSite("strict")
-                .secure(true)
-                .path("/board/"+postId)
-                .maxAge(Duration.ofSeconds(60*11))
-                .build();
-        response.addHeader("set-cookie", accessToken.toString());
-        response.addHeader("set-cookie", refreshToken.toString());
-    }
-
     /**
      * <h3>글 수정 페이지</h3>
      * 읽기 페이지에서 수정 버튼 클릭 시
@@ -127,23 +101,69 @@ public class BoardController {
      * </pre>
      */
     @GetMapping("/{postId}/edit")
-    public String postUpdatePage(@PathVariable Long postId, Authentication authentication, Model model) {
+    public String postUpdatePage(@PathVariable Long postId,
+                                 @CookieValue("EditAccessToken") String accessToken,
+                                 @CookieValue("EditRefreshToken") String refreshToken,
+                                 Authentication authentication,
+                                 Model model) {
+        if(accessToken == null || accessToken.equals("")) {
+            throw new IllegalArgumentException("잘못된 접근입니다");
+        }
+
+        log.info("Edit Access Token : {}", accessToken);
+
+        // accessToken 로직 수행
+        if (!boardService.isValidEditAccessToken(postId, accessToken)) {
+            // 토큰이 유효하지 않은 경우 401 Unauthorized 를 응답 => 클라이언트는 401을 확인 후 refresh 재발급 요청을 수행함
+            log.info("토큰이 유효하지 않음");
+        }
+
         boolean isGuestPost = boardService.isGuestPost(postId);
         boolean isAuthNull = (authentication == null);
+
+        PostUpdatePageDto dto = null;
         // 비회원 게시글인 경우
         if (isGuestPost == true && isAuthNull == true) {
             // do guest post edit page logic
             // attach jwt token (access token + refresh token)
+            dto = boardService.getPostUpdatePageDtoByToken(postId, accessToken);
+            log.info("비회원 게시글 dto 생성 :: {}", dto);
         }
+
         // 회원 게시글인 경우
         else if (isGuestPost == false && isAuthNull == false) {
             // validate whether auth instance matches with post user
             // if match then pass edit page
             // when edit requested, double-check session user
+            log.info("수정 페이지 요청에서 회원 게시글 분기로 들어감");
         } else {
             throw new IllegalArgumentException("잘못된 요청 입니다");
         }
+
+        model.addAttribute("post", dto);
         return VIEW_PREFIX + "write";
+    }
+
+    /**
+     * 토큰 재발급
+     * @param postId
+     * @param refreshToken
+     * @param response
+     * @return
+     */
+    @PostMapping("/{postId}/edit/tokenRefresh")
+    public ResponseEntity postEditTokenRefresh(@PathVariable long postId,
+                                               @CookieValue("EditRefreshToken") String refreshToken,
+                                               HttpServletResponse response) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            throw new IllegalArgumentException("잘못된 접근 입니다");
+        }
+
+        TokenDto tokenDto = boardService.generateNewTokensByRefreshToken(postId, refreshToken);
+        addTokenCookie(response, tokenDto, postId);
+
+        // 상태코드 200
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -167,7 +187,7 @@ public class BoardController {
     }
 
     @PostMapping("/write/{postId}")
-    public String updateGuestPost(@PathVariable Long postId,
+    public String updateGuestPost_DEPRECATED(@PathVariable Long postId,
                              Long id, String title, String author, String content) {
 
         // !!! 수정 필요 !!!
@@ -201,6 +221,23 @@ public class BoardController {
         return "redirect:/board/" + id;
     }
 
+    @PostMapping("/{postId}/edit")
+    public String updateGuestPost(@PathVariable long postId,
+                                  @ModelAttribute PostUpdateRequestDto dto,
+                                  @CookieValue("EditAccessToken") String accessToken,
+                                  RedirectAttributes redirectAttributes) {
+        if (postId != dto.getId()) {
+            throw new IllegalArgumentException("URL 의 PostId 와 요청으로 전달된 PostId 가 일치하지 않습니다");
+        }
+        if (!boardService.isValidEditAccessToken(postId, accessToken)) {
+            throw new IllegalArgumentException("토큰이 유효하지 않습니다");
+        }
+
+        Post post = boardService.updatePost(dto);
+        redirectAttributes.addAttribute("postId", post.getId());
+        return "redirect:/board/{postId}/";
+    }
+
     /**
      * 회원 게시글인 경우 auth != null
      * 비회원 게시글인 경우 auth == null
@@ -212,5 +249,27 @@ public class BoardController {
     private boolean isNotValidPostEditAuthArguments(Authentication authentication, boolean isGuest) {
         boolean isAuthNull = authentication == null;
         return (isAuthNull == isGuest); // 둘 다 true 또는 둘 다 false 인 경우 => true 반환
+    }
+
+    private void addTokenCookie(HttpServletResponse response, TokenDto tokenDto, long postId) {
+        String rawAccessToken = URLEncoder.encode(tokenDto.getAccessToken(), StandardCharsets.UTF_8);
+        String rawRefreshToken = URLEncoder.encode(tokenDto.getRefreshToken(), StandardCharsets.UTF_8);
+        log.info("add Cookie \t:: Access token = {} \n \t\t:: Refresh Token = {}", rawAccessToken, rawRefreshToken);
+        ResponseCookie accessToken = ResponseCookie.from("EditAccessToken", rawAccessToken)
+                .httpOnly(true)
+                .sameSite("strict")
+                .secure(true)
+                .path("/board/"+postId)
+                .maxAge(Duration.ofSeconds(60*10))
+                .build();
+        ResponseCookie refreshToken = ResponseCookie.from("EditRefreshToken", rawRefreshToken)
+                .httpOnly(true)
+                .sameSite("strict")
+                .secure(true)
+                .path("/board/"+postId)
+                .maxAge(Duration.ofSeconds(60*11))
+                .build();
+        response.addHeader("set-cookie", accessToken.toString());
+        response.addHeader("set-cookie", refreshToken.toString());
     }
 }
