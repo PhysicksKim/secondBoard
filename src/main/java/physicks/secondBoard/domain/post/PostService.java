@@ -11,7 +11,6 @@ import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
 import physicks.secondBoard.exception.RoleMismatchException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +20,8 @@ public class PostService {
     private final AuthorRepository authorRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Optional<Post> findPostById(Long id) {
-        return postRepository.findById(id);
+    public Post findPostById(Long id) {
+        return postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다"));
     }
 
     public Page<Post> getPostList(Pageable pageable) {

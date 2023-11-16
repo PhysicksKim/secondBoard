@@ -17,8 +17,10 @@ import physicks.secondBoard.domain.token.TokenDto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * need to refactor this class
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -26,8 +28,9 @@ import java.util.Optional;
 public class BoardService {
 
     private final PostService postService;
-    private final PasswordEncoder passwordEncoder;
     private final PostEditTokenService postEditTokenService;
+
+    private final PasswordEncoder passwordEncoder;
 
     public List<PostListDto> getPostListDtos(Pageable pageable) {
         List<PostListDto> result = new ArrayList<>();
@@ -40,7 +43,7 @@ public class BoardService {
     }
 
     public PostReadDto getPostReadDto(long id) {
-        Post post = findPostById(id);
+        Post post = postService.findPostById(id);
         return PostReadDtoMapper.toDto(post);
     }
 
@@ -50,11 +53,7 @@ public class BoardService {
     }
 
     public Post findPostById(long id) {
-        Optional<Post> post = postService.findPostById(id);
-        if(post.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 게시글 입니다");
-        }
-        return post.get();
+        return postService.findPostById(id);
     }
 
     public Post savePost(PostGuestWriteDto dto) {
@@ -63,7 +62,12 @@ public class BoardService {
     }
 
     public boolean isValidEditAccessToken(long postId, String accessToken) {
-        return postEditTokenService.validateEditAccessToken(accessToken, postId);
+        try {
+            return postEditTokenService.validateEditAccessToken(accessToken, postId);
+        } catch (Exception e) {
+            log.error("유효하지 않은 토큰 인증 요청 발생", e);
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다");
+        }
     }
 
     public PostUpdatePageDto getPostUpdatePageDtoByToken(long postId, String accessToken) {
@@ -77,14 +81,14 @@ public class BoardService {
 
     public TokenDto validatePostPasswordAndGenerateToken(long postId, String rawPassword) {
         canEditPostByPassword(postId);
-
-        Post findPost = postService.findPostById(postId).get();
-
+        Post findPost = postService.findPostById(postId);
         if (!passwordEncoder.matches(rawPassword, findPost.getAuthor().getPassword())) {
+            log.error("비밀번호가 일치하지 않습니다 :: rawPassword = {}", rawPassword);
+            log.error("비밀번호가 일치하지 않습니다 :: post password = {}", findPost.getAuthor().getPassword());
             throw new IllegalArgumentException("일치하지 않는 비밀번호 입니다");
         }
 
-        // 유효성 통과
+        // -- 유효성 통과시 로직 --
         String accessToken = postEditTokenService.generateEditAccessToken(postId);
         String refreshToken = postEditTokenService.generateEditRefreshToken(postId);
 
@@ -92,16 +96,11 @@ public class BoardService {
     }
 
     /**
-     * 게시글을 비밀번호 입력 방식으로 수정할 수 있는지 체크함
+     * 게시글을 비밀번호 입력 방식으로 수정할 수 있는지 체크함. 회원 게시글은 비밀번호 방식으로 수정할 수 없음.
      * @param postId 대상 post
      */
     private Post canEditPostByPassword(long postId) {
-        Optional<Post> optionalPost = postService.findPostById(postId);
-        if(optionalPost.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 게시글 입니다");
-        }
-
-        Post findPost = optionalPost.get();
+        Post findPost = postService.findPostById(postId);
         if(findPost.isGuest() == false) {
             throw new IllegalArgumentException("회원 게시글은 게시글 비밀번호로 수정 권한을 요청할 수 없습니다");
         }
@@ -114,7 +113,7 @@ public class BoardService {
             throw new IllegalArgumentException("유효하지 않은 리프래쉬 토큰입니다");
         }
 
-        // 기존 refresh token 파기 로직
+        // 기존 refresh token 파기 로직 구현 필요
 
         String newAccessToken = postEditTokenService.generateEditAccessToken(postId);
         String newRefreshToken = postEditTokenService.generateEditRefreshToken(postId);
@@ -122,31 +121,13 @@ public class BoardService {
         return tokenDto;
     }
 
-    public Post updatePost(Long id, PostGuestUpdateDto dto) {
-        Post post = postService.findPostById(id).get();
-        post.updateTitleAndContent(dto.getTitle(), dto.getContent());
-        post.updateAuthor(dto.getName());
-
-        return post;
-    }
-
-    public Post updatePost(Long id, PostMemberUpdateDto dto) {
-        Post post = postService.findPostById(id).get();
-        post.updateTitleAndContent(dto.getTitle(), dto.getContent());
-
-        return post;
-    }
-
     public Post updatePost(PostUpdateRequestDto dto) {
-        Post post = postService.findPostById(dto.getId()).get();
-        log.info("post 수정 전 :: {}", post);
+        Post post = postService.findPostById(dto.getId());
         post.updateTitleAndContent(dto.getTitle(), dto.getContent());
-        log.info("post 수정 후 :: {}", post);
         return post;
     }
 
     public List<Post> findAll() {
-        // return postRepository.findAll();
         return postService.getPostAll();
     }
 }

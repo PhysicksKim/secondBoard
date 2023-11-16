@@ -16,8 +16,6 @@ import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
 import physicks.secondBoard.domain.token.PostEditTokenService;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -50,7 +48,7 @@ class BoardServiceMockTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this); // Mock 객체 초기화
-        boardService = new BoardService(postService, passwordEncoder, postEditTokenService); // 테스트할 Service 에 Mock 객체를 주입
+        boardService = new BoardService(postService, postEditTokenService, passwordEncoder); // 테스트할 Service 에 Mock 객체를 주입
     }
 
     /**
@@ -80,9 +78,9 @@ class BoardServiceMockTest {
 
         // Mock 주입
         when(postService.findPostById(1L))
-                .thenReturn(Optional.of(post1));
+                .thenReturn(post1);
         when(postService.findPostById(2L))
-                .thenReturn(Optional.of(post2));
+                .thenReturn(post2);
 
         //when
         Post findPost_id1L = boardService.findPostById(1L);

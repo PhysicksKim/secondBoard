@@ -39,22 +39,6 @@ public class PostEditTokenService {
         return generateToken(postId, CLAIM_VALUE_TYPE_REFRESH, REFRESH_TOKEN_EXPIRATION_MS, SUBJECT_FOR_REFRESH_TOKEN);
     }
 
-    private String generateToken(long postId, String claimTokenTypeValueRefresh, long refreshTokenExpirationTime, String subjectRefresh) {
-        Map<String, Object> claims = getPostIdClaim(postId);
-        claims.put(CLAIM_KEY_TOKEN_TYPE, claimTokenTypeValueRefresh);
-
-        Date issuedDate = getIssuedDate();
-        Date expirationDate = getExpirationDate(refreshTokenExpirationTime);
-
-        return Jwts.builder()
-                .claims(claims)
-                .subject(subjectRefresh)
-                .issuedAt(issuedDate)
-                .expiration(expirationDate)
-                .signWith(SECRET_KEY)
-                .compact();
-    }
-
     public boolean validateEditAccessToken(String token, long postId) {
         try {
             Jws<Claims> claimsJws = getClaimsFromToken(token);
@@ -79,6 +63,22 @@ public class PostEditTokenService {
             log.error("Unexpected Token error", e);
             return false;
         }
+    }
+
+    private String generateToken(long postId, String claimTokenTypeValueRefresh, long refreshTokenExpirationTime, String subjectRefresh) {
+        Map<String, Object> claims = getPostIdClaim(postId);
+        claims.put(CLAIM_KEY_TOKEN_TYPE, claimTokenTypeValueRefresh);
+
+        Date issuedDate = getIssuedDate();
+        Date expirationDate = getExpirationDate(refreshTokenExpirationTime);
+
+        return Jwts.builder()
+                .claims(claims)
+                .subject(subjectRefresh)
+                .issuedAt(issuedDate)
+                .expiration(expirationDate)
+                .signWith(SECRET_KEY)
+                .compact();
     }
 
     private Jws<Claims> getClaimsFromToken(String token) {
