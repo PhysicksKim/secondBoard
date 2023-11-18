@@ -7,10 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.author.AuthorRepository;
-import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
 import physicks.secondBoard.exception.RoleMismatchException;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,18 +25,21 @@ public class PostService {
         return postRepository.findAllByOrderByIdDesc(pageable);
     }
 
-    public List<Post> getPostAll() {
-        return postRepository.findAll();
-    }
+    /**
+     * 비회원 게시글을 신규 작성합니다
+     * @param title
+     * @param author
+     * @param password rawPassword 를 받습니다. 인코딩은 이 메서드 내에서 수행합니다.
+     * @param content
+     * @return
+     */
+    public Post createPostOfGuest(String title, String author, String password, String content) {
+        String encodedPassword = passwordEncoder.encode(password);
 
-    public Post savePost(PostGuestWriteDto dto) {
-        String password = passwordEncoder.encode(dto.getPassword());
+        Author authorEntity = Author.ofGuest(author, encodedPassword);
+        authorRepository.save(authorEntity);
 
-        // Guest Author 는 항상 새롭게 생성
-        Author author = Author.ofGuest(dto.getAuthor(), password);
-        authorRepository.save(author);
-
-        Post post = Post.of(dto.getTitle(), author, dto.getContent());
+        Post post = Post.of(title, authorEntity, content);
         return postRepository.save(post);
     }
 
@@ -51,10 +51,10 @@ public class PostService {
 
     public Post updateAuthorForGuest(Long id, String name) {
         Post post = postRepository.findById(id).get();
-        if(!post.isGuest()) {
+        if(!post.getAuthor().isGuest()) {
             throw new RoleMismatchException("비회원 게시글만 작성자 이름 변경이 가능합니다");
         }
-        post.updateAuthor(name);
+        post.getAuthor().updateName(name);
         return post;
     }
 }

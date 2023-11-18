@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
 import physicks.secondBoard.domain.token.PostEditTokenService;
@@ -26,8 +25,7 @@ public class PostEditTokenServiceTest {
 
     @BeforeEach
     public void samplePost() {
-        PostGuestWriteDto dto = new PostGuestWriteDto("testTitle", "guest1","Password1!","hello this is test post");
-        Post post = postService.savePost(dto);
+        Post post = postService.createPostOfGuest("testTitle", "guest1","Password1!","hello this is test post");
         savedPostId = post.getId();
         log.info("test post add : {}", post);
         log.info("savedPostId : {}", savedPostId);

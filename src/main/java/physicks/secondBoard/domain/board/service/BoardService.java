@@ -8,8 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.board.dto.*;
-import physicks.secondBoard.domain.board.mapper.PostListDtoMapper;
-import physicks.secondBoard.domain.board.mapper.PostReadDtoMapper;
+import physicks.secondBoard.domain.board.dto.mapper.PostListDtoMapper;
+import physicks.secondBoard.domain.board.dto.mapper.PostReadDtoMapper;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
 import physicks.secondBoard.domain.token.PostEditTokenService;
@@ -56,9 +56,8 @@ public class BoardService {
         return postService.findPostById(id);
     }
 
-    public Post savePost(PostGuestWriteDto dto) {
-        Post savedPost = postService.savePost(dto);
-        return savedPost;
+    public Post writePost(PostGuestWriteDto dto) {
+        return postService.createPostOfGuest(dto.getTitle(), dto.getAuthor(), dto.getPassword(), dto.getContent());
     }
 
     public boolean isValidEditAccessToken(long postId, String accessToken) {
@@ -88,7 +87,7 @@ public class BoardService {
             throw new IllegalArgumentException("일치하지 않는 비밀번호 입니다");
         }
 
-        // -- 유효성 통과시 로직 --
+        // -- 유효성 통과 후 --
         String accessToken = postEditTokenService.generateEditAccessToken(postId);
         String refreshToken = postEditTokenService.generateEditRefreshToken(postId);
 
@@ -101,7 +100,7 @@ public class BoardService {
      */
     private Post canEditPostByPassword(long postId) {
         Post findPost = postService.findPostById(postId);
-        if(findPost.isGuest() == false) {
+        if(findPost.getAuthor().isGuest() == false) {
             throw new IllegalArgumentException("회원 게시글은 게시글 비밀번호로 수정 권한을 요청할 수 없습니다");
         }
 
@@ -121,13 +120,18 @@ public class BoardService {
         return tokenDto;
     }
 
+    /**
+     * 게시글 수정
+     * BoardService 에서는 PostService 로 수정을 위임합니다.
+     * Post 수정과 관련된 로직은 모두 postService 가 가지고 있도록 합니다.
+     * BoardService 는 dto 와 관련된 의존성 해결에 집중합니다.
+     * PostService 는 Entity 와 관련된 의존성 해결에 집중합니다.
+     * @param dto
+     * @return
+     */
     public Post updatePost(PostUpdateRequestDto dto) {
-        Post post = postService.findPostById(dto.getId());
-        post.updateTitleAndContent(dto.getTitle(), dto.getContent());
-        return post;
-    }
-
-    public List<Post> findAll() {
-        return postService.getPostAll();
+        postService.updateTitleAndContent(dto.getId(), dto.getTitle(), dto.getContent());
+        postService.updateAuthorForGuest(dto.getId(), dto.getAuthor());
+        return postService.findPostById(dto.getId());
     }
 }

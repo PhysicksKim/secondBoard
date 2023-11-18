@@ -35,7 +35,7 @@ public class BoardServiceSpringTest {
     public void setup() {
         for(int i = 1 ; i <= postNums ; i++) {
             PostGuestWriteDto postGuestWriteDto = new PostGuestWriteDto("title" + i, "author" + i, "password" + i, "content" + i);
-            boardService.savePost(postGuestWriteDto);
+            boardService.writePost(postGuestWriteDto);
         }
     }
 
@@ -45,7 +45,7 @@ public class BoardServiceSpringTest {
         PostGuestWriteDto postGuestWriteDto = new PostGuestWriteDto("title","author","password", "content");
 
         //when
-        Post savedPost = boardService.savePost(postGuestWriteDto);
+        Post savedPost = boardService.writePost(postGuestWriteDto);
         em.flush();
         em.clear();
 
@@ -112,10 +112,6 @@ public class BoardServiceSpringTest {
         for (PostListDto postListDto : dtoList) {
             System.out.println("dto title = " + postListDto.getTitle());
         }
-        List<Post> all = boardService.findAll();
-        for (Post post : all) {
-            System.out.println("post.getTitle() = " + post.getTitle());
-        }
 
         //then
         assertThat(dtoList.size()).isEqualTo(3);
@@ -137,7 +133,7 @@ public class BoardServiceSpringTest {
         String authorName = "GuestAuthor";
 
         findPost.updateTitleAndContent(title, content);
-        findPost.updateAuthor(authorName);
+        findPost.getAuthor().updateName(authorName);
 
         em.flush();
         em.clear();

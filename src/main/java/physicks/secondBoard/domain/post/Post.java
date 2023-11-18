@@ -5,6 +5,7 @@ import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.baseEntity.AuditBaseEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 // @Data 어노테이션을 붙이면 toString() 이 자동으로 추가되는데,
@@ -23,6 +24,7 @@ public class Post extends AuditBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
+    @NotNull
     private Author author;
 
     @Column(nullable = false)
@@ -32,6 +34,9 @@ public class Post extends AuditBaseEntity {
     private String content;
 
     private Post(String title, Author author, String content) {
+        if(author==null) {
+            throw new IllegalArgumentException("작성자(Author)는 null 일 수 없습니다");
+        }
         this.title = title;
         this.author = author;
         this.content = content;
@@ -43,33 +48,6 @@ public class Post extends AuditBaseEntity {
     public void updateTitleAndContent(String title, String content) {
         this.title = title;
         this.content = content;
-    }
-
-    public void updateAuthor(String name) {
-        author.updateName(name);
-    }
-
-    public void updateAuthor(Author author) {
-        author.updateName(author.getAuthorName());
-    }
-
-    public boolean isGuest() {
-        return this.author.isGuest();
-    }
-
-    /**
-     * 주어진 author의 role 이, post 객체의 role과 일치하는지 체크한다.
-     *
-     * @param author 객체와 Role 일치 여부를 체크할 대상
-     * @return 매개변수와 객체의 Role이 일치하면 true, 일치하지 않으면 false
-     */
-    private boolean isAuthorRoleMatching(Author author) {
-        boolean isArgumentGuest = author.isGuest();
-        boolean isInstanceGuest = this.isGuest();
-
-        // 둘 다 true 거나, 둘 다 false 일때 올바른 RoleMatching 이다.
-        // 따라서 XNOR 로 연산한 결과를 반환한다.
-        return isArgumentGuest == isInstanceGuest;
     }
 
     @Override

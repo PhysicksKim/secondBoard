@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import physicks.secondBoard.baseEntity.AuditBaseEntity;
-import physicks.secondBoard.domain.user.Guest;
 import physicks.secondBoard.domain.user.Member;
 import physicks.secondBoard.domain.user.Role;
 import physicks.secondBoard.domain.user.User;
@@ -78,15 +77,6 @@ public class Author extends AuditBaseEntity {
         return author;
     }
 
-    public static Author ofGuest(Guest guest) {
-        Author author = new Author();
-        author.isGuest = true;
-        author.name = guest.getName();
-        author.password = guest.getPassword();
-
-        return author;
-    }
-
     public static Author ofGuest(String name, String password) {
         Author author = new Author();
         author.isGuest = true;
@@ -102,10 +92,6 @@ public class Author extends AuditBaseEntity {
         author.name = member.getName();
 
         return author;
-    }
-
-    public boolean equalsById(Author author) {
-        return Objects.equals(this.getId(), author.getId());
     }
 
     @Override

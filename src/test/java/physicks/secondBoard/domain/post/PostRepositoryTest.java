@@ -31,7 +31,6 @@ public class PostRepositoryTest {
 
     private static int samplePostNum = 21;
 
-
     @BeforeEach
     void addSamplePosts() {
         for(int i = 0 ; i<samplePostNum ; i++) {
@@ -63,5 +62,8 @@ public class PostRepositoryTest {
         assertThat(results.getTotalElements()).isEqualTo(samplePostNum);
         assertThat(results.getTotalPages()).isEqualTo((samplePostNum + size - 1) / size);
         assertThat(results.getContent().size()).isEqualTo(5);
+
+        // entityManager 를 통해 쿼리가 몇 번 날아갔는지 조회 하는법
+        // https://stackoverflow.com/questions/3377047/how-to-count-the-number-of-queries-executed-by-spring-jpa
     }
 }

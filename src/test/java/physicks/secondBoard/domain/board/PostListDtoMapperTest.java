@@ -8,7 +8,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.board.dto.PostListDto;
-import physicks.secondBoard.domain.board.mapper.PostListDtoMapper;
+import physicks.secondBoard.domain.board.dto.mapper.PostListDtoMapper;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 

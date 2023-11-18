@@ -142,7 +142,7 @@ public class BoardController {
 
         PostGuestWriteDto postGuestWriteDto = new PostGuestWriteDto(title, author, password, content);
         try {
-            Post post = boardService.savePost(postGuestWriteDto);
+            Post post = boardService.writePost(postGuestWriteDto);
             log.info("save post successfully! :: {}", post.toString());
             return "redirect:/board/"+post.getId();
         } catch (Exception e) {

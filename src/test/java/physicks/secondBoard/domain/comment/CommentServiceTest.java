@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.member.MemberRepository;
-import physicks.secondBoard.domain.user.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,9 +27,6 @@ class CommentServiceTest {
 
     @Autowired
     private CommentService commentService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private MemberRepository memberRepository;

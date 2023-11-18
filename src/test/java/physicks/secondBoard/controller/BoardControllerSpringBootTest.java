@@ -60,7 +60,7 @@ public class BoardControllerSpringBootTest {
     void addSamplePosts() {
         for (int i = 0; i < samplePostNum; i++) {
             PostGuestWriteDto postGuestWriteDto = new PostGuestWriteDto("title" + i, "tester" + i,"password"+i, "content" + i);
-            boardService.savePost(postGuestWriteDto);
+            boardService.writePost(postGuestWriteDto);
         }
     }
 

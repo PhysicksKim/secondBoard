@@ -11,7 +11,6 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Authentication authentication) {
-        // 비회원인 경우 AnonymousAuthenticationToken 이 아니라 null 이 들어온다.
         log.info("auth username : {}", authentication != null ? authentication : "NULL");
         return "index";
     }

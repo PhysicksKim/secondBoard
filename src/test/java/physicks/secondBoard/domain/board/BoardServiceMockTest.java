@@ -36,13 +36,15 @@ import static org.mockito.Mockito.*;
 @Deprecated
 class BoardServiceMockTest {
 
+    private BoardService boardService;
+
     @Mock
     private PostService postService;
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
     private PostEditTokenService postEditTokenService;
-    private BoardService boardService;
+
     private static final String POST_ID_FIELD = "id";
 
     @BeforeEach
@@ -110,13 +112,13 @@ class BoardServiceMockTest {
         PostGuestWriteDto postDto = new PostGuestWriteDto("title1", "author1", "password1", "content1");
         Post post1 = Post.of("title1", Author.ofGuest("author1", "password1"), "content1");
 
-        when(postService.savePost(postDto)).thenReturn(post1);
+        when(postService.createPostOfGuest(postDto.getTitle(), postDto.getAuthor(), postDto.getPassword(), postDto.getContent())).thenReturn(post1);
 
         //when
-        Post savedPost = boardService.savePost(postDto);
+        Post savedPost = boardService.writePost(postDto);
 
         //then
-        verify(postService, times(1)).savePost(postDto);
+        verify(postService, times(1)).createPostOfGuest(postDto.getTitle(), postDto.getAuthor(), postDto.getPassword(), postDto.getContent());
         assertThat(savedPost.getTitle()).isEqualTo(post1.getTitle());
         assertThat(savedPost.getAuthor()).isEqualTo(post1.getAuthor());
         assertThat(savedPost.getContent()).isEqualTo(post1.getContent());

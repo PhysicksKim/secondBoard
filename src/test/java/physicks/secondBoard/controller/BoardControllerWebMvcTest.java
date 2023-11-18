@@ -9,7 +9,6 @@ import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import physicks.secondBoard.domain.board.service.BoardService;
-import physicks.secondBoard.domain.user.AuthService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,9 +55,6 @@ class BoardControllerWebMvcTest {
 
     @MockBean
     private BoardService boardService;
-
-    @MockBean
-    private AuthService authService;
 
     @Test
     void mainPage() throws Exception{

@@ -19,9 +19,12 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create
-    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
 
-
+# SQL Query 출력
 #logging.level:
 #  org.hibernate.SQL: debug
 #  org.hibernate.type: trace

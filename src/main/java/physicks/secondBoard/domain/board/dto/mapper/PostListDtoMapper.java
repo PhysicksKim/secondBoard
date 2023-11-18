@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.board.mapper;
+package physicks.secondBoard.domain.board.dto.mapper;
 
 import physicks.secondBoard.domain.board.dto.PostListDto;
 import physicks.secondBoard.domain.post.Post;
