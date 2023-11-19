@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import physicks.secondBoard.domain.member.login.FormLoginUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,13 +42,21 @@ public class UsernameAddInterceptor implements HandlerInterceptor {
         }
 
         log.debug("authentication instanceof OAuth2AuthenticationToken == {}", authentication instanceof OAuth2AuthenticationToken);
+        // OAuth2 로그인 유저인 경우
         if(authentication instanceof OAuth2AuthenticationToken) {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
             printDebugLog(authentication);
             OAuth2User principal = oauthToken.getPrincipal();
-            modelAndView.addObject("username", principal.getAttributes().get("name"));
+            modelAndView.addObject("username", principal.getAttributes().get("name")); // Logged in as : HongChan Kim
+        }
+        // 일반 로그인 유저인 경우
+        else if(authentication.getPrincipal() instanceof FormLoginUser) {
+            log.info("authentication == {}", authentication);
+            FormLoginUser formLoginUser = (FormLoginUser) authentication.getPrincipal();
+            modelAndView.addObject("username", formLoginUser.getNickname()); // Logged in as : 닉네임
         } else {
-            modelAndView.addObject("username", authentication.getName());
+            // 예상치 못한 타입의 Authentication 이 들어온 경우
+            modelAndView.addObject("username", null);
         }
     }
 

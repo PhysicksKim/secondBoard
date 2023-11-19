@@ -55,7 +55,6 @@ public class SignupController {
         return "redirect:/";
     }
 
-
     private String formatViolation(BindingResult bindingResult) {
         StringBuilder sb = new StringBuilder();
         int errCount = bindingResult.getErrorCount();
