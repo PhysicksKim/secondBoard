@@ -6,7 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import physicks.secondBoard.domain.member.login.CustomAuthenticationFailureHandler;
 import physicks.secondBoard.domain.member.login.H2UserDetailsService;
 import physicks.secondBoard.domain.oauth.CustomOAuth2UserService;
@@ -17,7 +17,7 @@ import physicks.secondBoard.domain.user.Role;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final SavedRequestAwareAuthenticationSuccessHandler savedRequestAwareAuthenticationSuccessHandler;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
     private final H2UserDetailsService h2UserDetailsService;
 
@@ -34,6 +34,7 @@ public class SecurityConfig {
                     .antMatchers("/", "/css/**","/images/**",
                             "/js/**","h2-console/**","/profile").permitAll() // index페이지 + 정적 파일 권한
                     .antMatchers("/board/**").permitAll()
+                    .antMatchers("/api/**").authenticated()
                     .anyRequest().permitAll()
                 .and()
                     .anonymous().authorities(Role.GUEST.getKey())
@@ -49,7 +50,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .failureHandler(customAuthenticationFailureHandler)
-                        .successHandler(savedRequestAwareAuthenticationSuccessHandler)
+                        .successHandler(authenticationSuccessHandler)
                 .and()
                     .logout()
                         .logoutSuccessUrl("/");

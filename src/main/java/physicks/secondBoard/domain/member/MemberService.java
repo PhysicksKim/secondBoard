@@ -31,7 +31,18 @@ public class MemberService {
         return savedMember.getId();
     }
 
-    public Long login(MemberLoginDto dto) {
+    public Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 email 을 찾을 수 없습니다"));
+    }
+
+    /**
+     * @Deprecated 로그인 요청이 Security Chain 에 의해서 이뤄지므로 해당 메서드는 사용하지 않음
+     * @param dto
+     * @return
+     */
+    @Deprecated
+    public Long loginValidate(MemberLoginDto dto) {
         // find
         Member member = memberRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("해당 Login id 를 찾을 수 없습니다"));

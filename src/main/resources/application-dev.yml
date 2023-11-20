@@ -57,3 +57,6 @@ logging.level:
 ## jwt token secret key !! ONLY FOR 'dev'
 secret:
   key: dFoxgaXiaq8jOVZ8br9WjihM0mommzgp9DPSTaOYR5s
+
+app:
+  baseUrl: http://localhost:8080
