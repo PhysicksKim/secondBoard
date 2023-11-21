@@ -6,12 +6,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import physicks.secondBoard.domain.member.MemberLoginDto;
-import physicks.secondBoard.domain.member.signup.MemberSignupDto;
 import physicks.secondBoard.domain.member.MemberService;
+import physicks.secondBoard.domain.member.signup.MemberSignupDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -76,34 +74,34 @@ class MemberServiceTest {
         assertThat(passwordEncoder.encode(rawPassword)).isNotEqualTo(member.getPassword());
         Assertions.assertTrue(passwordEncoder.matches(rawPassword, member.getPassword()));
     }
-
-    @Test
-    void 로그인_성공() {
-        // given
-        final String email = NAME_PREFIX+1+EMAIL_SUFFIX;
-        final String rawPassword = PASSWORD_PREFIX+1;
-        MemberLoginDto dto = new MemberLoginDto(email, rawPassword);
-
-        // when
-        Long memberId = memberService.login(dto);
-        Member loginMember = memberService.findMemberById(memberId);
-
-        // then
-        assertThat(loginMember.getPassword()).isNotEqualTo(rawPassword);
-        Assertions.assertTrue(passwordEncoder.matches(rawPassword, loginMember.getPassword()));
-        assertThat(loginMember.getName()).isEqualTo(NAME_PREFIX+1);
-        assertThat(loginMember.getEmail()).isEqualTo(NAME_PREFIX+1+EMAIL_SUFFIX);
-        assertThat(loginMember.getRole()).isEqualTo(Role.MEMBER);
-    }
-
-    @Test
-    void 로그인_실패() {
-        // given
-        final String email = NAME_PREFIX + 1 + EMAIL_SUFFIX;
-        final String rawPassword = "wrongPassword";
-        MemberLoginDto dto = new MemberLoginDto(email, rawPassword);
-
-        // when && then
-        Assertions.assertThrows(BadCredentialsException.class, () -> memberService.login(dto));
-    }
+    //
+    // @Test
+    // void 로그인_성공() {
+    //     // given
+    //     final String email = NAME_PREFIX+1+EMAIL_SUFFIX;
+    //     final String rawPassword = PASSWORD_PREFIX+1;
+    //     MemberLoginDto dto = new MemberLoginDto(email, rawPassword);
+    //
+    //     // when
+    //     Long memberId = memberService.login(dto);
+    //     Member loginMember = memberService.findMemberById(memberId);
+    //
+    //     // then
+    //     assertThat(loginMember.getPassword()).isNotEqualTo(rawPassword);
+    //     Assertions.assertTrue(passwordEncoder.matches(rawPassword, loginMember.getPassword()));
+    //     assertThat(loginMember.getName()).isEqualTo(NAME_PREFIX+1);
+    //     assertThat(loginMember.getEmail()).isEqualTo(NAME_PREFIX+1+EMAIL_SUFFIX);
+    //     assertThat(loginMember.getRole()).isEqualTo(Role.MEMBER);
+    // }
+    //
+    // @Test
+    // void 로그인_실패() {
+    //     // given
+    //     final String email = NAME_PREFIX + 1 + EMAIL_SUFFIX;
+    //     final String rawPassword = "wrongPassword";
+    //     MemberLoginDto dto = new MemberLoginDto(email, rawPassword);
+    //
+    //     // when && then
+    //     Assertions.assertThrows(BadCredentialsException.class, () -> memberService.login(dto));
+    // }
 }

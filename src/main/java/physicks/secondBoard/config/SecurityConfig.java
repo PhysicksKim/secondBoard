@@ -6,20 +6,26 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import physicks.secondBoard.domain.member.login.CustomAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import physicks.secondBoard.domain.member.login.H2UserDetailsService;
 import physicks.secondBoard.domain.oauth.CustomOAuth2UserService;
 import physicks.secondBoard.domain.user.Role;
 
+/**
+ * 설정에 사용된 보안 설정용 Bean 들은 SecurityBeans 에서 관리한다.
+ * @see physicks.secondBoard.config.SecurityBeans
+ */
 @RequiredArgsConstructor
 @EnableWebSecurity(debug = false)
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final AuthenticationSuccessHandler authenticationSuccessHandler;
-    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
     private final H2UserDetailsService h2UserDetailsService;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final LogoutSuccessHandler logoutSuccessHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -49,11 +55,11 @@ public class SecurityConfig {
                         .loginPage("/login").permitAll()
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
-                        .failureHandler(customAuthenticationFailureHandler)
+                        .failureHandler(authenticationFailureHandler)
                         .successHandler(authenticationSuccessHandler)
                 .and()
                     .logout()
-                        .logoutSuccessUrl("/");
+                    .logoutSuccessHandler(logoutSuccessHandler);
 
         return http.build();
     }

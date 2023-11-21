@@ -31,7 +31,10 @@
                         </div>
                         <div th:if="${username != null}">
                             <div>
-                                <a href="/logout" class="btn logout-btn" role="button">Logout</a>
+                                <form action="/logout" method="post">
+                                    <button type="submit" class="btn logout-btn">Logout</button>
+                                </form>
+<!--                                <a href="/logout" class="btn logout-btn" role="button">Logout</a>-->
                             </div>
                             <div style="visibility: hidden; display: none" th:text="'Logged in as : '+${username}"> 유저이름 </div>
                         </div>
