@@ -31,7 +31,8 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String redirectUrl = request.getParameter("redirect");
 
-        log.info("redirectUrl = {}", redirectUrl);
+        log.info("AuthSuccess :: referer = {}", request.getHeader("Referer"));
+        log.info("AuthSuccess :: requestURI = {}", request.getRequestURI());
         if(redirectUrl != null && !redirectUrl.isEmpty()) {
             log.debug("query parameter redirectUrl = {}", redirectUrl);
             getRedirectStrategy().sendRedirect(request, response, redirectUrl);

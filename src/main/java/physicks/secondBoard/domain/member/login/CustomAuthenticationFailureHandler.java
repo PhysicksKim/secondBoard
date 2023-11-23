@@ -28,7 +28,11 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         String redirectUrl = request.getParameter(REDIRECT_PARAM);
 
         String addUrl = addRedirectUrl(refererUrl, redirectUrl);
-        log.info("addUrl = {}", addUrl);
+
+        log.info("AuthFail :: referer = {}", refererUrl);
+        log.info("AuthFail :: requestURI = {}", request.getRequestURI());
+        log.info("AuthFail :: addUrl = {}", addUrl);
+
         failureUrl += addUrl;
         response.sendRedirect(failureUrl);
     }
@@ -44,7 +48,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     private String addRedirectUrl(String refererUrl, String redirectUrl) {
         final String redirectKey = "&" + REDIRECT_PARAM + "=";
         // 이전 페이지 정보가 없는 경우 early return
-        if(refererUrl != null && !refererUrl.isEmpty()) {
+        if(refererUrl == null || refererUrl.isEmpty()) {
             return "";
         }
         // Case A,B : 이전 페이지가 login 페이지인 경우

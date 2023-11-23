@@ -10,6 +10,8 @@ import physicks.secondBoard.config.SecurityConstants;
 import physicks.secondBoard.domain.member.MemberLoginDto;
 import physicks.secondBoard.domain.member.MemberService;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -19,10 +21,15 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginPage(Model model,
+                            HttpServletRequest request,
                             @RequestParam(value = "redirect", required = false) String redirectUrl) {
         model.addAttribute("memberLoginDto", new MemberLoginDto());
         model.addAttribute("redirectParamKey", SecurityConstants.LOGIN_REDIRECT_PARAM);
         model.addAttribute("redirectUrl", redirectUrl);
+
+        String referer = request.getHeader("Referer");
+        log.info("login page :: referer = {}", referer);
+        log.info("login page :: requestURI = {}", request.getRequestURI());
 
         return "pages/login/login";
     }

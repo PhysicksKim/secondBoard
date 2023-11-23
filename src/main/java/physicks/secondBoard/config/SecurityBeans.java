@@ -17,14 +17,6 @@ public class SecurityBeans {
 
     private final RefererUtil refererUtil;
 
-    // @Bean
-    // public AuthenticationSuccessHandler authenticationSuccessHandler() {
-    //     SavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler = new SavedRequestAwareAuthenticationSuccessHandler();
-    //     authenticationSuccessHandler.setUseReferer(true);
-    //     authenticationSuccessHandler.setDefaultTargetUrl("/");
-    //     return authenticationSuccessHandler;
-    // }
-
     @Bean
     public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
         return new CustomAuthenticationSuccessHandler(refererUtil);

@@ -9,6 +9,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import physicks.secondBoard.domain.member.login.CustomAuthEntryPoint;
 import physicks.secondBoard.domain.member.login.H2UserDetailsService;
 import physicks.secondBoard.domain.oauth.CustomOAuth2UserService;
 import physicks.secondBoard.domain.user.Role;
@@ -35,6 +36,9 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .headers().frameOptions().disable()
+                .and()
+                    .exceptionHandling()
+                    .authenticationEntryPoint(new CustomAuthEntryPoint())
                 .and()
                     .authorizeRequests()
                     .antMatchers("/", "/css/**","/images/**",
