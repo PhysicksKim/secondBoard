@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.member.login;
+package physicks.secondBoard.domain.member.login.redirect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;

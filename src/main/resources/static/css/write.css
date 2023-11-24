@@ -5,13 +5,17 @@ body {
     padding: 0;
 }
 
+.wrapper {
+    width: 1280px;
+    margin: 0 auto;
+}
+
 h1 {
     text-align: center;
     margin-top: 50px;
 }
 
 #post-form {
-    width: 80%;
     margin: 50px auto;
 }
 

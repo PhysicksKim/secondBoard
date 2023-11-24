@@ -7,9 +7,9 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
-import physicks.secondBoard.domain.member.login.CustomAuthenticationFailureHandler;
-import physicks.secondBoard.domain.member.login.CustomAuthenticationSuccessHandler;
-import physicks.secondBoard.util.RefererUtil;
+import physicks.secondBoard.domain.member.login.redirect.CustomAuthenticationFailureHandler;
+import physicks.secondBoard.domain.member.login.redirect.CustomAuthenticationSuccessHandler;
+import physicks.secondBoard.domain.member.login.redirect.RefererUtil;
 
 @Configuration
 @RequiredArgsConstructor

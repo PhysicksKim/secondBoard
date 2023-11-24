@@ -3,43 +3,45 @@
 <head>
     <th:block th:replace="/fragment/commonHead.html :: common-head" />
     <th:block th:replace="/fragment/headerBarHead.html :: header-bar-head" />
-    <title th:if="${post == null}">Post Write Page</title>
-    <title th:unless="${post == null}">Post Edit Page</title>
+    <title th:if="${post == null}">글 작성</title>
+    <title th:unless="${post == null}">글 수정</title>
     <link type="text/css" rel="stylesheet" th:href="@{/css/write.css}">
 </head>
 <body>
 <th:block th:replace="/fragment/headerBarBody.html :: header-bar-body" />
 
-<h1 th:if="${post == null}">Post Write Page</h1>
-<h1 th:unless="${post == null}">Post Edit Page</h1>
+<div class="wrapper">
+    <h1 th:if="${post == null}">글 작성</h1>
+    <h1 th:unless="${post == null}">글 수정</h1>
 
-<!-- post == null 인 경우 글 신규작성 / post != null 인 경우 글 수정 -->
-<form id="post-form" name="post-form" method="post"
-      th:action="${post == null} ? '/board/write' : '/board/' + ${post.id} + '/edit'" >
-    <div id="inputs-container">
-        <input type="text" id="title" name="title"
-               th:value="${post != null} ? ${post.title} : ''"
-               placeholder="제목"> <br>
+    <!-- post == null 인 경우 글 신규작성 / post != null 인 경우 글 수정 -->
+    <form id="post-form" name="post-form" method="post"
+          th:action="${post == null} ? '/board/write' : '/board/' + ${post.id} + '/edit'" >
+        <div id="inputs-container">
+            <input type="text" id="title" name="title"
+                   th:value="${post != null} ? ${post.title} : ''"
+                   placeholder="제목"> <br>
 
-        <input th:if="${username == null && post == null}"
-               type="text" id="password" name="password"
-               placeholder="게시글 비밀번호"> <br>
+            <input th:if="${username == null && post == null}"
+                   type="text" id="password" name="password"
+                   placeholder="게시글 비밀번호"> <br>
 
-        <input th:if="${username == null && post == null}"
-               type="text" th:id="author" name="author"
-               placeholder="작성자"> <br>
-        <input th:unless="${username == null && post == null}"
-               type="text" th:id="author" name="author"
-               th:value="${post != null ? post.author : username}"
-               placeholder="작성자" readonly> <br>
+            <input th:if="${username == null && post == null}"
+                   type="text" th:id="author" name="author"
+                   placeholder="작성자"> <br>
+            <input th:unless="${username == null && post == null}"
+                   type="text" th:id="author" name="author"
+                   th:value="${post != null ? post.author : username}"
+                   placeholder="작성자" readonly> <br>
 
-        <input type="hidden" id="id" name="id"
-               th:value="${post != null} ? ${post.id} : ''" >
-    </div>
-    <textarea id="content" name="content" form="post-form"
-              th:text="${post != null} ? ${post.content} : ''"
-              placeholder="내용"></textarea> <br>
-    <input type="submit" th:value="${post == null} ? 'Write' : 'Edit'">
-</form>
+            <input type="hidden" id="id" name="id"
+                   th:value="${post != null} ? ${post.id} : ''" >
+        </div>
+        <textarea id="content" name="content" form="post-form"
+                  th:text="${post != null} ? ${post.content} : ''"
+                  placeholder="내용"></textarea> <br>
+        <input type="submit" th:value="${post == null} ? 'Write' : 'Edit'">
+    </form>
+</div>
 </body>
 </html>

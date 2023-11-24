@@ -22,7 +22,7 @@ public class PostService {
     }
 
     public Page<Post> getPostList(Pageable pageable) {
-        return postRepository.findAllByOrderByIdDesc(pageable);
+        return postRepository.findAllByOrderByCreatedTimeDesc(pageable);
     }
 
     /**

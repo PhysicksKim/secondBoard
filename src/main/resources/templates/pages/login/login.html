@@ -9,7 +9,6 @@
     <div class="login-wrapper">
         <div class="login-box">
             <form action="/login" method="post"
-                  th:object="${memberLoginDto}"
                   class="login-form" id="login-form" name="login-form">
                 <h1>로그인</h1>
                 <div th:if="${param.error}" class="login-error" role="alert">

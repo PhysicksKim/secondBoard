@@ -1,4 +1,4 @@
-package physicks.secondBoard.util;
+package physicks.secondBoard.domain.member.login.redirect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +11,7 @@ import java.net.URL;
 /**
  * static 으로 구현 시 BASE_URL 환경 변수 값을 주입받을 수 없기 때문에 Bean 으로 등록해서 사용한다.
  * BASE_URL 은 Referer 추출 과정에서 사용된다.
- * @see physicks.secondBoard.domain.member.login.CustomAuthenticationSuccessHandler
+ * @see CustomAuthenticationSuccessHandler
  */
 @Slf4j
 @Component

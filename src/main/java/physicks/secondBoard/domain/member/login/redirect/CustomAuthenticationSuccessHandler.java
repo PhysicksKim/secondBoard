@@ -1,10 +1,9 @@
-package physicks.secondBoard.domain.member.login;
+package physicks.secondBoard.domain.member.login.redirect;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-import physicks.secondBoard.util.RefererUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +13,7 @@ import java.io.IOException;
 /**
  * SavedRequestAwareAuthenticationSuccessHandler 를 상속해서 로그인 성공 시, redirect url 작업을 처리한다.
  * Bean 으로 RefererUtil 을 주입받아서 사용한다.
- * @see physicks.secondBoard.util.RefererUtil
+ * @see RefererUtil
  */
 @Slf4j
 @RequiredArgsConstructor
