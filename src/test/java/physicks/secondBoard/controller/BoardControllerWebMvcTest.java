@@ -1,5 +1,6 @@
 package physicks.secondBoard.controller;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -40,11 +41,11 @@ class BoardControllerWebMvcTest {
 
     // board main
     private static final String URL_MAIN = "/board";
-    private static final String PAGE_MAIN = "board";
+    private static final String PAGE_MAIN = "pages/board/board";
 
     // board write page
     private static final String URL_WRITE = URL_MAIN + "/write";
-    private static final String PAGE_WRITE = "write";
+    private static final String PAGE_WRITE = "pages/board/write";
 
     // board update page
     private static final String URL_UPDATE = URL_MAIN + "/write/%d";
@@ -56,6 +57,7 @@ class BoardControllerWebMvcTest {
     @MockBean
     private BoardService boardService;
 
+    @DisplayName("게시판 메인 페이지는 GUEST 권한으로 접근 가능하다")
     @Test
     void mainPage() throws Exception{
         mockMvc.perform(get(URL_MAIN))
@@ -63,6 +65,7 @@ class BoardControllerWebMvcTest {
                 .andExpect(view().name(PAGE_MAIN));
     }
 
+    @DisplayName("게시글 작성 페이지는 GUEST 권한으로 접근 가능하다")
     @Test
     void postWritePage() throws Exception{
         mockMvc.perform(get(URL_WRITE))
@@ -70,12 +73,12 @@ class BoardControllerWebMvcTest {
                 .andExpect(view().name(PAGE_WRITE));
     }
 
+    @DisplayName("수정 토큰 없이 게시글 수정 페이지에 접근하면 권한이 없어서 404 에러가 발생한다")
     @Test
     void postUpdatePage() throws Exception{
         Long postId = 1L;
 
         mockMvc.perform(get(String.format(URL_UPDATE, postId)))
-                .andExpect(status().isOk())
-                .andExpect(view().name(PAGE_UPDATE));
+                .andExpect(status().is4xxClientError());
     }
 }

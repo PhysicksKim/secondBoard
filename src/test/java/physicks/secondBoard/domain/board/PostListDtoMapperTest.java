@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.author.Author;
+import physicks.secondBoard.domain.author.AuthorRepository;
 import physicks.secondBoard.domain.board.dto.PostListDto;
 import physicks.secondBoard.domain.board.dto.mapper.PostListDtoMapper;
 import physicks.secondBoard.domain.post.Post;
@@ -26,10 +27,15 @@ class PostListDtoMapperTest {
     @Autowired
     PostRepository postRepository;
 
+    @Autowired
+    AuthorRepository authorRepository;
+
     @Test
     public void PostToDtoMappingTest_today인경우() throws Exception {
         //given
-        Post post = Post.of("title", Author.ofGuest("author","password"),"content");
+        Author guest = Author.ofGuest("author", "password");
+        authorRepository.save(guest);
+        Post post = Post.of("title", guest,"content");
         Post savedPost = postRepository.save(post);
 
         //when
@@ -46,7 +52,9 @@ class PostListDtoMapperTest {
     @Test
     public void PostToDtoMappingTest_today아닌경우() throws Exception {
         //given
-        Post post = Post.of("title",Author.ofGuest("author", "password"),"content");
+        Author guest = Author.ofGuest("author", "password");
+        authorRepository.save(guest);
+        Post post = Post.of("title", guest,"content");
         Post savedPost = postRepository.save(post);
 
         // reflection을 사용하여 어제 작성된 글로 만든다

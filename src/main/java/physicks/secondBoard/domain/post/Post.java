@@ -1,6 +1,7 @@
 package physicks.secondBoard.domain.post;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.baseEntity.AuditBaseEntity;
 
@@ -15,11 +16,12 @@ import java.util.Objects;
  * 게시글 엔티티
  * 제목, 작성자, 내용, 작성일, 마지막 수정일
  */
-@Entity
 @Getter
+@Slf4j
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA 엔티티 생성을 위해
 @AllArgsConstructor(access = AccessLevel.PRIVATE) // 정적 팩토리를 위해
+@Entity
 public class Post extends AuditBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -3,6 +3,7 @@ package physicks.secondBoard.domain.author;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import physicks.secondBoard.baseEntity.AuditBaseEntity;
 import physicks.secondBoard.domain.user.Member;
 import physicks.secondBoard.domain.user.Role;
@@ -17,9 +18,11 @@ import java.util.Objects;
  * Guest Author : isGuest = true, user = null, password = Not null
  * Member Author : isGuest = false, user = Not null, password = null
  */
-@Entity
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class Author extends AuditBaseEntity {
+
 
     @Column(nullable = false)
     protected Boolean isGuest;
@@ -106,5 +109,15 @@ public class Author extends AuditBaseEntity {
         } else {
             return user.equals(author.user);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "isGuest=" + isGuest +
+                ", user=" + user +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

@@ -109,7 +109,7 @@ public class PostRepositoryTest {
 
         // then
         Post findPost = postRepository.findById(post.getId()).get();
-        // assertThat(findPost).isEqualTo(post); // equals 구현 문제로 실패
+        assertThat(findPost).isEqualTo(post); // equals 구현 문제로 실패
         assertThat(findPost.getAuthor().getAuthorName()).isEqualTo(member.getName());
         assertThat(findPost.getAuthor().isGuest()).isFalse();
     }
