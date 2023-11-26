@@ -33,7 +33,7 @@ public class Post extends AuditBaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    private Post(String title, Author author, String content) {
+    private Post(String title, @NotNull Author author, String content) {
         if(author==null) {
             throw new IllegalArgumentException("작성자(Author)는 null 일 수 없습니다");
         }
@@ -56,7 +56,7 @@ public class Post extends AuditBaseEntity {
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
         return Objects.equals(getTitle(), post.getTitle())
-                && Objects.equals(getAuthor(), post.getAuthor())
+                && getAuthor().equals(post.getAuthor())
                 && Objects.equals(getContent(), post.getContent());
     }
 

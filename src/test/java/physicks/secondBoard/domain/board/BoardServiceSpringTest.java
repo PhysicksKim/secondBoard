@@ -144,4 +144,6 @@ public class BoardServiceSpringTest {
         assertThat(updatedPost.getAuthor().getAuthorName()).isEqualTo(findPost.getAuthor().getAuthorName());
         assertThat(updatedPost.getTitle()).isEqualTo(findPost.getTitle());
     }
+
+
 }

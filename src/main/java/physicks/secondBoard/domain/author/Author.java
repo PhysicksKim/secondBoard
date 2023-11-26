@@ -60,7 +60,7 @@ public class Author extends AuditBaseEntity {
     @PostUpdate
     public void checkConstraints() {
         if ((isGuest && user != null) || (!isGuest && user == null)) {
-            throw new EntityConstraintViolation("Author 의 비회원/회원 제약조건에 문제가 생겼습니다");
+            throw new EntityConstraintViolation("Author 의 비회원/회원 제약조건에 문제가 생겼습니다. isGuest : " + isGuest + ", user : " + user);
         }
     }
 
@@ -90,6 +90,8 @@ public class Author extends AuditBaseEntity {
         Author author = new Author();
         author.isGuest = false;
         author.name = member.getName();
+        author.user = member;
+        author.password = null;
 
         return author;
     }

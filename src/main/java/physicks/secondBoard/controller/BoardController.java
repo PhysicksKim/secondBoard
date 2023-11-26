@@ -85,11 +85,20 @@ public class BoardController {
                                             HttpServletResponse response,
                                             String password,
                                             RedirectAttributes redirectAttributes) {
-        TokenDto tokenDto = boardService.validatePostPasswordAndGenerateToken(postId, password);
-        addTokenCookie(response, tokenDto, postId);
 
         redirectAttributes.addAttribute("id", postId);
-        return "redirect:/board/{postId}/edit";
+        try {
+            TokenDto tokenDto = boardService.validatePostPasswordAndGenerateToken(postId, password);
+            addTokenCookie(response, tokenDto, postId);
+            return "redirect:/board/{postId}/edit";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", "비밀번호가 일치하지 않습니다");
+            return "redirect:/board/{postId}/password";
+        } catch (Exception e) {
+            log.error("Error 알 수 없는 에러 발생 :: {}", e);
+            redirectAttributes.addFlashAttribute("error", "서버 오류로 실패했습니다. 잠시 후 다시 시도해 주세요.");
+            return "redirect:/board/{postId}/password";
+        }
     }
 
     @GetMapping("/{postId}/edit")
