@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="/fragment/commonHead.html :: common-head" />
-    <th:block th:replace="/fragment/headerBarHead.html :: header-bar-head" />
+    <th:block th:replace="~{/fragment/commonHead.html :: common-head}" />
+    <th:block th:replace="~{/fragment/headerBarHead.html :: header-bar-head}" />
     <title>MAIN</title>
     <link type="text/css" rel="stylesheet" th:href="@{/css/index.css}">
 </head>
 <body>
-    <th:block th:replace="/fragment/headerBarBody.html :: header-bar-body" />
+    <th:block th:replace="~{/fragment/headerBarBody.html :: header-bar-body}" />
 
     <div id="title" name="title">
         <h1> Index Page </h1>
