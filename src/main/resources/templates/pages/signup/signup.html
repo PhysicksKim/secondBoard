@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="/fragment/commonHead.html :: common-head" />
+    <th:block th:replace="~{/fragment/commonHead.html :: common-head}" />
     <title>회원가입</title>
     <link type="text/css" rel="stylesheet" th:href="@{/css/signup.css}" />
     <!-- font awesome -->
-    <th:block th:replace="/fragment/fontawesome.html :: fontawesome"/>
+    <th:block th:replace="~{/fragment/fontawesome.html :: fontawesome}"/>
     <!-- Password show/hide toggle function -->
     <script type="text/javascript">
         function togglePassword(inputId, iconId) {

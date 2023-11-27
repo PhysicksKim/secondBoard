@@ -11,10 +11,10 @@ public class GlobalControllerAdvice {
 
     @ModelAttribute("nowUri")
     public String getHeaderNavBarActiveStatus(HttpServletRequest request) {
+        log.info("request.getRequestURI() : {}", request.getRequestURI());
         if(request.getRequestURI().equals("/board")) {
-            return "board";
+            return "/board";
         }
         return "";
     }
-
 }
