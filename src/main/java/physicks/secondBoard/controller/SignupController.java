@@ -13,7 +13,7 @@ import physicks.secondBoard.domain.member.MemberService;
 import physicks.secondBoard.domain.member.signup.MemberSignupDto;
 import physicks.secondBoard.domain.member.signup.SignupForm;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.io.IOException;
 
 @Controller

@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.baseEntity.AuditBaseEntity;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 
 // @Data 어노테이션을 붙이면 toString() 이 자동으로 추가되는데,

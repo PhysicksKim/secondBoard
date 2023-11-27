@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import physicks.secondBoard.domain.user.Member;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Getter

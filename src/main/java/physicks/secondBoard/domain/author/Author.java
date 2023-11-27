@@ -11,7 +11,7 @@ import physicks.secondBoard.domain.user.User;
 import physicks.secondBoard.exception.AuthorRoleException;
 import physicks.secondBoard.exception.EntityConstraintViolation;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Objects;
 
 /**

@@ -6,8 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 import physicks.secondBoard.validator.ValidPassword;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Email;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Email;
 
 /**
  * <pre>
