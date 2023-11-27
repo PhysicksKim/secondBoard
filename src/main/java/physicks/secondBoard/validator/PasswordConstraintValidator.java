@@ -2,8 +2,8 @@ package physicks.secondBoard.validator;
 
 import org.springframework.stereotype.Component;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 @Component
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {

@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import physicks.secondBoard.domain.member.signup.SignupForm;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Getter
