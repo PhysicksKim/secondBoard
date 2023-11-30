@@ -12,8 +12,8 @@ import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
 import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;

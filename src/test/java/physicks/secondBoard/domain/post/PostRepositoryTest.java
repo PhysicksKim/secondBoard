@@ -15,7 +15,7 @@ import physicks.secondBoard.domain.author.AuthorRepository;
 import physicks.secondBoard.domain.member.MemberRepository;
 import physicks.secondBoard.domain.user.Member;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -38,3 +38,4 @@ secret:
 
 app:
   baseUrl: http://localhost:8080
+

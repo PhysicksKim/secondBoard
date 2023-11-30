@@ -1,5 +1,7 @@
 package physicks.secondBoard.validator;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import physicks.secondBoard.domain.member.signup.SignupForm;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
@@ -23,7 +23,6 @@ class PasswordConstraintValidatorTest {
     private final static String NAME = "validKim";
     private final static String VALID_PASSWORD = "Valid1234!";
     private final static String INVALID_PASSWORD = "invalid";
-
 
     @Autowired
     private Validator validator;

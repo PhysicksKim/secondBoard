@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.member.MemberRepository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 /**
  * <pre>

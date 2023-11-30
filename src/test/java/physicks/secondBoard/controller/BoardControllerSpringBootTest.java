@@ -20,8 +20,8 @@ import physicks.secondBoard.domain.board.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -91,7 +91,7 @@ public class BoardControllerSpringBootTest {
         final String password = "123456aA!";
 
         // when
-        ResultActions perform = mockMvc.perform(post("/board/write")
+        ResultActions perform = mockMvc.perform(post("/board/write") //
                 .param("title", title)
                 .param("author", author)
                 .param("content", content)
