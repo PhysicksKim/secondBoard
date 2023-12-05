@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.board.dto;
+package physicks.secondBoard.web.controller.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

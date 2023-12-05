@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import physicks.secondBoard.domain.member.MemberService;
+import physicks.secondBoard.web.service.MemberService;
 import physicks.secondBoard.domain.member.signup.MemberSignupDto;
 
 import static org.assertj.core.api.Assertions.assertThat;

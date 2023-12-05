@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
-import physicks.secondBoard.domain.board.service.BoardService;
+import physicks.secondBoard.web.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
 import physicks.secondBoard.domain.token.PostEditTokenService;

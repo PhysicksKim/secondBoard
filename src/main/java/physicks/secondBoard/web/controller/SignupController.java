@@ -1,4 +1,4 @@
-package physicks.secondBoard.controller;
+package physicks.secondBoard.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import physicks.secondBoard.domain.member.MemberService;
+import physicks.secondBoard.web.service.MemberService;
 import physicks.secondBoard.domain.member.signup.MemberSignupDto;
 import physicks.secondBoard.domain.member.signup.SignupForm;
 

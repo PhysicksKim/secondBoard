@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
-import physicks.secondBoard.domain.board.service.BoardService;
+import physicks.secondBoard.web.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
 

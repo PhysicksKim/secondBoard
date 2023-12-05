@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.board.dto.PostListDto;
 import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
-import physicks.secondBoard.domain.board.service.BoardService;
+import physicks.secondBoard.web.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 
 import jakarta.persistence.EntityManager;

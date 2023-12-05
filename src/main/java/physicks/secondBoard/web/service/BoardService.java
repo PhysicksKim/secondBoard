@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.board.service;
+package physicks.secondBoard.web.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,13 +7,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import physicks.secondBoard.domain.board.dto.*;
+import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
+import physicks.secondBoard.domain.board.dto.PostListDto;
+import physicks.secondBoard.domain.board.dto.PostReadDto;
+import physicks.secondBoard.domain.board.dto.PostUpdatePageDto;
 import physicks.secondBoard.domain.board.dto.mapper.PostListDtoMapper;
 import physicks.secondBoard.domain.board.dto.mapper.PostReadDtoMapper;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
 import physicks.secondBoard.domain.token.PostEditTokenService;
 import physicks.secondBoard.domain.token.TokenDto;
+import physicks.secondBoard.web.controller.request.PostUpdateRequestDto;
 
 import java.util.ArrayList;
 import java.util.List;

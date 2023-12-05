@@ -9,7 +9,7 @@ public class PostListDtoMapper {
 
     static public PostListDto toDto(Post post) {
         if(post == null) {
-            throw new NullMappingException();
+            throw new IllegalArgumentException("Mapper 에서 Post 객체가 null 입니다");
         }
 
         String formattedCreatedTime

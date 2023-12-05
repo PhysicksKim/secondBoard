@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.author.AuthorRepository;
-import physicks.secondBoard.domain.member.MemberService;
+import physicks.secondBoard.web.service.MemberService;
 import physicks.secondBoard.domain.member.signup.MemberSignupDto;
 import physicks.secondBoard.domain.post.Post;
 

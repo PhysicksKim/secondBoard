@@ -1,10 +1,11 @@
-package physicks.secondBoard.domain.member;
+package physicks.secondBoard.web.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import physicks.secondBoard.domain.member.MemberRepository;
 import physicks.secondBoard.domain.member.signup.MemberSignupDto;
 import physicks.secondBoard.domain.user.Member;
 import physicks.secondBoard.exception.UserNotFoundException;

@@ -1,4 +1,4 @@
-package physicks.secondBoard.controller;
+package physicks.secondBoard.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

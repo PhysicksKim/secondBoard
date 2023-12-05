@@ -1,4 +1,4 @@
-package physicks.secondBoard.controller;
+package physicks.secondBoard.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import physicks.secondBoard.domain.board.dto.*;
-import physicks.secondBoard.domain.board.service.BoardService;
+import physicks.secondBoard.web.controller.request.PostUpdateRequestDto;
+import physicks.secondBoard.web.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.token.TokenDto;
 

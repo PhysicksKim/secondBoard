@@ -8,8 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import physicks.secondBoard.domain.member.MemberRepository;
-import physicks.secondBoard.domain.member.MemberService;
+import physicks.secondBoard.web.service.MemberService;
 import physicks.secondBoard.domain.user.Member;
 
 import java.util.Collections;

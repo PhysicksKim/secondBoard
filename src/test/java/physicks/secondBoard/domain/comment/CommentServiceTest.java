@@ -4,11 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import physicks.secondBoard.domain.board.service.BoardService;
+import physicks.secondBoard.web.service.BoardService;
 import physicks.secondBoard.domain.member.MemberRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import physicks.secondBoard.web.service.CommentService;
 
 /**
  * <pre>

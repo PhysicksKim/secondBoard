@@ -1,4 +1,4 @@
-package physicks.secondBoard.controller;
+package physicks.secondBoard.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,10 @@ import physicks.secondBoard.config.SecurityConstants;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * 로그인 페이지를 보여주는 컨트롤러입니다.
+ * 로그인 처리는 Spring Security 가 담당합니다.
+ */
 @Controller
 @Slf4j
 @RequiredArgsConstructor

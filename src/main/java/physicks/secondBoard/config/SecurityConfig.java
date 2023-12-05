@@ -28,6 +28,7 @@ public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final H2UserDetailsService h2UserDetailsService;
+
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final LogoutSuccessHandler logoutSuccessHandler;
