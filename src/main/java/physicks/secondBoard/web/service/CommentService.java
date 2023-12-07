@@ -2,14 +2,13 @@ package physicks.secondBoard.web.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.comment.Comment;
 import physicks.secondBoard.domain.comment.CommentRepository;
-import physicks.secondBoard.exception.CommentNotFoundException;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Slf4j
@@ -31,8 +30,8 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public Comment findCommentById(Long id) throws CommentNotFoundException{
-        return commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
+    public Comment findCommentById(Long id) {
+        return commentRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     public void deleteComment(Comment comment) {

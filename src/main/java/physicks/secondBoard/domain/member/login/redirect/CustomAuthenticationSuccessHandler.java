@@ -28,22 +28,35 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
      */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        sendLoginSuccessRedirect(request, response, authentication);
+    }
+
+    private void sendLoginSuccessRedirect(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String redirectUrl = request.getParameter("redirect");
 
-        log.info("AuthSuccess :: referer = {}", request.getHeader("Referer"));
-        log.info("AuthSuccess :: requestURI = {}", request.getRequestURI());
+        // A. redirectUrl 이 존재한 경우, Redirect URL 로 보낸다.
         if(redirectUrl != null && !redirectUrl.isEmpty()) {
             log.debug("query parameter redirectUrl = {}", redirectUrl);
             getRedirectStrategy().sendRedirect(request, response, redirectUrl);
-        } else if (isModalLogin(request)) {
+        }
+        // B. Modal login 인 경우 referer 를 사용한다.
+        else if (isModalLogin(request)) {
             String url = refererUtil.getRefererUrl(request);
             log.debug("isModalLogin. url = {}", url);
             getRedirectStrategy().sendRedirect(request, response, url);
-        } else {
+        }
+        // C. redirectUrl 정보가 없고 Modal login 도 아닌 경우, Saved Request 사용해서 redirect 를 보낸다
+        else {
             super.onAuthenticationSuccess(request, response, authentication);
         }
     }
 
+    /**
+     * Modal Login 으로 한번에 성공한 경우인지 판별한다.
+     * 즉 '/login' 페이지에서 온 요청이 아닌경우를 판별하고, Referer 기반으로 redirect 를 수행한다.
+     * @param request
+     * @return
+     */
     private boolean isModalLogin(HttpServletRequest request) {
         String modal = request.getParameter("modal");
         return modal != null && modal.equals("true");

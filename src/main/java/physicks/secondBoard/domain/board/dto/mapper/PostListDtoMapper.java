@@ -2,7 +2,6 @@ package physicks.secondBoard.domain.board.dto.mapper;
 
 import physicks.secondBoard.domain.board.dto.PostListDto;
 import physicks.secondBoard.domain.post.Post;
-import physicks.secondBoard.exception.NullMappingException;
 import physicks.secondBoard.util.BoardTimeFormatter;
 
 public class PostListDtoMapper {

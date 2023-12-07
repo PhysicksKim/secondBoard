@@ -89,7 +89,7 @@ public class BoardController {
 
         redirectAttributes.addAttribute("id", postId);
         try {
-            TokenDto tokenDto = boardService.validatePostPasswordAndGenerateToken(postId, password);
+            TokenDto tokenDto = boardService.validatePostPasswordAndGenerateTokens(postId, password);
             addTokenCookie(response, tokenDto, postId);
             return "redirect:/board/{postId}/edit";
         } catch (IllegalArgumentException e) {
@@ -102,6 +102,7 @@ public class BoardController {
         }
     }
 
+    // TODO : [Refactoring] BoardService 를 두 번 호출하고 있습니다. Controller 에서 isValidToken 분기를 만들고 있는데, BoardService 메서드 내부에서 분기를 처리하는 게 좋아 보입니다.
     @GetMapping("/{postId}/edit")
     public String showEditPostForm(@PathVariable Long postId,
                                  @CookieValue("EditAccessToken") String accessToken,
@@ -111,11 +112,11 @@ public class BoardController {
         if(accessToken == null || accessToken.equals("") || refreshToken == null || refreshToken.equals("")) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
-        boardService.isValidEditAccessToken(postId, accessToken);
+
+        PostUpdatePageDto dto = boardService.getPostUpdatePageDtoUsingAccessToken(postId, accessToken);
+        model.addAttribute("post", dto);
 
         noCachePage(response);
-        PostUpdatePageDto dto = boardService.getPostUpdatePageDtoByToken(postId, accessToken);
-        model.addAttribute("post", dto);
         return VIEW_PREFIX + "write";
     }
 
@@ -127,7 +128,7 @@ public class BoardController {
             throw new IllegalArgumentException("잘못된 접근 입니다");
         }
 
-        TokenDto tokenDto = boardService.generateNewTokensByRefreshToken(postId, refreshToken);
+        TokenDto tokenDto = boardService.generateNewTokensUsingRefreshToken(postId, refreshToken);
         addTokenCookie(response, tokenDto, postId);
         return ResponseEntity.ok().build();
     }
@@ -162,6 +163,7 @@ public class BoardController {
         }
     }
 
+    // TODO : [Refactoring] BoardService 를 두 번 호출하고 있습니다. Controller 에서 isValidToken 분기를 만들고 있는데, BoardService 메서드 내부에서 분기를 처리하는 게 좋아 보입니다.
     @PostMapping("/{postId}/edit")
     public String submitPostUpdate(@PathVariable long postId,
                                   @ModelAttribute PostUpdateRequestDto dto,
@@ -170,11 +172,7 @@ public class BoardController {
         if (postId != dto.getId()) {
             throw new IllegalArgumentException("URL 의 PostId 와 요청으로 전달된 PostId 가 일치하지 않습니다");
         }
-        if (!boardService.isValidEditAccessToken(postId, accessToken)) {
-            throw new IllegalArgumentException("토큰이 유효하지 않습니다");
-        }
-
-        Post post = boardService.updatePost(dto);
+        Post post = boardService.updatePostUsingAccessToken(dto, accessToken);
         redirectAttributes.addAttribute("postId", post.getId());
         return "redirect:/board/{postId}/";
     }

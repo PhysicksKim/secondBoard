@@ -8,7 +8,6 @@ import physicks.secondBoard.baseEntity.AuditBaseEntity;
 import physicks.secondBoard.domain.user.Member;
 import physicks.secondBoard.domain.user.Role;
 import physicks.secondBoard.domain.user.User;
-import physicks.secondBoard.exception.AuthorRoleException;
 import physicks.secondBoard.exception.EntityConstraintViolation;
 
 import jakarta.persistence.*;
@@ -74,7 +73,7 @@ public class Author extends AuditBaseEntity {
         } else if(user.getRole().equals(Role.MEMBER)) {
             author = ofMember((Member) user);
         } else {
-            throw new AuthorRoleException();
+            throw new IllegalArgumentException("Author 의 Role 이 GUEST, MEMBER 가 아닙니다. Role : " + user.getRole());
         }
 
         return author;

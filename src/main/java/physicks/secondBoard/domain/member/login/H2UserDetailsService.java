@@ -24,7 +24,7 @@ public class H2UserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         log.info("login email : {}", email);
-        Member findMember = memberService.getMemberByEmail(email);
+        Member findMember = memberService.findMemberByEmail(email);
         List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
         return new FormLoginUser(findMember.getEmail(), findMember.getPassword(), findMember.getName(), authorities);
     }

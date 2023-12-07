@@ -39,6 +39,12 @@ public class PostEditTokenService {
         return generateToken(postId, CLAIM_VALUE_TYPE_REFRESH, REFRESH_TOKEN_EXPIRATION_MS, SUBJECT_FOR_REFRESH_TOKEN);
     }
 
+    /**
+     * 토큰이 유효하지 않은 경우 false 를 반환합니다.
+     * 토큰이 유효하지 않으면 추가적인 작업을 상위 service 에서 처리해야 하므로, 예외 대신 boolean 을 반환하도록 합니다.
+     * @param token
+     * @param postId
+     */
     public boolean validateEditAccessToken(String token, long postId) {
         try {
             Jws<Claims> claimsJws = getClaimsFromToken(token);

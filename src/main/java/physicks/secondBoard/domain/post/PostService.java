@@ -7,7 +7,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.author.AuthorRepository;
-import physicks.secondBoard.exception.RoleMismatchException;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +51,7 @@ public class PostService {
     public Post updateAuthorForGuest(Long id, String name) {
         Post post = postRepository.findById(id).get();
         if(!post.getAuthor().isGuest()) {
-            throw new RoleMismatchException("비회원 게시글만 작성자 이름 변경이 가능합니다");
+            throw new IllegalArgumentException("비회원 게시글만 작성자 이름 변경이 가능합니다");
         }
         post.getAuthor().updateName(name);
         return post;

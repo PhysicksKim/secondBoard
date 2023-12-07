@@ -2,14 +2,15 @@ package physicks.secondBoard.web.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import physicks.secondBoard.domain.member.MemberRepository;
 import physicks.secondBoard.domain.member.signup.MemberSignupDto;
 import physicks.secondBoard.domain.user.Member;
-import physicks.secondBoard.exception.UserNotFoundException;
 
+import java.util.NoSuchElementException;
+
+// TODO : MemberService 분리 필요. { 1. signUp(SignUpController) 2. memberFind(H2UserDetailsService) } 2가지 역할을 수행하고 있음.
 @Service
 @Getter
 @RequiredArgsConstructor
@@ -31,12 +32,13 @@ public class MemberService {
         return savedMember.getId();
     }
 
-    public Member getMemberByEmail(String email) {
+    public Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 email 을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException("해당 email 을 찾을 수 없습니다"));
     }
 
-    public Member findMemberById(Long savedId) throws UserNotFoundException{
-        return memberRepository.findMemberById(savedId).orElseThrow(UserNotFoundException::new);
+    public Member findMemberById(Long id) {
+        return memberRepository.findMemberById(id)
+                .orElseThrow(NoSuchElementException::new);
     }
 }

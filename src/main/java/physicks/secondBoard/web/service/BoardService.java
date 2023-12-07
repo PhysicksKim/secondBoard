@@ -22,8 +22,12 @@ import physicks.secondBoard.web.controller.request.PostUpdateRequestDto;
 import java.util.ArrayList;
 import java.util.List;
 
+
+// TODO : 리팩토링. 1. 코드 가독성 향상 필요 2. 위임 구조 점검 필요 3. request 에 일대일 매칭 되도록 퍼사드 구조 점검
 /**
- * need to refactor this class
+ * BoardController 를 위한 facade Service 입니다.
+ * 각각의 public 메서드 하나 또는 최소한의 request 에 매칭됩니다.
+ * 예외적으로, 간단한 위임 메서드는 여러 곳에서 호출될 수 있습니다. (ex. isGuestPost, findPostById)
  */
 @Service
 @Slf4j
@@ -64,30 +68,25 @@ public class BoardService {
         return postService.createPostOfGuest(dto.getTitle(), dto.getAuthor(), dto.getPassword(), dto.getContent());
     }
 
-    public boolean isValidEditAccessToken(long postId, String accessToken) {
-        try {
-            return postEditTokenService.validateEditAccessToken(accessToken, postId);
-        } catch (Exception e) {
-            log.error("유효하지 않은 토큰 인증 요청 발생", e);
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다");
-        }
-    }
-
-    public PostUpdatePageDto getPostUpdatePageDtoByToken(long postId, String accessToken) {
+    public PostUpdatePageDto getPostUpdatePageDtoUsingAccessToken(long postId, String accessToken) {
         if (!postEditTokenService.validateEditAccessToken(accessToken, postId)) {
             throw new IllegalArgumentException("토큰이 유효하지 않습니다");
+        }
+
+        if(!postEditTokenService.validateEditAccessToken(accessToken, postId)) {
+            throw new IllegalArgumentException("게시글 수정 토큰이 유효하지 않습니다");
         }
 
         Post findPost = findPostById(postId);
         return new PostUpdatePageDto(findPost.getId(), findPost.getTitle(), findPost.getAuthor().getAuthorName(), findPost.getContent());
     }
 
-    public TokenDto validatePostPasswordAndGenerateToken(long postId, String rawPassword) {
-        canEditPostByPassword(postId);
+    public TokenDto validatePostPasswordAndGenerateTokens(long postId, String rawPassword) {
+        checkCanEditWithPassword(postId);
         Post findPost = postService.findPostById(postId);
         if (!passwordEncoder.matches(rawPassword, findPost.getAuthor().getPassword())) {
-            log.error("비밀번호가 일치하지 않습니다 :: rawPassword = {}", rawPassword);
-            log.error("비밀번호가 일치하지 않습니다 :: post password = {}", findPost.getAuthor().getPassword());
+            log.info("비밀번호가 일치하지 않습니다 :: rawPassword = {}", rawPassword);
+            log.info("비밀번호가 일치하지 않습니다 :: post password = {}", findPost.getAuthor().getPassword());
             throw new IllegalArgumentException("일치하지 않는 비밀번호 입니다");
         }
 
@@ -98,20 +97,7 @@ public class BoardService {
         return new TokenDto(accessToken, refreshToken);
     }
 
-    /**
-     * 게시글을 비밀번호 입력 방식으로 수정할 수 있는지 체크함. 회원 게시글은 비밀번호 방식으로 수정할 수 없음.
-     * @param postId 대상 post
-     */
-    private Post canEditPostByPassword(long postId) {
-        Post findPost = postService.findPostById(postId);
-        if(findPost.getAuthor().isGuest() == false) {
-            throw new IllegalArgumentException("회원 게시글은 게시글 비밀번호로 수정 권한을 요청할 수 없습니다");
-        }
-
-        return findPost;
-    }
-
-    public TokenDto generateNewTokensByRefreshToken(long postId, String refreshToken) {
+    public TokenDto generateNewTokensUsingRefreshToken(long postId, String refreshToken) {
         if(!postEditTokenService.validateEditRefreshToken(refreshToken, postId)) {
             throw new IllegalArgumentException("유효하지 않은 리프래쉬 토큰입니다");
         }
@@ -120,8 +106,7 @@ public class BoardService {
 
         String newAccessToken = postEditTokenService.generateEditAccessToken(postId);
         String newRefreshToken = postEditTokenService.generateEditRefreshToken(postId);
-        TokenDto tokenDto = new TokenDto(newAccessToken, newRefreshToken);
-        return tokenDto;
+        return new TokenDto(newAccessToken, newRefreshToken);
     }
 
     /**
@@ -133,9 +118,24 @@ public class BoardService {
      * @param dto
      * @return
      */
-    public Post updatePost(PostUpdateRequestDto dto) {
+    public Post updatePostUsingAccessToken(PostUpdateRequestDto dto, String token) {
+        if (!postEditTokenService.validateEditAccessToken(token, dto.getId())) {
+            throw new IllegalArgumentException("토큰이 유효하지 않습니다");
+        }
+
         postService.updateTitleAndContent(dto.getId(), dto.getTitle(), dto.getContent());
         postService.updateAuthorForGuest(dto.getId(), dto.getAuthor());
         return postService.findPostById(dto.getId());
+    }
+
+    /**
+     * 게시글을 비밀번호 입력 방식으로 수정할 수 있는지 체크함. 회원 게시글은 비밀번호 방식으로 수정할 수 없음.
+     * @param postId 대상 post
+     */
+    private void checkCanEditWithPassword(long postId) {
+        Post findPost = postService.findPostById(postId);
+        if(!findPost.getAuthor().isGuest()) {
+            throw new IllegalArgumentException("회원 게시글은 게시글 비밀번호로 수정 권한을 요청할 수 없습니다");
+        }
     }
 }
