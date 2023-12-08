@@ -19,6 +19,7 @@ import jakarta.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+// todo : 과거에 작성한 PostRepositoryTest 리펙토링 점검 및 @DisplayName 추가
 @Slf4j
 @SpringBootTest
 public class PostRepositoryTest {

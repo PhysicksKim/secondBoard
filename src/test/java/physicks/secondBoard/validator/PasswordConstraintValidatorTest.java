@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import physicks.secondBoard.domain.member.signup.SignupForm;
+import physicks.secondBoard.web.controller.request.signup.SignupForm;
 
 import java.lang.annotation.Annotation;
 import java.util.Set;

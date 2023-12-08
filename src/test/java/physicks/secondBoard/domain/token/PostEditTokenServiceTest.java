@@ -1,4 +1,4 @@
-package physicks.secondBoard.token;
+package physicks.secondBoard.domain.token;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;

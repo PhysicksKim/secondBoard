@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import physicks.secondBoard.baseEntity.AuditBaseEntity;
+import physicks.secondBoard.baseentity.AuditBaseEntity;
 import physicks.secondBoard.domain.user.Member;
 import physicks.secondBoard.domain.user.Role;
 import physicks.secondBoard.domain.user.User;
@@ -21,7 +21,6 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Author extends AuditBaseEntity {
-
 
     @Column(nullable = false)
     protected Boolean isGuest;
@@ -60,7 +59,7 @@ public class Author extends AuditBaseEntity {
      */
     @PostPersist
     @PostUpdate
-    public void checkConstraints() {
+    protected void checkConstraints() {
         if ((isGuest && user != null) || (!isGuest && user == null)) {
             throw new EntityConstraintViolation("Author 의 비회원/회원 제약조건에 문제가 생겼습니다. isGuest : " + isGuest + ", user : " + user);
         }

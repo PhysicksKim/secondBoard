@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.member.signup;
+package physicks.secondBoard.web.controller.request.signup;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

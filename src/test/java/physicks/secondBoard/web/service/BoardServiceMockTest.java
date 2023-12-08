@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.board;
+package physicks.secondBoard.web.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
-import physicks.secondBoard.web.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
 import physicks.secondBoard.domain.token.PostEditTokenService;
@@ -29,7 +28,6 @@ import static org.mockito.Mockito.*;
  * 따라서 Post 객체 일치여부는 모든 필드에 대해 비교하지 않습니다.
  * Post Mapping 비교는 아래 테스트에서 수행합니다.
  * </pre>
- * @see PostListDtoMapperTest
  */
 @Slf4j
 @ExtendWith(MockitoExtension.class)

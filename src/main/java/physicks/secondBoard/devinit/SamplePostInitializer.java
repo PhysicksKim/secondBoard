@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.author.Author;
 import physicks.secondBoard.domain.author.AuthorRepository;
 import physicks.secondBoard.web.service.MemberService;
-import physicks.secondBoard.domain.member.signup.MemberSignupDto;
+import physicks.secondBoard.web.controller.request.signup.MemberSignupDto;
 import physicks.secondBoard.domain.post.Post;
 
 import java.time.LocalDateTime;

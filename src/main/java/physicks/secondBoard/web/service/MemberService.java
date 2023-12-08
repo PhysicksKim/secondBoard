@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import physicks.secondBoard.domain.member.MemberRepository;
-import physicks.secondBoard.domain.member.signup.MemberSignupDto;
+import physicks.secondBoard.web.controller.request.signup.MemberSignupDto;
 import physicks.secondBoard.domain.user.Member;
 
 import java.util.NoSuchElementException;

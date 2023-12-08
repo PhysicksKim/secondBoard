@@ -1,6 +1,7 @@
 package physicks.secondBoard.domain.board;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,8 +31,9 @@ class PostListDtoMapperTest {
     @Autowired
     AuthorRepository authorRepository;
 
+    @DisplayName("Post 작성일이 오늘인 경우 HH:mm 형식으로 표기한다")
     @Test
-    public void PostToDtoMappingTest_today인경우() throws Exception {
+    public void toDto_today() throws Exception {
         //given
         Author guest = Author.ofGuest("author", "password");
         authorRepository.save(guest);
@@ -49,8 +51,9 @@ class PostListDtoMapperTest {
         Assertions.assertThat(dto.getCreatedTime()).isEqualTo(savedPost.getCreatedTime().format(formatter));
     }
 
+    @DisplayName("Post 작성일이 오늘이 아닌 경우 MM/dd 형식으로 표기한다")
     @Test
-    public void PostToDtoMappingTest_today아닌경우() throws Exception {
+    public void toDto_NotToday() throws Exception {
         //given
         Author guest = Author.ofGuest("author", "password");
         authorRepository.save(guest);

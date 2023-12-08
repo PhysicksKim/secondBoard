@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
-import physicks.secondBoard.domain.member.signup.SignupForm;
+import physicks.secondBoard.web.controller.request.signup.SignupForm;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -15,6 +15,8 @@ import physicks.secondBoard.domain.user.Member;
 
 import java.util.Collections;
 
+// todo : oauth2 service 테스트 작성 필요
+// todo : 스프링 시큐리티 테스트 라이브러리를 사용하면 oauth2 유저를 만들 수 있다는데, 알아봐야 할 것 같다.
 @RequiredArgsConstructor
 @Service
 @Slf4j

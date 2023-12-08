@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.user;
+package physicks.secondBoard.web.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import physicks.secondBoard.web.service.MemberService;
-import physicks.secondBoard.domain.member.signup.MemberSignupDto;
+import physicks.secondBoard.domain.user.Member;
+import physicks.secondBoard.web.controller.request.signup.MemberSignupDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

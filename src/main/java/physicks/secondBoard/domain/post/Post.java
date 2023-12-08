@@ -3,7 +3,7 @@ package physicks.secondBoard.domain.post;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import physicks.secondBoard.domain.author.Author;
-import physicks.secondBoard.baseEntity.AuditBaseEntity;
+import physicks.secondBoard.baseentity.AuditBaseEntity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

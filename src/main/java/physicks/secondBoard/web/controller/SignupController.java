@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import physicks.secondBoard.web.service.MemberService;
-import physicks.secondBoard.domain.member.signup.MemberSignupDto;
-import physicks.secondBoard.domain.member.signup.SignupForm;
+import physicks.secondBoard.web.controller.request.signup.MemberSignupDto;
+import physicks.secondBoard.web.controller.request.signup.SignupForm;
 
 import jakarta.validation.Valid;
 import java.io.IOException;
