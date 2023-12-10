@@ -16,14 +16,6 @@ public class PostService {
     private final AuthorRepository authorRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Post findPostById(Long id) {
-        return postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다"));
-    }
-
-    public Page<Post> getPostList(Pageable pageable) {
-        return postRepository.findAllByOrderByCreatedTimeDesc(pageable);
-    }
-
     /**
      * 비회원 게시글을 신규 작성합니다
      * @param title
@@ -40,6 +32,14 @@ public class PostService {
 
         Post post = Post.of(title, authorEntity, content);
         return postRepository.save(post);
+    }
+
+    public Post findPostById(Long id) {
+        return postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다"));
+    }
+
+    public Page<Post> getPostList(Pageable pageable) {
+        return postRepository.findAllByOrderByCreatedTimeDesc(pageable);
     }
 
     public Post updateTitleAndContent(Long id, String title, String content) {

@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-// todo : Post Update 관련 테스트 필요.
 @SpringBootTest
 @Transactional
 class PostServiceTest {
@@ -77,6 +76,44 @@ class PostServiceTest {
         assertThat(postList.getTotalPages()).isEqualTo(2);
         assertThat(postList.getNumber()).isEqualTo(0);
         assertThat(postList.getSize()).isEqualTo(10);
+    }
+
+    @DisplayName("게시글의 제목과 내용을 수정합니다")
+    @Test
+    void updateTitleAndContent() {
+        // given
+        generateSamplePosts(1);
+        Page<Post> list = postService.getPostList(PageRequest.of(0, 1));
+        Post post = list.getContent().get(0);
+        long id = post.getId();
+
+        // when
+        String newTitle = "newTitle";
+        String newContent = "newContent";
+        Post updatedPost = postService.updateTitleAndContent(id, newTitle, newContent);
+
+        // then
+        assertThat(updatedPost).isNotNull();
+        assertThat(updatedPost.getTitle()).isEqualTo(newTitle);
+        assertThat(updatedPost.getContent()).isEqualTo(newContent);
+    }
+
+    @DisplayName("비회원 게시글은 Author name 수정이 가능합니다")
+    @Test
+    void updateAuthorForGuest() {
+        // given
+        generateSamplePosts(1);
+        Page<Post> list = postService.getPostList(PageRequest.of(0, 1));
+        Post post = list.getContent().get(0);
+        long id = post.getId();
+
+        // when
+        String newName = "newName";
+        Post updatedPost = postService.updateAuthorForGuest(id, newName);
+
+        // then
+        assertThat(updatedPost).isNotNull();
+        assertThat(updatedPost.getAuthor().getAuthorName()).isEqualTo(newName);
     }
 
     private void generateSamplePosts(int numberOfPosts) {
