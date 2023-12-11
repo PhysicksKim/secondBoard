@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
-import physicks.secondBoard.domain.token.PostEditTokenService;
 
 @Slf4j
 @SpringBootTest
@@ -31,9 +30,9 @@ public class PostEditTokenServiceTest {
         log.info("savedPostId : {}", savedPostId);
     }
 
+    @DisplayName("게시글 수정용 Access Token 생성 및 유효성 검사")
     @Test
-    @DisplayName("Access Token 생성 및 유효성 검사")
-    void access_token_create_validation() {
+    void generateEditAccessToken_and_Validation() {
         // given
         String token = postEditTokenService.generateEditAccessToken(savedPostId);
 
@@ -42,9 +41,10 @@ public class PostEditTokenServiceTest {
 
         Assertions.assertTrue(isValidToken, "토큰 유효성 검사");
     }
-    @Test
+
     @DisplayName("Refresh Token 생성 및 유효성 검사")
-    void refresh_token_create_validation() {
+    @Test
+    void generateEditRefreshToken_and_Validation() {
         // given
         String token = postEditTokenService.generateEditRefreshToken(savedPostId);
 

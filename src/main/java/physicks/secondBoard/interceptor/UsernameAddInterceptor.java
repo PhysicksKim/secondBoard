@@ -30,13 +30,16 @@ public class UsernameAddInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        log.info("UsernameAddInterceptor :: postHandle() called");
         if (!isUsernameRequireView(modelAndView)) {
+            log.info("UsernameAddInterceptor :: postHandle() :: modelAndView is null or modelAndView has username attribute");
             return;
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (!isLoginUser(authentication)) {
+            log.info("UsernameAddInterceptor :: postHandle() :: authentication is null or anonymous user");
             modelAndView.addObject("username", null);
             return;
         }
@@ -44,6 +47,8 @@ public class UsernameAddInterceptor implements HandlerInterceptor {
         log.debug("authentication instanceof OAuth2AuthenticationToken == {}", authentication instanceof OAuth2AuthenticationToken);
         // OAuth2 로그인 유저인 경우
         if(authentication instanceof OAuth2AuthenticationToken) {
+            log.info("UsernameAddInterceptor :: postHandle() :: authentication is OAuth2AuthenticationToken");
+
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
             printDebugLog(authentication);
             OAuth2User principal = oauthToken.getPrincipal();
@@ -55,6 +60,7 @@ public class UsernameAddInterceptor implements HandlerInterceptor {
             FormLoginUser formLoginUser = (FormLoginUser) authentication.getPrincipal();
             modelAndView.addObject("username", formLoginUser.getNickname()); // Logged in as : 닉네임
         } else {
+            log.info("UsernameAddInterceptor :: postHandle() :: authentication is not OAuth2AuthenticationToken or FormLoginUser");
             // 예상치 못한 타입의 Authentication 이 들어온 경우
             modelAndView.addObject("username", null);
         }

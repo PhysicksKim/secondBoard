@@ -10,11 +10,11 @@ import physicks.secondBoard.interceptor.UsernameAddInterceptor;
 public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
-    private UsernameAddInterceptor userSessionInterceptor;
+    private UsernameAddInterceptor usernameAddInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(userSessionInterceptor)
+        registry.addInterceptor(usernameAddInterceptor)
                 .addPathPatterns("/**");
                 // .excludePathPatterns("/excludePath1/**", "/excludePath2/**");  // 제외할 경로
     }
