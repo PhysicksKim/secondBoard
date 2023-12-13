@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.index;
+package physicks.secondBoard.web.controller.index;
 
 
 import org.junit.jupiter.api.Test;
