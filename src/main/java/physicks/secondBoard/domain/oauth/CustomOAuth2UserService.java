@@ -28,25 +28,23 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         // 기본적으로 제공되는 OAuth2UserService 를 통해서 user 를 가지고 옴. 마치 super.loadUser() 과 유사한 코드
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
-
         log.info("OAuth2 UserRequest : {}", userRequest);
         log.info("OAuth2 User : {}", oAuth2User);
 
         // 가져온 OAuth2User
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        // user 를 식별하는 name 을 가져옴 :: email 로 식별
         String userNameAttributeName = userRequest
                 .getClientRegistration()
                 .getProviderDetails()
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
+        log.info("userNameAttributeName : {}", userNameAttributeName);
 
         OAuthAttributes attributes = OAuthAttributes
-                .of(registrationId,
-                        userNameAttributeName,
-                        oAuth2User.getAttributes());
-
-        log.info("Attributes : {}", attributes.getAttributes());
+                .of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
         saveOrUpdate(attributes);
+        log.info("Attributes : {}", attributes.getAttributes());
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("OauthUser")),
@@ -59,6 +57,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         Member member = memberRepository.findByEmail(attributes.getEmail())
                 .map(memberEntity -> memberEntity.updateName(attributes.getName()))
                 .orElse(attributes.toEntity());
+        log.info("member : {}", member);
         return memberRepository.save(member);
     }
 }
