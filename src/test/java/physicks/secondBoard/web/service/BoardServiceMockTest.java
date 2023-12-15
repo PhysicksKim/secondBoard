@@ -9,7 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
-import physicks.secondBoard.domain.author.Author;
+import physicks.secondBoard.domain.post.author.Author;
 import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;

@@ -5,8 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import physicks.secondBoard.domain.author.Author;
-import physicks.secondBoard.domain.author.AuthorRepository;
+import physicks.secondBoard.domain.post.author.Author;
+import physicks.secondBoard.domain.post.author.AuthorRepository;
+import physicks.secondBoard.domain.user.Member;
 
 @Service
 @RequiredArgsConstructor
@@ -18,19 +19,33 @@ public class PostService {
 
     /**
      * 비회원 게시글을 신규 작성합니다
-     * @param title
-     * @param author
+     * @param title 글 제목
+     * @param authorName 비회원 작성자 이름
      * @param password rawPassword 를 받습니다. 인코딩은 이 메서드 내에서 수행합니다.
-     * @param content
-     * @return
+     * @param content 글 내용
+     * @return 작성한 글 엔티티
      */
-    public Post createPostOfGuest(String title, String author, String password, String content) {
+    public Post createPostOfGuest(String title, String authorName, String password, String content) {
         String encodedPassword = passwordEncoder.encode(password);
 
-        Author authorEntity = Author.ofGuest(author, encodedPassword);
+        Author authorEntity = Author.ofGuest(authorName, encodedPassword);
         authorRepository.save(authorEntity);
 
         Post post = Post.of(title, authorEntity, content);
+        return postRepository.save(post);
+    }
+
+    /**
+     * 회원 게시글을 신규 작성합니다
+     * @param title 글 제목
+     * @param member 회원 엔티티
+     * @param content 글 내용
+     * @return 작성한 글 엔티티
+     */
+    public Post createPostOfMember(String title, Member member, String content) {
+        Author author = Author.ofMember(member);
+
+        Post post = Post.of(title, author, content);
         return postRepository.save(post);
     }
 

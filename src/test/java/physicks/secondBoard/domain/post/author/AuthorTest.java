@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.author;
+package physicks.secondBoard.domain.post.author;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ class AuthorTest {
         // given
         Author author = new Author();
         author.isGuest = true;
-        author.user = Member.of("encodedPassword","name", "email@test.com", false);
+        author.member = Member.of("encodedPassword","name", "email@test.com", false);
 
         // when / then
         assertThrows(EntityConstraintViolation.class, author::checkConstraints);
@@ -28,7 +28,7 @@ class AuthorTest {
         // given
         Author author = new Author();
         author.isGuest = false;
-        author.user = null;
+        author.member = null;
 
         // when / then
         assertThrows(EntityConstraintViolation.class, author::checkConstraints);
@@ -43,7 +43,7 @@ class AuthorTest {
         // then
         assertThat(guest.isGuest()).isTrue();
         assertThat(guest.isGuest).isTrue();
-        assertThat(guest.user).isNull();
+        assertThat(guest.member).isNull();
     }
 
     @DisplayName("ofGuest 생성 메서드로 fields 값을 채워넣습니다")
@@ -78,7 +78,7 @@ class AuthorTest {
         // then
         assertThat(author.isGuest()).isFalse();
         assertThat(author.isGuest).isFalse();
-        assertThat(author.user).isEqualTo(member);
+        assertThat(author.member).isEqualTo(member);
     }
 
     @DisplayName("ofMember 생성 메서드로 fields 값을 채워넣습니다")

@@ -1,12 +1,16 @@
 package physicks.secondBoard.domain.post;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import physicks.secondBoard.domain.post.author.Author;
+import physicks.secondBoard.domain.user.Member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,7 +21,10 @@ class PostServiceTest {
     @Autowired
     private PostService postService;
 
-    @DisplayName("회원 게시글을 작성합니다")
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @DisplayName("비회원 게시글을 작성합니다")
     @Test
     void createPostOfGuest() {
         // given
@@ -114,6 +121,36 @@ class PostServiceTest {
         // then
         assertThat(updatedPost).isNotNull();
         assertThat(updatedPost.getAuthor().getAuthorName()).isEqualTo(newName);
+    }
+
+    @DisplayName("회원 게시글을 작성합니다.")
+    @Test
+    void createPostOfMember_success() {
+        // given
+        String title = "testTitle";
+        String content = "hello this is test post";
+
+        Member member = generateMember();
+        Author author = Author.ofMember(member);
+
+        // when
+        Post postOfMember = postService.createPostOfMember(title, member, content);
+
+        // then
+        Assertions.assertThat(postOfMember).isNotNull();
+        Assertions.assertThat(postOfMember.getTitle()).isEqualTo(title);
+        Assertions.assertThat(postOfMember.getAuthor()).isEqualTo(author);
+        Assertions.assertThat(postOfMember.getContent()).isEqualTo(content);
+    }
+
+    private Member generateMember() {
+        String email = "tester@test.com";
+        String password = "Password1!";
+        String name = "tester";
+        String encodedPassword = passwordEncoder.encode(password);
+        boolean isOauthUser = false;
+
+        return Member.of(email, encodedPassword, name, isOauthUser);
     }
 
     private void generateSamplePosts(int numberOfPosts) {

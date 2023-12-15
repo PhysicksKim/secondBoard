@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
-import physicks.secondBoard.domain.author.Author;
+import physicks.secondBoard.domain.post.author.Author;
 import physicks.secondBoard.baseentity.AuditBaseEntity;
 import physicks.secondBoard.domain.post.Post;
 

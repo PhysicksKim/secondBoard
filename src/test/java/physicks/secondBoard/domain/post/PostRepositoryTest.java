@@ -10,8 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import physicks.secondBoard.domain.author.Author;
-import physicks.secondBoard.domain.author.AuthorRepository;
+import physicks.secondBoard.domain.post.author.Author;
+import physicks.secondBoard.domain.post.author.AuthorRepository;
 import physicks.secondBoard.domain.member.MemberRepository;
 import physicks.secondBoard.domain.user.Member;
 

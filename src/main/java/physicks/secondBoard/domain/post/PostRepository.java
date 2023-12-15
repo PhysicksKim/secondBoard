@@ -1,5 +1,6 @@
 package physicks.secondBoard.domain.post;
 
+import io.micrometer.common.lang.NonNullApi;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -12,6 +13,7 @@ import java.util.List;
  * findAll() 은 성능상 문제로 금지합니다. Pageable 을 사용해주세요.
  */
 @Repository
+@NonNullApi
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     /**

@@ -1,4 +1,4 @@
-package physicks.secondBoard.domain.author;
+package physicks.secondBoard.domain.post.author;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class Author extends AuditBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true)
-    protected Member user;
+    protected Member member;
 
     @Column(nullable = false)
     protected String name;
@@ -47,10 +47,10 @@ public class Author extends AuditBaseEntity {
     }
 
     public String getAuthorName() {
-        if(isGuest == false && user == null) {
-            throw new AuthorUserNullException("작성자(Author)의 회원 객체(User)가 NULL 입니다");
+        if(!isGuest && member == null) {
+            throw new IllegalArgumentException("회원 작성자(Author) 객체인데, 회원 필드(Member)가 NULL 입니다");
         }
-        return isGuest ? name : user.getName();
+        return isGuest ? name : member.getName();
     }
 
     /**
@@ -60,8 +60,8 @@ public class Author extends AuditBaseEntity {
     @PostPersist
     @PostUpdate
     protected void checkConstraints() {
-        if ((isGuest && user != null) || (!isGuest && user == null)) {
-            throw new EntityConstraintViolation("Author 의 비회원/회원 제약조건에 문제가 생겼습니다. isGuest : " + isGuest + ", user : " + user);
+        if ((isGuest && member != null) || (!isGuest && member == null)) {
+            throw new EntityConstraintViolation("Author 의 비회원/회원 제약조건에 문제가 생겼습니다. isGuest : " + isGuest + ", user : " + member);
         }
     }
 
@@ -91,7 +91,7 @@ public class Author extends AuditBaseEntity {
         Author author = new Author();
         author.isGuest = false;
         author.name = member.getName();
-        author.user = member;
+        author.member = member;
         author.password = null;
 
         return author;
@@ -105,7 +105,7 @@ public class Author extends AuditBaseEntity {
         if(isGuest) {
             return Objects.equals(getId(), author.getId());
         } else {
-            return user.equals(author.user);
+            return member.equals(author.member);
         }
     }
 
@@ -113,7 +113,7 @@ public class Author extends AuditBaseEntity {
     public String toString() {
         return "Author{" +
                 "isGuest=" + isGuest +
-                ", user=" + user +
+                ", user=" + member +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 '}';
