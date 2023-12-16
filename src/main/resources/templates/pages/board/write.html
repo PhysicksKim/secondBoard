@@ -27,11 +27,11 @@
                    placeholder="게시글 비밀번호"> <br>
 
             <input th:if="${username == null && post == null}"
-                   type="text" th:id="author" name="author"
+                   type="text" th:id="authorName" name="authorName"
                    placeholder="작성자"> <br>
             <input th:unless="${username == null && post == null}"
-                   type="text" th:id="author" name="author"
-                   th:value="${post != null ? post.author : username}"
+                   type="text" th:id="authorName" name="authorName"
+                   th:value="${post != null ? post.authorName : username}"
                    placeholder="작성자" readonly> <br>
 
             <input type="hidden" id="id" name="id"

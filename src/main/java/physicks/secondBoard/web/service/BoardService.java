@@ -4,19 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
-import physicks.secondBoard.domain.board.dto.PostListDto;
-import physicks.secondBoard.domain.board.dto.PostReadDto;
-import physicks.secondBoard.domain.board.dto.PostUpdatePageDto;
+import physicks.secondBoard.domain.board.dto.*;
 import physicks.secondBoard.domain.board.dto.mapper.PostListDtoMapper;
 import physicks.secondBoard.domain.board.dto.mapper.PostReadDtoMapper;
+import physicks.secondBoard.domain.member.AuthenticationUtils;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
+import physicks.secondBoard.domain.post.author.Author;
 import physicks.secondBoard.domain.token.PostEditTokenService;
 import physicks.secondBoard.domain.token.TokenDto;
+import physicks.secondBoard.domain.user.Member;
 import physicks.secondBoard.web.controller.request.PostUpdateRequestDto;
 
 import java.util.ArrayList;
@@ -36,9 +36,10 @@ import java.util.List;
 public class BoardService {
 
     private final PostService postService;
+    private final MemberService memberService;
     private final PostEditTokenService postEditTokenService;
-
-    private final PasswordEncoder passwordEncoder;
+    private final AuthorService authorService;
+    private final AuthenticationUtils authenticationUtils;
 
     public List<PostListDto> getPostListDtos(Pageable pageable) {
         List<PostListDto> result = new ArrayList<>();
@@ -64,8 +65,18 @@ public class BoardService {
         return postService.findPostById(id);
     }
 
-    public Post writePost(PostGuestWriteDto dto) {
-        return postService.createPostOfGuest(dto.getTitle(), dto.getAuthor(), dto.getPassword(), dto.getContent());
+    // todo : test 작성 필요
+    public Post writeGuestPost(PostWriteGuestRequest dto) {
+        Author guestAuthor = authorService.createGuestAuthor(dto.getAuthorName(), dto.getPassword());
+        return postService.createPost(dto.getTitle(), guestAuthor, dto.getContent());
+    }
+
+    // todo : test 작성 필요
+    public Post writeMemberPost(PostWriteMemberRequest dto, Authentication authentication) {
+        String email = authenticationUtils.extractEmail(authentication);
+        Member member = memberService.findMemberByEmail(email);
+        Author memberAuthor = authorService.createMemberAuthor(member);
+        return postService.createPost(dto.getTitle(), memberAuthor, dto.getContent());
     }
 
     public PostUpdatePageDto getPostUpdatePageDtoUsingAccessToken(long postId, String accessToken) {
@@ -84,7 +95,7 @@ public class BoardService {
     public TokenDto validatePostPasswordAndGenerateTokens(long postId, String rawPassword) {
         checkCanEditWithPassword(postId);
         Post findPost = postService.findPostById(postId);
-        if (!passwordEncoder.matches(rawPassword, findPost.getAuthor().getPassword())) {
+        if (!authorService.isMatchedPassword(findPost.getAuthor(), rawPassword)) {
             log.info("비밀번호가 일치하지 않습니다 :: rawPassword = {}", rawPassword);
             log.info("비밀번호가 일치하지 않습니다 :: post password = {}", findPost.getAuthor().getPassword());
             throw new IllegalArgumentException("일치하지 않는 비밀번호 입니다");

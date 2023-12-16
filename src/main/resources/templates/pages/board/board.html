@@ -22,7 +22,7 @@
                 <tr th:each="post : ${postList}">
                     <td th:text="${post.id}"></td>
                     <td><a th:text="${post.title}" th:href="@{/board/{id}(id = ${post.id})}"></a></td>
-                    <td th:text="${post.author}"></td>
+                    <td th:text="${post.authorName}"></td>
                     <td th:text="${post.createdTime}"></td>
                 </tr>
             </table>

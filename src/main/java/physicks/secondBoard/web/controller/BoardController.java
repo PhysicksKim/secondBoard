@@ -96,13 +96,13 @@ public class BoardController {
             redirectAttributes.addFlashAttribute("error", "비밀번호가 일치하지 않습니다");
             return "redirect:/board/{postId}/password";
         } catch (Exception e) {
-            log.error("Error 알 수 없는 에러 발생 :: {}", e);
+            log.error("Error 알 수 없는 에러 발생 ", e);
             redirectAttributes.addFlashAttribute("error", "서버 오류로 실패했습니다. 잠시 후 다시 시도해 주세요.");
             return "redirect:/board/{postId}/password";
         }
     }
 
-    // TODO : [Refactoring] BoardService 를 두 번 호출하고 있습니다. Controller 에서 isValidToken 분기를 만들고 있는데, BoardService 메서드 내부에서 분기를 처리하는 게 좋아 보입니다.
+    // TODO : RefreshToken 은 사용되지 않고 있음.
     @GetMapping("/{postId}/edit")
     public String showEditPostForm(@PathVariable Long postId,
                                  @CookieValue("EditAccessToken") String accessToken,
@@ -120,6 +120,7 @@ public class BoardController {
         return VIEW_PREFIX + "write";
     }
 
+    // TODO : 토큰 재발급은 아직 쓰이지 않고 있음. 추후 토큰 재발급 로직 과정에 사용할 예정.
     @PostMapping("/{postId}/edit/tokenRefresh")
     public ResponseEntity refreshEditToken(@PathVariable long postId,
                                            @CookieValue("EditRefreshToken") String refreshToken,
@@ -135,43 +136,49 @@ public class BoardController {
 
     /**
      * 게시글 작성 페이지에서 작성한 게시글을 저장합니다. <br>
-     * 게시글 작성에 성공하면 게시글 상세 페이지로 redirect 합니다. <br>
-     * 게시글 작성에 실패하면 500 에러를 반환합니다.
-     * @param title
-     * @param author
-     * @param content
-     * @param password
+     * 성공 : 게시글 상세 페이지로 redirect 합니다. <br>
+     * 실패 : 500 에러를 반환합니다.
+     * @param postWriteGuestRequest
      * @param response
      * @return
      */
     @PostMapping("/write")
-    public String submitNewPost(String title,
-                                String author,
-                                String content,
-                                String password,
-                                HttpServletResponse response) {
-
-        PostGuestWriteDto postGuestWriteDto = new PostGuestWriteDto(title, author, password, content);
+    public String writeGuestPost(@ModelAttribute PostWriteGuestRequest postWriteGuestRequest,
+                                 HttpServletResponse response) {
         try {
-            Post post = boardService.writePost(postGuestWriteDto);
-            log.info("save post successfully! :: {}", post.toString());
+            Post post = boardService.writeGuestPost(postWriteGuestRequest);
             return "redirect:/board/"+post.getId();
         } catch (Exception e) {
-            log.error("Error. postRepository.save(post) 에서 에러 발생 : {}", e);
+            log.error("postRepository.save(post) 에서 에러 발생 ", e);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return "서버 오류로 글 작성에 실패했습니다. 잠시 후 다시 시도해 주세요.";
+            throw new RuntimeException("서버 오류로 글 작성에 실패했습니다. 잠시 후 다시 시도해 주세요.");
         }
     }
 
-    // TODO : [Refactoring] BoardService 를 두 번 호출하고 있습니다. Controller 에서 isValidToken 분기를 만들고 있는데, BoardService 메서드 내부에서 분기를 처리하는 게 좋아 보입니다.
+    @PostMapping
+    public String writeMemberPost(@ModelAttribute PostWriteMemberRequest postWriteMemberRequest,
+                                  Authentication authentication) {
+
+        if(authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalArgumentException("로그인이 필요합니다");
+            // 1. 게시글 작성 정보를 게시글 캐싱 DB 저장
+            // 2. login page redirect
+        }
+
+        Post writePost = boardService.writeMemberPost(postWriteMemberRequest, authentication);
+        return "redirect:/board/"+writePost.getId();
+    }
+
     @PostMapping("/{postId}/edit")
     public String submitPostUpdate(@PathVariable long postId,
                                   @ModelAttribute PostUpdateRequestDto dto,
                                   @CookieValue("EditAccessToken") String accessToken,
                                   RedirectAttributes redirectAttributes) {
+
         if (postId != dto.getId()) {
             throw new IllegalArgumentException("URL 의 PostId 와 요청으로 전달된 PostId 가 일치하지 않습니다");
         }
+
         Post post = boardService.updatePostUsingAccessToken(dto, accessToken);
         redirectAttributes.addAttribute("postId", post.getId());
         return "redirect:/board/{postId}/";

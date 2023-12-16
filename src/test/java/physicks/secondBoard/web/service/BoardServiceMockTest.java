@@ -9,15 +9,17 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
-import physicks.secondBoard.domain.post.author.Author;
-import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
+import physicks.secondBoard.domain.board.dto.PostWriteGuestRequest;
+import physicks.secondBoard.domain.member.AuthenticationUtils;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
+import physicks.secondBoard.domain.post.author.Author;
 import physicks.secondBoard.domain.token.PostEditTokenService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+// TODO : 리팩토링에 따른 test 전면 수정 필요
 /**
  * <pre>
  * BoardService 의 메서드들을 테스트 합니다.
@@ -42,13 +44,19 @@ class BoardServiceMockTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private PostEditTokenService postEditTokenService;
+    @Mock
+    private MemberService memberService;
+    @Mock
+    private AuthorService authorService;
+    @Mock
+    private AuthenticationUtils authenticationUtils;
 
     private static final String POST_ID_FIELD = "id";
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this); // Mock 객체 초기화
-        boardService = new BoardService(postService, postEditTokenService, passwordEncoder); // 테스트할 Service 에 Mock 객체를 주입
+        boardService = new BoardService(postService, memberService, postEditTokenService, authorService, authenticationUtils); // 테스트할 Service 에 Mock 객체를 주입
     }
 
     /**
@@ -107,16 +115,16 @@ class BoardServiceMockTest {
     @Test
     public void savePost() throws Exception {
         //given
-        PostGuestWriteDto postDto = new PostGuestWriteDto("title1", "author1", "password1", "content1");
+        PostWriteGuestRequest postDto = new PostWriteGuestRequest("title1", "author1", "password1", "content1");
         Post post1 = Post.of("title1", Author.ofGuest("author1", "password1"), "content1");
 
-        when(postService.createPostOfGuest(postDto.getTitle(), postDto.getAuthor(), postDto.getPassword(), postDto.getContent())).thenReturn(post1);
+        when(postService.createPostOfGuest(postDto.getTitle(), postDto.getAuthorName(), postDto.getPassword(), postDto.getContent())).thenReturn(post1);
 
         //when
-        Post savedPost = boardService.writePost(postDto);
+        Post savedPost = boardService.writeGuestPost(postDto);
 
         //then
-        verify(postService, times(1)).createPostOfGuest(postDto.getTitle(), postDto.getAuthor(), postDto.getPassword(), postDto.getContent());
+        verify(postService, times(1)).createPostOfGuest(postDto.getTitle(), postDto.getAuthorName(), postDto.getPassword(), postDto.getContent());
         assertThat(savedPost.getTitle()).isEqualTo(post1.getTitle());
         assertThat(savedPost.getAuthor()).isEqualTo(post1.getAuthor());
         assertThat(savedPost.getContent()).isEqualTo(post1.getContent());

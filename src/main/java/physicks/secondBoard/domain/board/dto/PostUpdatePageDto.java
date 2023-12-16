@@ -10,6 +10,6 @@ import lombok.ToString;
 public class PostUpdatePageDto {
     private final long id;
     private final String title;
-    private final String author;
+    private final String authorName;
     private final String content;
 }

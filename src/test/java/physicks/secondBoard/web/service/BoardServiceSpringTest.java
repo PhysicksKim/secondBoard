@@ -8,8 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.board.dto.PostListDto;
-import physicks.secondBoard.domain.board.dto.PostGuestWriteDto;
-import physicks.secondBoard.web.service.BoardService;
+import physicks.secondBoard.domain.board.dto.PostWriteGuestRequest;
 import physicks.secondBoard.domain.post.Post;
 
 import jakarta.persistence.EntityManager;
@@ -34,18 +33,18 @@ public class BoardServiceSpringTest {
     @BeforeEach
     public void setup() {
         for(int i = 1 ; i <= postNums ; i++) {
-            PostGuestWriteDto postGuestWriteDto = new PostGuestWriteDto("title" + i, "author" + i, "password" + i, "content" + i);
-            boardService.writePost(postGuestWriteDto);
+            PostWriteGuestRequest postWriteGuestRequest = new PostWriteGuestRequest("title" + i, "author" + i, "password" + i, "content" + i);
+            boardService.writeGuestPost(postWriteGuestRequest);
         }
     }
 
     @Test
     public void post_saveAndFind() throws Exception {
         //given
-        PostGuestWriteDto postGuestWriteDto = new PostGuestWriteDto("title","author","password", "content");
+        PostWriteGuestRequest postWriteGuestRequest = new PostWriteGuestRequest("title","author","password", "content");
 
         //when
-        Post savedPost = boardService.writePost(postGuestWriteDto);
+        Post savedPost = boardService.writeGuestPost(postWriteGuestRequest);
         em.flush();
         em.clear();
 

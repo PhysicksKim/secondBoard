@@ -14,6 +14,6 @@ import lombok.*;
 public class PostListDto {
     private Long id;
     private String title;
-    private String author;
+    private String authorName;
     private String createdTime;
 }
