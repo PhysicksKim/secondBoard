@@ -1,31 +1,50 @@
 package physicks.secondBoard.web.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.board.dto.PostListDto;
 import physicks.secondBoard.domain.board.dto.PostWriteGuestRequest;
+import physicks.secondBoard.domain.board.dto.PostWriteMemberRequest;
+import physicks.secondBoard.domain.member.MemberRepository;
 import physicks.secondBoard.domain.post.Post;
+import physicks.secondBoard.domain.user.Member;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Slf4j
 @SpringBootTest
 @Transactional
-public class BoardServiceSpringTest {
+public class BoardServiceTest {
 
     @Autowired
     private BoardService boardService;
 
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     private final int postNums = 13;
     private final int size = 5;
@@ -144,5 +163,60 @@ public class BoardServiceSpringTest {
         assertThat(updatedPost.getTitle()).isEqualTo(findPost.getTitle());
     }
 
+    @DisplayName("올바른 request 에 따라서 guest post 작성에 성공")
+    @Test
+    void writeGuestPost() {
+        // given
+        String rawPassword = "123456a!";
+        PostWriteGuestRequest postWriteGuestRequest = new PostWriteGuestRequest("title", "author", rawPassword, "content");
+
+        // when
+        Post post = boardService.writeGuestPost(postWriteGuestRequest);
+
+        // then
+        assertThat(post).isNotNull();
+        assertThat(post.getId()).isNotNull();
+        assertThat(post.getTitle()).isEqualTo(postWriteGuestRequest.getTitle());
+        assertThat(post.getAuthor().getAuthorName()).isEqualTo(postWriteGuestRequest.getAuthorName());
+        assertThat(post.getAuthor().isGuest()).isTrue();
+        assertThat(post.getContent()).isEqualTo(postWriteGuestRequest.getContent());
+        assertTrue(passwordEncoder.matches(rawPassword, post.getAuthor().getPassword()));
+    }
+
+    @DisplayName("request 가 Empty String 이 들어있는 경우 예외를 던집니다.")
+    @Test
+    void writeGuestPost_failWithEmptyString() {
+        // given
+        PostWriteGuestRequest postWriteGuestRequest = new PostWriteGuestRequest("","", "", "");
+
+        // when
+        Assertions.assertThrows(IllegalArgumentException.class, () -> boardService.writeGuestPost(postWriteGuestRequest));
+    }
+
+    @DisplayName("회원 인증 객체 타입 UsernamePasswordAuthenticationToken 으로 회원 게시글 작성에 성공한다.")
+    @Test
+    void writeMemberPost_SuccessWithUsernamePasswordAuthenticationToken() {
+        // given
+        String rawPassword = "123456a!";
+        Member member = Member.of(passwordEncoder.encode(rawPassword), "tester", "tester@test.com", false);
+        memberRepository.save(member);
+
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
+        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated("tester@test.com", "", authorities);
+        PostWriteMemberRequest postWriteMemberRequest = new PostWriteMemberRequest("title", "content");
+
+        log.info("authentication = {}", authentication);
+        log.info("authentication.getName() = {}", authentication.getName());
+        // when
+        Post post = boardService.writeMemberPost(postWriteMemberRequest, authentication);
+
+        // then
+        assertThat(post).isNotNull();
+        assertThat(post.getId()).isNotNull();
+        assertThat(post.getTitle()).isEqualTo(postWriteMemberRequest.getTitle());
+        assertThat(post.getAuthor().getAuthorName()).isEqualTo(member.getName());
+        assertThat(post.getAuthor().isGuest()).isFalse();
+        assertThat(post.getContent()).isEqualTo(postWriteMemberRequest.getContent());
+    }
 
 }

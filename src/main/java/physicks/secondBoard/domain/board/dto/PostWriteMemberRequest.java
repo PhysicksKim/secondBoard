@@ -6,12 +6,10 @@ import lombok.Getter;
 public class PostWriteMemberRequest {
 
     private String title;
-    private String password;
     private String content;
 
-    public PostWriteMemberRequest(String title, String password, String content) {
+    public PostWriteMemberRequest(String title, String content) {
         this.title = title;
-        this.password = password;
         this.content = content;
     }
 

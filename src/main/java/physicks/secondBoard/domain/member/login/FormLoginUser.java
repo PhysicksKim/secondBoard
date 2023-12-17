@@ -1,10 +1,12 @@
 package physicks.secondBoard.domain.member.login;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
+@Getter
 public class FormLoginUser extends User {
 
     private final String nickname;
@@ -17,10 +19,6 @@ public class FormLoginUser extends User {
     public FormLoginUser(String username, String password, String nickname, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.nickname = nickname;
-    }
-
-    public String getNickname() {
-        return nickname;
     }
 
     @Override

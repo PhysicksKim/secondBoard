@@ -2,7 +2,6 @@ package physicks.secondBoard.web.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -19,14 +18,13 @@ import physicks.secondBoard.domain.token.TokenDto;
 import physicks.secondBoard.domain.user.Member;
 import physicks.secondBoard.web.controller.request.PostUpdateRequestDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 // TODO : 리팩토링. 1. 코드 가독성 향상 필요 2. 위임 구조 점검 필요 3. request 에 일대일 매칭 되도록 퍼사드 구조 점검
 /**
  * BoardController 를 위한 facade Service 입니다.
- * 각각의 public 메서드 하나 또는 최소한의 request 에 매칭됩니다.
+ * 각각의 public 메서드는 하나 또는 최소한의 controller mapping 과 매칭됩니다.
  * 예외적으로, 간단한 위임 메서드는 여러 곳에서 호출될 수 있습니다. (ex. isGuestPost, findPostById)
  */
 @Service
@@ -42,13 +40,10 @@ public class BoardService {
     private final AuthenticationUtils authenticationUtils;
 
     public List<PostListDto> getPostListDtos(Pageable pageable) {
-        List<PostListDto> result = new ArrayList<>();
-        Page<Post> posts = postService.getPostList(pageable);
-        for (Post post : posts) {
-            PostListDto dto = PostListDtoMapper.toDto(post);
-            result.add(dto);
-        }
-        return result;
+        return postService.getPostList(pageable)
+                .stream()
+                .map(PostListDtoMapper::toDto)
+                .toList();
     }
 
     public PostReadDto getPostReadDto(long id) {
@@ -65,8 +60,11 @@ public class BoardService {
         return postService.findPostById(id);
     }
 
-    // todo : test 작성 필요
     public Post writeGuestPost(PostWriteGuestRequest dto) {
+        if(invalidWriteRequest(dto)) {
+            throw new IllegalArgumentException("게시글 작성 요청 값이 유효하지 않습니다.");
+        }
+
         Author guestAuthor = authorService.createGuestAuthor(dto.getAuthorName(), dto.getPassword());
         return postService.createPost(dto.getTitle(), guestAuthor, dto.getContent());
     }
@@ -148,5 +146,10 @@ public class BoardService {
         if(!findPost.getAuthor().isGuest()) {
             throw new IllegalArgumentException("회원 게시글은 게시글 비밀번호로 수정 권한을 요청할 수 없습니다");
         }
+    }
+
+    private boolean invalidWriteRequest(PostWriteGuestRequest dto) {
+        return dto.getTitle() == null || dto.getAuthorName() == null || dto.getPassword() == null || dto.getContent() == null ||
+                dto.getTitle().isEmpty() || dto.getAuthorName().isEmpty() || dto.getPassword().isEmpty() || dto.getContent().isEmpty();
     }
 }

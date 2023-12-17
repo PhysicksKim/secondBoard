@@ -7,19 +7,18 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-// TODO : test 작성 필요
 @Component
 public class AuthenticationUtils {
 
-    // TODO : Authentication 객체는 구현체에 따라서 email 이 포함되지 않을 수 있음. 그래서 이 부분을 명확히 테스트 해야함. 특히 OAuth2, usernamepassword 둘 다 테스트 필요
     public String extractEmail(Authentication authentication) {
         if (authentication instanceof UsernamePasswordAuthenticationToken) {
-            return authentication.getName();
+            return authentication.getName(); // UsernamePasswordAuthenticationToken 은 email 을 name 으로 저장하도록 설정해뒀음
         } else if (authentication instanceof OAuth2AuthenticationToken) {
+            // OAuth2 인증에서 email 추출 방식은, OAuth2 제공자마다 구현이 다름
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
             Map<String, Object> attributes = oauthToken.getPrincipal().getAttributes();
 
-            // 이메일 추출 로직. 제공자별로 다를 수 있음
+            // 제공자별로 다른 이메일 추출 로직
             if (attributes.containsKey("email")) {
                 return (String) attributes.get("email");
             } else {

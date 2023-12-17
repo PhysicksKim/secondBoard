@@ -1,6 +1,8 @@
 package physicks.secondBoard.domain.board.dto;
 
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 /**
@@ -11,12 +13,17 @@ import lombok.*;
  */
 @Getter
 public class PostWriteGuestRequest {
+
+    @NotNull
+    @Size(min = 6)
     private String title;
+
+    @Size
     private String authorName;
     private String password;
     private String content;
 
-    public PostWriteGuestRequest(String title, String authorName, String password, String content) {
+    public PostWriteGuestRequest(@NotNull String title, @NotNull String authorName, @NotNull String password, @NotNull String content) {
         this.title = title;
         this.authorName = authorName;
         this.password = password;
