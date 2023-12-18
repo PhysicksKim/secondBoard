@@ -1,5 +1,6 @@
 package physicks.secondBoard.web.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +35,7 @@ public class MemberService {
 
     public Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("해당 email 을 찾을 수 없습니다"));
+                .orElseThrow(() -> new EntityNotFoundException("email : " + email + " 인 Member 를 찾을 수 없습니다"));
     }
 
     public Member findMemberById(Long id) {

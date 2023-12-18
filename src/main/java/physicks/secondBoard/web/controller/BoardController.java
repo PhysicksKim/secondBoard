@@ -134,6 +134,7 @@ public class BoardController {
         return ResponseEntity.ok().build();
     }
 
+    // todo : 회원 게시글 작성 요청을 분리해야한다. 회원 게시글 작성 요청 uri 를 분리할지, 하나의 method 에서 나눌지 생각해봐야 겠다.
     /**
      * 게시글 작성 페이지에서 작성한 게시글을 저장합니다. <br>
      * 성공 : 게시글 상세 페이지로 redirect 합니다. <br>
@@ -155,6 +156,7 @@ public class BoardController {
         }
     }
 
+    // todo : 게시글 작성 request 를 하나의 URI 로 통합 필요
     @PostMapping
     public String writeMemberPost(@ModelAttribute PostWriteMemberRequest postWriteMemberRequest,
                                   Authentication authentication) {

@@ -3,6 +3,7 @@ package physicks.secondBoard.web.service;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +29,7 @@ import physicks.secondBoard.domain.user.Member;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
@@ -57,8 +60,9 @@ public class BoardServiceTest {
         }
     }
 
+    @DisplayName("게시글 작성에 성공합니다.")
     @Test
-    public void post_saveAndFind() throws Exception {
+    public void writeGuestPost_saveAndFind() throws Exception {
         //given
         PostWriteGuestRequest postWriteGuestRequest = new PostWriteGuestRequest("title","author","password", "content");
 
@@ -138,6 +142,8 @@ public class BoardServiceTest {
         }
     }
 
+    // todo : Post Entity Test 로 이동해야 합니다.
+    @DisplayName("게시글 수정 요청에 성공합니다.")
     @Test
     public void postUpdateTest() throws Exception {
         // given
@@ -201,12 +207,12 @@ public class BoardServiceTest {
         Member member = Member.of(passwordEncoder.encode(rawPassword), "tester", "tester@test.com", false);
         memberRepository.save(member);
 
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
-        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated("tester@test.com", "", authorities);
+        Authentication authentication = authenticatedMemberToken();
         PostWriteMemberRequest postWriteMemberRequest = new PostWriteMemberRequest("title", "content");
 
         log.info("authentication = {}", authentication);
         log.info("authentication.getName() = {}", authentication.getName());
+
         // when
         Post post = boardService.writeMemberPost(postWriteMemberRequest, authentication);
 
@@ -217,6 +223,60 @@ public class BoardServiceTest {
         assertThat(post.getAuthor().getAuthorName()).isEqualTo(member.getName());
         assertThat(post.getAuthor().isGuest()).isFalse();
         assertThat(post.getContent()).isEqualTo(postWriteMemberRequest.getContent());
+    }
+
+    @DisplayName("request 가 비어있을 때 예외를 던집니다.")
+    @Test
+    void writeMemberPost_InvalidRequestData() {
+        // Given: 무효한 요청 데이터
+        PostWriteMemberRequest invalidRequest = new PostWriteMemberRequest("", "");
+        Authentication authentication = authenticatedMemberToken();
+
+        // When & Then: 예외가 발생해야 함
+        assertThat(authentication.isAuthenticated()).isTrue();
+        assertThrows(IllegalArgumentException.class, () -> boardService.writeMemberPost(invalidRequest, authentication));
+    }
+
+    @DisplayName("인증되지 않은 회원 토큰이 회원 게시글 작성을 시도하면 예외를 던집니다.")
+    @Test
+    void writeMemberPost_AuthenticationNotFound() {
+        // Given: 인증되지 않은 사용자
+        PostWriteMemberRequest request = new PostWriteMemberRequest("title", "content");
+        Authentication authentication = unauthenticatedMemberToken();
+
+        // When & Then: 예외가 발생해야 함
+        assertThat(authentication.isAuthenticated()).isFalse();
+        assertThrows(IllegalArgumentException.class, () -> boardService.writeMemberPost(request, authentication));
+    }
+
+    @DisplayName("비회원이 회원 게시글 작성을 시도하면 예외를 던집니다.")
+    @Test
+    void writeMemberPost_MemberNotFound() {
+        // Given
+        PostWriteMemberRequest request = new PostWriteMemberRequest("title", "content");
+        Authentication authentication = guestToken();
+        log.info("authentication.isAuthenticated() = {}", authentication.isAuthenticated());
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> boardService.writeMemberPost(request, authentication));
+    }
+
+    @NotNull
+    private static Authentication authenticatedMemberToken() {
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
+        return UsernamePasswordAuthenticationToken.authenticated("tester@test.com", "", authorities);
+    }
+
+    @NotNull
+    private static Authentication unauthenticatedMemberToken() {
+        return UsernamePasswordAuthenticationToken.unauthenticated("tester@test.com", "");
+    }
+
+    @NotNull
+    private static Authentication guestToken() {
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_GUEST");
+        Authentication authentication = new AnonymousAuthenticationToken("guest", "guest", authorities);
+        return authentication;
     }
 
 }
