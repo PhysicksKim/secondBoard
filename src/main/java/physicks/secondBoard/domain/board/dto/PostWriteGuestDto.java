@@ -12,7 +12,7 @@ import lombok.*;
  * </pre>
  */
 @Getter
-public class PostWriteGuestRequest {
+public class PostWriteGuestDto {
 
     @NotNull
     @Size(min = 6)
@@ -23,7 +23,7 @@ public class PostWriteGuestRequest {
     private String password;
     private String content;
 
-    public PostWriteGuestRequest(@NotNull String title, @NotNull String authorName, @NotNull String password, @NotNull String content) {
+    public PostWriteGuestDto(@NotNull String title, @NotNull String authorName, @NotNull String password, @NotNull String content) {
         this.title = title;
         this.authorName = authorName;
         this.password = password;
@@ -32,7 +32,7 @@ public class PostWriteGuestRequest {
 
     @Override
     public String toString() {
-        return "PostWriteGuestRequest{" +
+        return "PostWriteGuestDto{" +
                 "title='" + title + '\'' +
                 ", author='" + authorName + '\'' +
                 ", password='" + password + '\'' +

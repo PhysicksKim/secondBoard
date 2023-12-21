@@ -20,8 +20,8 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.board.dto.PostListDto;
-import physicks.secondBoard.domain.board.dto.PostWriteGuestRequest;
-import physicks.secondBoard.domain.board.dto.PostWriteMemberRequest;
+import physicks.secondBoard.domain.board.dto.PostWriteGuestDto;
+import physicks.secondBoard.domain.board.dto.PostWriteMemberDto;
 import physicks.secondBoard.domain.member.MemberRepository;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.user.Member;
@@ -55,8 +55,8 @@ public class BoardServiceTest {
     @BeforeEach
     public void setup() {
         for(int i = 1 ; i <= postNums ; i++) {
-            PostWriteGuestRequest postWriteGuestRequest = new PostWriteGuestRequest("title" + i, "author" + i, "password" + i, "content" + i);
-            boardService.writeGuestPost(postWriteGuestRequest);
+            PostWriteGuestDto postWriteGuestDto = new PostWriteGuestDto("title" + i, "author" + i, "password" + i, "content" + i);
+            boardService.writeGuestPost(postWriteGuestDto);
         }
     }
 
@@ -64,10 +64,10 @@ public class BoardServiceTest {
     @Test
     public void writeGuestPost_saveAndFind() throws Exception {
         //given
-        PostWriteGuestRequest postWriteGuestRequest = new PostWriteGuestRequest("title","author","password", "content");
+        PostWriteGuestDto postWriteGuestDto = new PostWriteGuestDto("title","author","password", "content");
 
         //when
-        Post savedPost = boardService.writeGuestPost(postWriteGuestRequest);
+        Post savedPost = boardService.writeGuestPost(postWriteGuestDto);
         em.flush();
         em.clear();
 
@@ -174,18 +174,18 @@ public class BoardServiceTest {
     void writeGuestPost() {
         // given
         String rawPassword = "123456a!";
-        PostWriteGuestRequest postWriteGuestRequest = new PostWriteGuestRequest("title", "author", rawPassword, "content");
+        PostWriteGuestDto postWriteGuestDto = new PostWriteGuestDto("title", "author", rawPassword, "content");
 
         // when
-        Post post = boardService.writeGuestPost(postWriteGuestRequest);
+        Post post = boardService.writeGuestPost(postWriteGuestDto);
 
         // then
         assertThat(post).isNotNull();
         assertThat(post.getId()).isNotNull();
-        assertThat(post.getTitle()).isEqualTo(postWriteGuestRequest.getTitle());
-        assertThat(post.getAuthor().getAuthorName()).isEqualTo(postWriteGuestRequest.getAuthorName());
+        assertThat(post.getTitle()).isEqualTo(postWriteGuestDto.getTitle());
+        assertThat(post.getAuthor().getAuthorName()).isEqualTo(postWriteGuestDto.getAuthorName());
         assertThat(post.getAuthor().isGuest()).isTrue();
-        assertThat(post.getContent()).isEqualTo(postWriteGuestRequest.getContent());
+        assertThat(post.getContent()).isEqualTo(postWriteGuestDto.getContent());
         assertTrue(passwordEncoder.matches(rawPassword, post.getAuthor().getPassword()));
     }
 
@@ -193,10 +193,10 @@ public class BoardServiceTest {
     @Test
     void writeGuestPost_failWithEmptyString() {
         // given
-        PostWriteGuestRequest postWriteGuestRequest = new PostWriteGuestRequest("","", "", "");
+        PostWriteGuestDto postWriteGuestDto = new PostWriteGuestDto("","", "", "");
 
         // when
-        Assertions.assertThrows(IllegalArgumentException.class, () -> boardService.writeGuestPost(postWriteGuestRequest));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> boardService.writeGuestPost(postWriteGuestDto));
     }
 
     @DisplayName("회원 인증 객체 타입 UsernamePasswordAuthenticationToken 으로 회원 게시글 작성에 성공한다.")
@@ -208,31 +208,31 @@ public class BoardServiceTest {
         memberRepository.save(member);
 
         Authentication authentication = authenticatedMemberToken();
-        PostWriteMemberRequest postWriteMemberRequest = new PostWriteMemberRequest("title", "content");
+        PostWriteMemberDto postWriteMemberDto = new PostWriteMemberDto("title", "content");
 
         log.info("authentication = {}", authentication);
         log.info("authentication.getName() = {}", authentication.getName());
 
         // when
-        Post post = boardService.writeMemberPost(postWriteMemberRequest, authentication);
+        Post post = boardService.writeMemberPost(postWriteMemberDto, authentication);
 
         // then
         assertThat(post).isNotNull();
         assertThat(post.getId()).isNotNull();
-        assertThat(post.getTitle()).isEqualTo(postWriteMemberRequest.getTitle());
+        assertThat(post.getTitle()).isEqualTo(postWriteMemberDto.getTitle());
         assertThat(post.getAuthor().getAuthorName()).isEqualTo(member.getName());
         assertThat(post.getAuthor().isGuest()).isFalse();
-        assertThat(post.getContent()).isEqualTo(postWriteMemberRequest.getContent());
+        assertThat(post.getContent()).isEqualTo(postWriteMemberDto.getContent());
     }
 
     @DisplayName("request 가 비어있을 때 예외를 던집니다.")
     @Test
     void writeMemberPost_InvalidRequestData() {
-        // Given: 무효한 요청 데이터
-        PostWriteMemberRequest invalidRequest = new PostWriteMemberRequest("", "");
+        // Given
+        PostWriteMemberDto invalidRequest = new PostWriteMemberDto("", "");
         Authentication authentication = authenticatedMemberToken();
 
-        // When & Then: 예외가 발생해야 함
+        // When & Then
         assertThat(authentication.isAuthenticated()).isTrue();
         assertThrows(IllegalArgumentException.class, () -> boardService.writeMemberPost(invalidRequest, authentication));
     }
@@ -240,11 +240,11 @@ public class BoardServiceTest {
     @DisplayName("인증되지 않은 회원 토큰이 회원 게시글 작성을 시도하면 예외를 던집니다.")
     @Test
     void writeMemberPost_AuthenticationNotFound() {
-        // Given: 인증되지 않은 사용자
-        PostWriteMemberRequest request = new PostWriteMemberRequest("title", "content");
+        // Given
+        PostWriteMemberDto request = new PostWriteMemberDto("title", "content");
         Authentication authentication = unauthenticatedMemberToken();
 
-        // When & Then: 예외가 발생해야 함
+        // When & Then
         assertThat(authentication.isAuthenticated()).isFalse();
         assertThrows(IllegalArgumentException.class, () -> boardService.writeMemberPost(request, authentication));
     }
@@ -253,7 +253,7 @@ public class BoardServiceTest {
     @Test
     void writeMemberPost_MemberNotFound() {
         // Given
-        PostWriteMemberRequest request = new PostWriteMemberRequest("title", "content");
+        PostWriteMemberDto request = new PostWriteMemberDto("title", "content");
         Authentication authentication = guestToken();
         log.info("authentication.isAuthenticated() = {}", authentication.isAuthenticated());
 

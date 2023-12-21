@@ -3,12 +3,12 @@ package physicks.secondBoard.domain.board.dto;
 import lombok.Getter;
 
 @Getter
-public class PostWriteMemberRequest {
+public class PostWriteMemberDto {
 
     private String title;
     private String content;
 
-    public PostWriteMemberRequest(String title, String content) {
+    public PostWriteMemberDto(String title, String content) {
         this.title = title;
         this.content = content;
     }

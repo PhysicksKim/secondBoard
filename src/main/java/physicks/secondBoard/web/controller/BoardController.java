@@ -1,22 +1,24 @@
 package physicks.secondBoard.web.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import physicks.secondBoard.domain.board.dto.*;
-import physicks.secondBoard.web.controller.request.PostUpdateRequestDto;
-import physicks.secondBoard.web.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.token.TokenDto;
+import physicks.secondBoard.web.controller.request.PostUpdateRequestDto;
+import physicks.secondBoard.web.controller.request.PostWriteRequest;
+import physicks.secondBoard.web.service.BoardService;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -139,15 +141,15 @@ public class BoardController {
      * 게시글 작성 페이지에서 작성한 게시글을 저장합니다. <br>
      * 성공 : 게시글 상세 페이지로 redirect 합니다. <br>
      * 실패 : 500 에러를 반환합니다.
-     * @param postWriteGuestRequest
+     * @param postWriteGuestDto
      * @param response
      * @return
      */
     @PostMapping("/write")
-    public String writeGuestPost(@ModelAttribute PostWriteGuestRequest postWriteGuestRequest,
+    public String writeGuestPost(@ModelAttribute PostWriteGuestDto postWriteGuestDto,
                                  HttpServletResponse response) {
         try {
-            Post post = boardService.writeGuestPost(postWriteGuestRequest);
+            Post post = boardService.writeGuestPost(postWriteGuestDto);
             return "redirect:/board/"+post.getId();
         } catch (Exception e) {
             log.error("postRepository.save(post) 에서 에러 발생 ", e);
@@ -156,19 +158,45 @@ public class BoardController {
         }
     }
 
-    // todo : 게시글 작성 request 를 하나의 URI 로 통합 필요
-    @PostMapping
-    public String writeMemberPost(@ModelAttribute PostWriteMemberRequest postWriteMemberRequest,
-                                  Authentication authentication) {
+    // todo : 게시글 작성 request 를 하나의 URI 로 통합 하기 위한 리팩토링중.
+    /*
+    0. 기존에 PostWriteMemberDto, PostWriteGuestDto 를 PostWrite___Dto 로 이름 변경. [DONE]
+    1. 회원/비회원 구분 로직 생성
+    2. request -> dto 맵핑 로직 생성.
+        :   맵핑 중 request 변환 validation 필요함.
+            dto 에는 Bean Validation 할 필요없음 (request 와 entity 에서만 validation)
+            (게시글 필수값 누락 등 값 부족 경우 / 회원인데 비회원 요청처럼 값이 들어온 경우 또는 그 반대 )
+    3. request 가 적절한 경우 Post Write 가 성공적으로 수행됨 / 실패한 경우 적절히 로깅 및 에러 반환
+     */
+    @PostMapping("/write/test")
+    public String writePost(@ModelAttribute PostWriteRequest request,
+                            Authentication authentication,
+                            RedirectAttributes redirectAttributes) {
 
-        if(authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalArgumentException("로그인이 필요합니다");
-            // 1. 게시글 작성 정보를 게시글 캐싱 DB 저장
-            // 2. login page redirect
+        Post writePost = null;
+        log.info("authentication = {}", authentication);
+        try {
+            // 비회원 게시글 작성 요청
+            if(isGuestWriteRequest(authentication)) {
+                log.info("비회원 게시글 작성 요청 :: {}", request.toString());
+                PostWriteGuestDto postWriteGuestDto = new PostWriteGuestDto(request.getTitle(),
+                        request.getAuthorName(), request.getPassword(), request.getContent());
+                writePost = boardService.writeGuestPost(postWriteGuestDto);
+            }
+            // 회원 게시글 작성 요청
+            else {
+                log.info("회원 게시글 작성 요청 :: {}", request.toString());
+                PostWriteMemberDto postWriteMemberDto = new PostWriteMemberDto(request.getTitle(),
+                        request.getContent());
+                writePost = boardService.writeMemberPost(postWriteMemberDto, authentication);
+            }
+        } catch (Exception e) {
+            log.error("글 작성 중 에러 발생 {} :: ", request.toString(), e);
+            throw new RuntimeException("글 작성에 실패했습니다. 잠시 후 다시 시도해 주세요.");
         }
 
-        Post writePost = boardService.writeMemberPost(postWriteMemberRequest, authentication);
-        return "redirect:/board/"+writePost.getId();
+        redirectAttributes.addAttribute("writeId", writePost.getId());
+        return "redirect:/board/{writeId}";
     }
 
     @PostMapping("/{postId}/edit")
@@ -219,5 +247,9 @@ public class BoardController {
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0 호환
         response.setDateHeader("Expires", 0); // 리소스 만료 시점 0 == 1970년 1월 1일 로 설정 => 즉시 만료
+    }
+
+    private static boolean isGuestWriteRequest(Authentication authentication) {
+        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
     }
 }

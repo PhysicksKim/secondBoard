@@ -1,42 +1,33 @@
 package physicks.secondBoard.web.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import physicks.secondBoard.domain.post.Post;
+import physicks.secondBoard.domain.post.author.Author;
+import physicks.secondBoard.domain.user.Member;
 import physicks.secondBoard.web.service.BoardService;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * <pre>
- * WebMvcTest 를 수행합니다.
- * service를 사용해야 하는경우 {@link BoardControllerSpringBootTest} 에서 수행해주세요.
- * 아래 테스트들은 SpringTest 가 더 적합하므로 mock에서 테스트하지 않음.
- * writePost, postRead
- * </pre>
- *
- * <h2>@WithMockUser(roles = "GUEST") 가 필요한 이유</h2>
- *
- * <pre>
- * 게시판 페이지 자체는 가장 낮은 GUEST 권한으로도 접근 가능하다.
- * 그러나 @WithMockUser 가 없으면 Security 가 확인할 Role 자체가 없다.
- * Spring Security 는 권한 자체가 없는 것을 확인하고
- * "너 GUEST도 아니고, ROLE 자체가 없네? 누구야" 하면서 권한 갖고 오라고 Login page로 넘겨버린다.
- * 그러므로 최소한 GUEST 권한이라도 집어 넣어줘야 한다.
- * </pre>
- */
-@WebMvcTest(BoardController.class) // class를 지정해주지 않으면 모든 @Controller 들을 로딩해버린다.
-@MockBean(JpaMetamodelMappingContext.class)
-@AutoConfigureMockMvc
-@WithMockUser(roles = "GUEST") // 게시판은 Guest 권한으로 접근 가능
+@Slf4j
+@WebMvcTest(controllers = BoardController.class)
 class BoardControllerWebMvcTest {
 
     // board main
@@ -57,16 +48,21 @@ class BoardControllerWebMvcTest {
     @MockBean
     private BoardService boardService;
 
-    @DisplayName("게시판 메인 페이지는 GUEST 권한으로 접근 가능하다")
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @DisplayName("메인 페이지는 GUEST 권한으로 접근 가능하다")
     @Test
+    @WithMockUser(roles = "GUEST")
     void mainPage() throws Exception{
         mockMvc.perform(get(URL_MAIN))
                 .andExpect(status().isOk())
                 .andExpect(view().name(PAGE_MAIN));
     }
 
-    @DisplayName("게시글 작성 페이지는 GUEST 권한으로 접근 가능하다")
+    @DisplayName("작성 페이지는 GUEST 권한으로 접근 가능하다")
     @Test
+    @WithMockUser(roles = "GUEST")
     void postWritePage() throws Exception{
         mockMvc.perform(get(URL_WRITE))
                 .andExpect(status().isOk())
@@ -75,10 +71,84 @@ class BoardControllerWebMvcTest {
 
     @DisplayName("수정 토큰 없이 게시글 수정 페이지에 접근하면 권한이 없어서 404 에러가 발생한다")
     @Test
+    @WithMockUser(roles = "GUEST") // 게시판은 Guest 권한으로 접근 가능
     void postUpdatePage() throws Exception{
         Long postId = 1L;
 
         mockMvc.perform(get(String.format(URL_UPDATE, postId)))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @DisplayName("회원 게시글 작성 요청을 보내고, 게시글 읽기 페이지로 리다이렉트 된다")
+    @Test
+    @WithMockUser(username = "tester", roles = "USER")
+    public void whenMemberPostWrite_thenRedirectToPostDetail() throws Exception {
+        // given
+        mockMvc = withSecurityMockMvc();
+
+        Member member = Member.of("test", "tester", "tester@test.com", false);
+        Author author = Author.ofMember(member);
+
+        String title = "Example Title";
+        String content = "Example content";
+        Post post = Post.of(title, author, content);
+
+        long postId = 1L;
+        ReflectionTestUtils.setField(post, "id", postId);
+
+        when(boardService.writeMemberPost(any(),any()))
+                .thenReturn(post);
+
+        // when / then
+        mockMvc.perform(post("/board/write/test")
+                        .param("title", "Example Title")
+                        .param("content", "Example content")
+                        // .with(authentication(createAuthentication()))
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/board/"+postId))
+                .andDo(print());
+    }
+
+    @DisplayName("비회원 게시글 작성 요청을 보내고, 게시글 읽기 페이지로 리다이렉트 된다")
+    @Test
+    @WithAnonymousUser
+    public void whenGuestPostWrite_thenRedirectToPostDetail() throws Exception {
+        // given
+        mockMvc = noSecurityMockMvc();
+
+        Author author = Author.ofGuest("Guest", "123456aA!");
+
+        String title = "Example Title";
+        String content = "Example content";
+        Post post = Post.of(title, author, content);
+
+        long postId = 1L;
+        ReflectionTestUtils.setField(post, "id", postId);
+
+        when(boardService.writeGuestPost(any())).thenReturn(post);
+
+        // when / then
+        mockMvc.perform(post("/board/write/test")
+                        .param("title", "Example Title")
+                        .param("authorName", "Guest")
+                        .param("password", "password123")
+                        .param("content", "Example content")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/board/" + postId));
+    }
+
+    private MockMvc noSecurityMockMvc() {
+        return MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .build();
+    }
+
+    private MockMvc withSecurityMockMvc() {
+        return MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
     }
 }

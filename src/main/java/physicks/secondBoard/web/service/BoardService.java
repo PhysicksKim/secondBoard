@@ -61,7 +61,7 @@ public class BoardService {
         return postService.findPostById(id);
     }
 
-    public Post writeGuestPost(PostWriteGuestRequest dto) {
+    public Post writeGuestPost(PostWriteGuestDto dto) {
         if(invalidWriteRequest(dto)) {
             throw new IllegalArgumentException("게시글 작성 요청 값이 유효하지 않습니다.");
         }
@@ -71,7 +71,7 @@ public class BoardService {
     }
 
     // todo : test 작성 필요
-    public Post writeMemberPost(PostWriteMemberRequest dto, Authentication authentication) {
+    public Post writeMemberPost(PostWriteMemberDto dto, Authentication authentication) {
         if(authentication == null || authentication instanceof AnonymousAuthenticationToken || !authentication.isAuthenticated() ) {
             throw new IllegalArgumentException("인증되지 않은 사용자의 게시글 작성 요청입니다");
         }
@@ -156,11 +156,11 @@ public class BoardService {
         }
     }
 
-    private boolean invalidWriteRequest(PostWriteGuestRequest dto) {
+    private boolean invalidWriteRequest(PostWriteGuestDto dto) {
         return dto.getTitle() == null || dto.getAuthorName() == null || dto.getPassword() == null || dto.getContent() == null ||
                 dto.getTitle().isEmpty() || dto.getAuthorName().isEmpty() || dto.getPassword().isEmpty() || dto.getContent().isEmpty();
     }
-    private boolean invalidWriteRequest(PostWriteMemberRequest dto) {
+    private boolean invalidWriteRequest(PostWriteMemberDto dto) {
         return dto.getTitle() == null || dto.getContent() == null ||
                 dto.getTitle().isEmpty() || dto.getContent().isEmpty();
     }

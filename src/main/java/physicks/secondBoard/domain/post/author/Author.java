@@ -65,6 +65,7 @@ public class Author extends AuditBaseEntity {
         }
     }
 
+    @Deprecated(since = "명시적으로 Guest, Member 를 구분한 팩토리 메서드를 사용해 주세요")
     public static Author of(User user) {
         Author author;
         if(user.getRole().equals(Role.GUEST)) {

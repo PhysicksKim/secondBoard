@@ -15,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-import physicks.secondBoard.domain.board.dto.PostWriteGuestRequest;
+import physicks.secondBoard.domain.board.dto.PostWriteGuestDto;
 import physicks.secondBoard.web.service.BoardService;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostRepository;
@@ -60,8 +60,8 @@ public class BoardControllerSpringBootTest {
     @BeforeEach
     void addSamplePosts() {
         for (int i = 0; i < samplePostNum; i++) {
-            PostWriteGuestRequest postWriteGuestRequest = new PostWriteGuestRequest("title" + i, "tester" + i,"password"+i, "content" + i);
-            boardService.writeGuestPost(postWriteGuestRequest);
+            PostWriteGuestDto postWriteGuestDto = new PostWriteGuestDto("title" + i, "tester" + i,"password"+i, "content" + i);
+            boardService.writeGuestPost(postWriteGuestDto);
         }
     }
 
