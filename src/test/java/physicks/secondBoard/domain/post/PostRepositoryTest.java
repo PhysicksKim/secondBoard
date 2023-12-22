@@ -47,9 +47,10 @@ public class PostRepositoryTest {
         }
     }
 
-    @Test
+    @DisplayName("게시판 글 목록 조회시 N+1 문제가 발생하지 않도록 한다")
     @Transactional
-    void 게시판메인페이지_패치조인_n1문제() {
+    @Test
+    void findAllByOrderByCreatedTimeDesc_SuccessWithEntityGraph() {
         // Persistence Context Cache Clear
         em.flush();
         em.clear();
@@ -74,8 +75,8 @@ public class PostRepositoryTest {
         // https://stackoverflow.com/questions/3377047/how-to-count-the-number-of-queries-executed-by-spring-jpa
     }
 
+    @DisplayName("비회원 게시글을 저장하고 id로 찾기에 성공한다.")
     @Transactional
-    @DisplayName("비회원 게시글 저장 테스트")
     @Test
     void GuestPostSaveAndGet() {
         // given
@@ -90,8 +91,8 @@ public class PostRepositoryTest {
         assertThat(postRepository.findById(post.getId()).get()).isEqualTo(post);
     }
 
+    @DisplayName("회원 게시글을 저장하고 id로 찾기에 성공한다.")
     @Transactional
-    @DisplayName("회원 게시글 저장 테스트")
     @Test
     void MemberPostSaveAndGet() {
         // given

@@ -2,6 +2,7 @@ package physicks.secondBoard.domain.token;
 
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.security.Key;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Slf4j
 public class BasicJwtTest {
 
+    @DisplayName("jjwt 라이브러리 학습용 테스트입니다.")
     @Test
     void jwtTest() {
         // 비밀 키 생성

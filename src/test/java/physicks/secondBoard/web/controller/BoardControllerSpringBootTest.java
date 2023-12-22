@@ -65,7 +65,7 @@ public class BoardControllerSpringBootTest {
         }
     }
 
-    @DisplayName("게시글 읽기")
+    @DisplayName("게시글 읽기 페이지 request 에 올바른 view 를 반환한다.")
     @Test
     void postRead() throws Exception{
         PageRequest pageRequest = PageRequest.of(0, 1);

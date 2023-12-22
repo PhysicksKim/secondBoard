@@ -20,7 +20,7 @@ class H2UserDetailsServiceTest {
     @Autowired
     private MemberService memberService;
 
-    @DisplayName("")
+    @DisplayName("email 로 H2 db 에서 UserDetails 를 조회한다")
     @Test
     void loadUserByUsername() {
         // given

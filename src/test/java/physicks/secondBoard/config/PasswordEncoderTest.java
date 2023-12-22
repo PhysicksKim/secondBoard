@@ -1,6 +1,7 @@
 package physicks.secondBoard.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +14,8 @@ public class PasswordEncoderTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
+    @DisplayName("패스워드를 인코딩 하고 검증합니다")
     @Test
     void Basic_PasswordEncoder_Test() {
         String inputStr1 = "hello";

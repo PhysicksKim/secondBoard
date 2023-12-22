@@ -1,6 +1,7 @@
 package physicks.secondBoard.web.controller.index;
 
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,6 +22,7 @@ public class IndexPageMVCTest {
     /**
      * 기본 index 페이지 요청에 응답이 정상적으로 이뤄지는지 테스트
      */
+    @DisplayName("index 페이지 요청에 정상적으로 응답한다.")
     @Test
     public void indexPage_정상응답_test() throws Exception {
         mockMvc.perform(get("/"))

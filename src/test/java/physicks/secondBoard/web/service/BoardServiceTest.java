@@ -3,7 +3,6 @@ package physicks.secondBoard.web.service;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -87,6 +86,7 @@ public class BoardServiceTest {
      * Pagination 테스트 1 <br>
      * 최신 게시글 페이지 조회 테스트 <br>
      */
+    @DisplayName("Pagination 테스트 1. 최신 페이지 조회 (ex. 총 3페이지 중 1페이지 조회)")
     @Test
     public void getBoardPostList_PaginationTest_NewestPage() throws Exception{
         //given
@@ -104,6 +104,7 @@ public class BoardServiceTest {
     }
 
     // Pagination 테스트 2. 중간 페이지 조회 (ex. 총 3페이지 중 2페이지 조회)
+    @DisplayName("Pagination 테스트 2. 중간 페이지 조회 (ex. 총 3페이지 중 2페이지 조회)")
     @Test
     public void getBoardPostList_PaginationTest_MiddlePage() throws Exception{
         //given
@@ -122,6 +123,7 @@ public class BoardServiceTest {
 
 
     // Pagination 테스트 3. 마지막 페이지 조회 (ex. 총 3페이지 중 3페이지 조회)
+    @DisplayName("Pagination 테스트 3. 마지막 페이지 조회 (ex. 총 3페이지 중 3페이지 조회)")
     @Test
     public void getBoardPostList_PaginationTest_OldestPage() throws Exception{
         //given
@@ -261,18 +263,15 @@ public class BoardServiceTest {
         assertThrows(IllegalArgumentException.class, () -> boardService.writeMemberPost(request, authentication));
     }
 
-    @NotNull
     private static Authentication authenticatedMemberToken() {
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
         return UsernamePasswordAuthenticationToken.authenticated("tester@test.com", "", authorities);
     }
 
-    @NotNull
     private static Authentication unauthenticatedMemberToken() {
         return UsernamePasswordAuthenticationToken.unauthenticated("tester@test.com", "");
     }
 
-    @NotNull
     private static Authentication guestToken() {
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_GUEST");
         Authentication authentication = new AnonymousAuthenticationToken("guest", "guest", authorities);

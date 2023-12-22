@@ -1,5 +1,6 @@
 package physicks.secondBoard.interceptor;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,12 +30,14 @@ class UsernameAddInterceptorTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @DisplayName("로그인하지 않은 사용자는 username 이 null 이다.")
     @Test
     public void testNotLoggedInUser() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(model().attribute("username", nullValue()));
     }
 
+    @DisplayName("로그인한 사용자는 username 이 존재한다.")
     @Test
     @WithMockUser(username = "testUser", roles = "MEMBER")
     public void testLoggedInUser() throws Exception {
