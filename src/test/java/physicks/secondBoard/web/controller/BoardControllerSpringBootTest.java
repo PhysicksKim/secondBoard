@@ -77,7 +77,7 @@ public class BoardControllerSpringBootTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("pages/board/post"))
                 .andExpect(model().attribute("post", hasProperty("title", is(post.getTitle()))))
-                .andExpect(model().attribute("post", hasProperty("author", is(post.getAuthor().getAuthorName()))))
+                .andExpect(model().attribute("post", hasProperty("authorName", is(post.getAuthor().getAuthorName()))))
                 .andExpect(model().attribute("post", hasProperty("content", is(post.getContent()))));
     }
 
@@ -93,7 +93,7 @@ public class BoardControllerSpringBootTest {
         // when
         ResultActions perform = mockMvc.perform(post("/board/write") //
                 .param("title", title)
-                .param("author", author)
+                .param("authorName", author)
                 .param("content", content)
                 .param("password", password));
         PageRequest pageRequest = PageRequest.of(0, 1);

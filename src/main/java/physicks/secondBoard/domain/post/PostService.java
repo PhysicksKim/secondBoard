@@ -26,25 +26,6 @@ public class PostService {
 
     // todo : 제거 작업 필요
     /**
-     * 비회원 게시글을 신규 작성합니다
-     * @param title 글 제목
-     * @param authorName 비회원 작성자 이름
-     * @param password rawPassword 를 받습니다. 인코딩은 이 메서드 내에서 수행합니다.
-     * @param content 글 내용
-     * @return 작성한 글 엔티티
-     */
-    public Post createPostOfGuest(String title, String authorName, String password, String content) {
-        String encodedPassword = passwordEncoder.encode(password);
-
-        Author authorEntity = Author.ofGuest(authorName, encodedPassword);
-        authorRepository.save(authorEntity);
-
-        Post post = Post.of(title, authorEntity, content);
-        return postRepository.save(post);
-    }
-
-    // todo : 제거 작업 필요
-    /**
      * 회원 게시글을 신규 작성합니다
      * @param title 글 제목
      * @param member 회원 엔티티

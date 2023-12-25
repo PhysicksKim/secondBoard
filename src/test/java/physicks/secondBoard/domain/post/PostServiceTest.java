@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import physicks.secondBoard.domain.post.author.Author;
 import physicks.secondBoard.domain.user.Member;
+import physicks.secondBoard.web.service.AuthorService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,6 +25,9 @@ class PostServiceTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AuthorService authorService;
+
     @DisplayName("비회원 게시글을 작성합니다")
     @Test
     void createPostOfGuest() {
@@ -34,7 +38,8 @@ class PostServiceTest {
         String content = "hello this is test post";
 
         // when
-        Post postOfGuest = postService.createPostOfGuest(title, author, password, content);
+        Author guest = authorService.createGuestAuthor(author, password);
+        Post postOfGuest = postService.createPost(title, guest, content);
 
         // then
         assertThat(postOfGuest).isNotNull();
@@ -54,7 +59,8 @@ class PostServiceTest {
         String password = "Password1!";
         String content = "hello this is test post";
 
-        Post postOfGuest = postService.createPostOfGuest(title, author, password, content);
+        Author guest = authorService.createGuestAuthor(author, password);
+        Post postOfGuest = postService.createPost(title, guest, content);
 
         // when
         Post findPost = postService.findPostById(postOfGuest.getId());
@@ -131,7 +137,7 @@ class PostServiceTest {
         String content = "hello this is test post";
 
         Member member = generateMember();
-        Author author = Author.ofMember(member);
+        Author memberAuthor = authorService.createMemberAuthor(member);
 
         // when
         Post postOfMember = postService.createPostOfMember(title, member, content);
@@ -139,7 +145,7 @@ class PostServiceTest {
         // then
         Assertions.assertThat(postOfMember).isNotNull();
         Assertions.assertThat(postOfMember.getTitle()).isEqualTo(title);
-        Assertions.assertThat(postOfMember.getAuthor()).isEqualTo(author);
+        Assertions.assertThat(postOfMember.getAuthor()).isEqualTo(memberAuthor);
         Assertions.assertThat(postOfMember.getContent()).isEqualTo(content);
     }
 
@@ -156,11 +162,12 @@ class PostServiceTest {
     private void generateSamplePosts(int numberOfPosts) {
         for (int i = 1; i <= numberOfPosts; i++) {
             String title = "testTitle" + i;
-            String author = "guest" + i;
+            String authorName = "guest" + i;
             String password = "Password" + i + "!";
             String content = "hello this is test post" + i;
 
-            postService.createPostOfGuest(title, author, password, content);
+            Author guest = authorService.createGuestAuthor(authorName, password);
+            postService.createPost(title, guest, content);
         }
     }
 

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import physicks.secondBoard.domain.post.Post;
 import physicks.secondBoard.domain.post.PostService;
+import physicks.secondBoard.domain.post.author.Author;
+import physicks.secondBoard.web.service.AuthorService;
 
 @Slf4j
 @SpringBootTest
@@ -20,11 +22,15 @@ public class PostEditTokenServiceTest {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private AuthorService authorService;
+
     private Long savedPostId = -1L;
 
     @BeforeEach
     public void samplePost() {
-        Post post = postService.createPostOfGuest("testTitle", "guest1","Password1!","hello this is test post");
+        Author guest = authorService.createGuestAuthor("guest1", "Password1!");
+        Post post = postService.createPost("testTitle", guest, "hello this is test post");
         savedPostId = post.getId();
         log.info("test post add : {}", post);
         log.info("savedPostId : {}", savedPostId);
